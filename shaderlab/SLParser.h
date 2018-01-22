@@ -19,6 +19,7 @@ using namespace shaderlab;
 
 extern std::stack<SLShaderState*> _shaderStateStack;
 extern SLShader* _currentShader;
+extern std::vector<std::string> _currentErrors;
 
 void InitLex(const char *c, size_t length);
 void FreeLex();
@@ -27,6 +28,9 @@ int yyparse();
 void SetDefaultShaderState(SLShaderState &base)
 {
 	base.lod = 0;
+	base.gpuProgramID = -1;
+	base.offsetFactor.SetValue(0.0f);
+	base.offsetUnits.SetValue(0.0f);
 	base.fogMode = kFogUnknown;
 	base.fogDensity.SetRef("unity_FogDensity");
 	base.fogStart.SetRef("unity_FogStart");
@@ -57,7 +61,7 @@ void SetDefaultShaderState(SLShaderState &base)
 	base.stencilOpBack = base.stencilOp;
 }
 
-SLShader* ParseShader(const char* data, int dataSize)
+SLShader* ParseShader(const char* data, int dataSize, std::vector<std::string> &outErrors)
 {
 	if (data == nullptr || dataSize < 3) {
 		return nullptr;
@@ -67,6 +71,8 @@ SLShader* ParseShader(const char* data, int dataSize)
 		data += 3;
 		dataSize -= 3;
 	}
+
+	_currentErrors.resize(0);
 
 	SLShader* shader = new SLShader();
 
@@ -87,6 +93,11 @@ SLShader* ParseShader(const char* data, int dataSize)
 	}
 
 	_currentShader = nullptr;
+
+	for (std::size_t i = 0; i < _currentErrors.size(); ++i) {
+		outErrors.push_back(_currentErrors[i]);
+	}
+	
 	return shader;
 }
 

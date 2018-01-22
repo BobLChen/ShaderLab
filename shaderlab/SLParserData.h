@@ -542,6 +542,7 @@ namespace shaderlab
 		bool operator == (const SLShaderState &rhs) const
 		{
 			if (name != rhs.name
+				|| gpuProgramID != rhs.gpuProgramID
 				|| tags != rhs.tags
 				|| lod != rhs.lod
 				|| zTest != rhs.zTest
@@ -566,6 +567,8 @@ namespace shaderlab
 				|| stencilOpBack != rhs.stencilOpBack
 				|| stencilReadMask != rhs.stencilReadMask
 				|| stencilWriteMask != rhs.stencilWriteMask
+				|| offsetFactor != rhs.offsetFactor
+				|| offsetUnits != rhs.offsetUnits
 				) {
 				return false;
 			}
@@ -586,12 +589,18 @@ namespace shaderlab
 		std::string toString()
 		{
 			std::string ret("State:\n");
+			ret += FormatString("%-24s:%s\n", "    Name", name.c_str());
+			ret += FormatString("%-24s:%d\n", "    Lod", lod);
+			ret += FormatString("%-24s:%d\n", "    ProgramID", gpuProgramID);
 			ret += "Fog:\n";
 			ret += FormatString("%-24s:%s\n", "    FogMode", GetFogMode(fogMode).c_str());
 			ret += FormatString("%-24s:%s\n", "    FogStart", fogStart.toString().c_str());
 			ret += FormatString("%-24s:%s\n", "    FogEnd", fogEnd.toString().c_str());
 			ret += FormatString("%-24s:%s\n", "    FogDensity", fogDensity.toString().c_str());
 			ret += FormatString("%-24s:%s\n", "    FogColor", fogColor.toString().c_str());
+			ret += "Offset:\n";
+			ret += FormatString("%-24s:%s\n", "    OffsetFactor", offsetFactor.toString().c_str());
+			ret += FormatString("%-24s:%s\n", "    OffsetUnits", offsetUnits.toString().c_str());
 			ret += "Mask:\n";
 			ret += FormatString("%-24s:%s\n", "    ColorMask", colMask.toString().c_str());
 			ret += FormatString("%-24s:%s\n", "    AlphaToMask", alphaToMask.toString().c_str());
@@ -617,6 +626,7 @@ namespace shaderlab
 		}
 
 		int	lod;
+		int gpuProgramID;
 		std::string name;
 		std::map<std::string, std::string> tags;
 
@@ -627,6 +637,8 @@ namespace shaderlab
 		SLVector4 fogColor;
 		SLFloat colMask;
 		SLFloat alphaToMask;
+		SLFloat offsetFactor;
+		SLFloat offsetUnits;
 		SLFloat zTest;
 		SLFloat zWrite;
 		SLFloat culling;

@@ -1,10 +1,8 @@
+/* A Bison parser, made by GNU Bison 2.7.  */
 
-/* A Bison parser, made by GNU Bison 2.4.1.  */
-
-/* Skeleton interface for Bison's Yacc-like parsers in C
+/* Bison interface for Yacc-like parsers in C
    
-      Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
-   Free Software Foundation, Inc.
+      Copyright (C) 1984, 1989-1990, 2000-2012 Free Software Foundation, Inc.
    
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -32,6 +30,15 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
+#ifndef YY_YY_SLPARSERYACC_HPP_INCLUDED
+# define YY_YY_SLPARSERYACC_HPP_INCLUDED
+/* Enabling traces.  */
+#ifndef YYDEBUG
+# define YYDEBUG 0
+#endif
+#if YYDEBUG
+extern int yydebug;
+#endif
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -54,66 +61,66 @@
      TOKEN_ALPHA_TO_MASK = 270,
      TOKEN_TRUE = 271,
      TOKEN_FALSE = 272,
-     TOKEN_SETTEXTURE = 273,
-     TOKEN_CONSTBUFFER = 274,
-     TOKEN_BINDCB = 275,
-     TOKEN_SETBUFFER = 276,
-     TOKEN_MATRIX = 277,
-     TOKEN_FLOAT = 278,
-     TOKEN_RANGE = 279,
-     TOKEN_VECTOR = 280,
-     TOKEN_PROPERTIES = 281,
-     TOKEN_PROGRAM = 282,
-     TOKEN_SUBPROGRAM = 283,
-     TOKEN_BIND = 284,
-     TOKEN_TAGS = 285,
-     TOKEN_NAME = 286,
-     TOKEN_KEYWORDS = 287,
-     TOKEN_ZWRITE = 288,
-     TOKEN_ZTEST = 289,
-     TOKEN_CULL = 290,
-     TOKEN_BLEND = 291,
-     TOKEN_BLEND_OP = 292,
-     TOKEN_COLORMASK = 293,
-     TOKEN_STENCIL = 294,
-     TOKEN_REF = 295,
-     TOKEN_READ_MASK = 296,
-     TOKEN_WRITE_MASK = 297,
-     TOKEN_COMP = 298,
-     TOKEN_OP_PASS = 299,
-     TOKEN_OP_FAIL = 300,
-     TOKEN_OP_ZFAIL = 301,
-     TOKEN_COMP_BACK = 302,
-     TOKEN_OP_PASS_BACK = 303,
-     TOKEN_OP_FAIL_BACK = 304,
-     TOKEN_OP_ZFAIL_BACK = 305,
-     TOKEN_COMP_FRONT = 306,
-     TOKEN_OP_PASS_FRONT = 307,
-     TOKEN_OP_FAIL_FRONT = 308,
-     TOKEN_OP_ZFAIL_FRONT = 309,
-     VAL_NUMBER = 310,
-     VAL_ID = 311,
-     VAL_STRING = 312,
-     VAL_BRACKET_ID = 313,
-     VAL_TRIANGLE_FACE = 314,
-     VAL_COMPARE_MODE = 315,
-     VAL_RGBA_MASK = 316,
-     VAL_FOG_MODE = 317,
-     VAL_TEX_DIM = 318,
-     VAL_BLEND_FACTOR = 319,
-     VAL_BLEND_OP_MODE = 320,
-     VAL_STENCIL_ACTION = 321
+     TOKEN_GPU_PROGRAM_ID = 273,
+     TOKEN_SETTEXTURE = 274,
+     TOKEN_CONSTBUFFER = 275,
+     TOKEN_BINDCB = 276,
+     TOKEN_SETBUFFER = 277,
+     TOKEN_MATRIX = 278,
+     TOKEN_FLOAT = 279,
+     TOKEN_RANGE = 280,
+     TOKEN_VECTOR = 281,
+     TOKEN_PROPERTIES = 282,
+     TOKEN_PROGRAM = 283,
+     TOKEN_SUBPROGRAM = 284,
+     TOKEN_BIND = 285,
+     TOKEN_TAGS = 286,
+     TOKEN_NAME = 287,
+     TOKEN_KEYWORDS = 288,
+     TOKEN_ZWRITE = 289,
+     TOKEN_ZTEST = 290,
+     TOKEN_CULL = 291,
+     TOKEN_BLEND = 292,
+     TOKEN_BLEND_OP = 293,
+     TOKEN_COLORMASK = 294,
+     TOKEN_OFFSET = 295,
+     TOKEN_STENCIL = 296,
+     TOKEN_REF = 297,
+     TOKEN_READ_MASK = 298,
+     TOKEN_WRITE_MASK = 299,
+     TOKEN_COMP = 300,
+     TOKEN_OP_PASS = 301,
+     TOKEN_OP_FAIL = 302,
+     TOKEN_OP_ZFAIL = 303,
+     TOKEN_COMP_BACK = 304,
+     TOKEN_OP_PASS_BACK = 305,
+     TOKEN_OP_FAIL_BACK = 306,
+     TOKEN_OP_ZFAIL_BACK = 307,
+     TOKEN_COMP_FRONT = 308,
+     TOKEN_OP_PASS_FRONT = 309,
+     TOKEN_OP_FAIL_FRONT = 310,
+     TOKEN_OP_ZFAIL_FRONT = 311,
+     VAL_NUMBER = 312,
+     VAL_ID = 313,
+     VAL_STRING = 314,
+     VAL_BRACKET_ID = 315,
+     VAL_TRIANGLE_FACE = 316,
+     VAL_COMPARE_MODE = 317,
+     VAL_RGBA_MASK = 318,
+     VAL_FOG_MODE = 319,
+     VAL_TEX_DIM = 320,
+     VAL_BLEND_FACTOR = 321,
+     VAL_BLEND_OP_MODE = 322,
+     VAL_STENCIL_ACTION = 323
    };
 #endif
-
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
 {
-
-/* Line 1676 of yacc.c  */
-#line 31 "SLParserYacc.y"
+/* Line 2058 of yacc.c  */
+#line 32 "SLParserYacc.y"
 
 	SLVector4 *vector4;
 	SLFloat *floatval;
@@ -133,9 +140,8 @@ typedef union YYSTYPE
 	std::vector<SLPassBase*> *passes;
 
 
-
-/* Line 1676 of yacc.c  */
-#line 139 "SLParserYacc.hpp"
+/* Line 2058 of yacc.c  */
+#line 145 "SLParserYacc.hpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -144,4 +150,18 @@ typedef union YYSTYPE
 
 extern YYSTYPE yylval;
 
+#ifdef YYPARSE_PARAM
+#if defined __STDC__ || defined __cplusplus
+int yyparse (void *YYPARSE_PARAM);
+#else
+int yyparse ();
+#endif
+#else /* ! YYPARSE_PARAM */
+#if defined __STDC__ || defined __cplusplus
+int yyparse (void);
+#else
+int yyparse ();
+#endif
+#endif /* ! YYPARSE_PARAM */
 
+#endif /* !YY_YY_SLPARSERYACC_HPP_INCLUDED  */
