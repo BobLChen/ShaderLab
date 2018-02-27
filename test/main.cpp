@@ -2,14 +2,47 @@
 #include <stdlib.h>
 #include <string>
 #include <fstream>
-#include "SLParser.h"
 
-int main(int argc,char* argv[])
+#include "parser/SLParser.h"
+#include "compiler/SLCompiler.h"
+
+bool ReadTextFile(const std::string &filename, std::string &output)
 {
-    std::ifstream istream("CgBatchOutput.shader");
-	std::string text((std::istreambuf_iterator<char>(istream)), std::istreambuf_iterator<char>());
+	FILE *file = fopen(filename.c_str(), "rt");
+	if (!file) {
+		return false;
+	}
+	fseek(file, 0, SEEK_END);
+	int dataSize = ftell(file);
+	fseek(file, 0, SEEK_SET);
+	if (dataSize <= 0) {
+		fclose(file);
+		return false;
+	}
+	output.resize(dataSize);
+	int readSize = fread(&(*output.begin()), 1, dataSize, file);
+	fclose(file);
+	output.resize(readSize);
+	return true;
+}
+
+bool includeOpenCallback(bool isSystem, const char *fileName, const char *parentFileName, const char *parent, std::string &output, void *data)
+{
+	return ReadTextFile(fileName, output);
+}
+
+int main(int argc, char* argv[])
+{
+	std::string source;
+	std::string compiled;
+	ReadTextFile("nosurfce.shader", source);
+	shaderlab::compileCG(source, includeOpenCallback, compiled);
+	FILE* f = fopen("nosurfceOutput.shader", "wb");
+	fwrite(compiled.c_str(), compiled.size(), 1, f);
+	fclose(f);
+	
 	std::vector<std::string> errors;
-	shaderlab::SLShader *shader = ParseShader(text.c_str(), text.size(), errors);
+	shaderlab::SLShader *shader = ParseShader(compiled.c_str(), compiled.size(), errors);
     printf("shader:%s\n", shader->toString().c_str());
 	if (errors.size() > 0) {
 		for (std::size_t i = 0; i < errors.size(); ++i) {
@@ -18,6 +51,7 @@ int main(int argc,char* argv[])
 	} else {
 		printf("Parse success.\n");
 	}
+	
 	system("pause");
     return 0;
 }

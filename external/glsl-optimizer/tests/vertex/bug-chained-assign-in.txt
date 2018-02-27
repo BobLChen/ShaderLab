@@ -1,13 +1,74 @@
-// https://github.com/aras-p/glsl-optimizer/issues/48
+#ifndef particles
+    #define particles 1
+#endif
+#ifndef asdf
+    #define asdf 1
+#endif
+#ifndef asdsas
+    #define asdsas 1
+#endif
+#version 120
 
-attribute vec3 _in_position;
-
-uniform mat4 mtx;
-
-void main()
-{
-	mat4 m = mtx;
-	// chained assignments used to not work, #48
-	m[0][1] = m[0][2] = m[0][3] = 0.0;	
-    gl_Position = m * vec4(_in_position,1);
+#line 35
+struct v2f {
+    vec4 vertex;
+    vec4 color;
+    vec2 texcoord;
+    vec4 projPos;
+    vec4 tangents;
+};
+#line 26
+struct appdata_t {
+    vec4 vertex;
+    vec4 color;
+    vec2 texcoord;
+    vec4 indices;
+    vec4 weights;
+    vec4 tangents;
+};
+#line 12
+#line 23
+uniform sampler2D _MainTex;
+uniform vec4 _TintColor;
+#line 43
+uniform vec4 _MainTex_ST;
+uniform mat4 _matrix_mvp;
+#line 56
+uniform float _InvFade;
+uniform float _Intensity;
+uniform float _Intensito;
+#line 60
+#line 46
+v2f vert( in appdata_t v ) {
+    #line 48
+    v2f o;
+    o.vertex = (_matrix_mvp * v.vertex);
+    o.color = v.color;
+    o.texcoord = v.texcoord;
+    #line 52
+    o.tangents = v.tangents;
+    return o;
+}
+attribute vec4 xlat_attrib_SKIN_INDICES;
+attribute vec4 xlat_attrib_SKIN_WEIGHTS;
+attribute vec4 xlat_attrib_tangent;
+varying vec4 xlv_COLOR;
+varying vec2 xlv_TEXCOORD0;
+varying vec4 xlv_TEXCOORD1;
+varying vec4 xlv_TANGENT;
+void main() {
+    v2f xl_retval;
+    appdata_t xlt_v;
+    xlt_v.vertex = vec4(gl_Vertex);
+    xlt_v.color = vec4(gl_Color);
+    xlt_v.texcoord = vec2(gl_MultiTexCoord0);
+    xlt_v.indices = vec4(xlat_attrib_SKIN_INDICES);
+    xlt_v.weights = vec4(xlat_attrib_SKIN_WEIGHTS);
+    xlt_v.tangents = vec4(xlat_attrib_tangent);
+    xl_retval = vert( xlt_v);
+    gl_Position = vec4(xl_retval.vertex);
+    xlv_COLOR = vec4(xl_retval.color);
+    xlv_TEXCOORD0 = vec2(xl_retval.texcoord);
+    xlv_TEXCOORD1 = vec4(xl_retval.projPos);
+    xlv_TANGENT = vec4(xl_retval.tangents);
 }

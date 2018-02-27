@@ -19,8 +19,12 @@ SETUP_SAMPLE_START(Test)
 		main.cpp
     )
     SET(RESOURCE_FILES
-        CgBatchOutput.shader
+		CgBatchOutput.shader
+		nosurfce.shader
+		TestCgInclude.cginc
 	)
 SETUP_SAMPLE_END(Test)
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/CgBatchOutput.shader DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/nosurfce.shader DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/TestCgInclude.cginc DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
