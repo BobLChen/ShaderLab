@@ -51,6 +51,20 @@ int main(int argc, char* argv[])
 	} else {
 		printf("Parse success.\n");
 	}
+
+	if (errors.size() == 0) {
+		Json::Value jsonValue;
+		shader->ToJson(jsonValue);
+		Json::FastWriter fastWsriter;
+		fastWsriter.omitEndingLineFeed();
+		std::string jsonString = fastWsriter.write(jsonValue);
+
+		FILE* jsonFile = fopen("output.json", "wb");
+		fwrite(jsonString.c_str(), jsonString.size(), 1, jsonFile);
+		fclose(jsonFile);
+
+		printf("%s\n", jsonString.c_str());
+	}
 	
 	system("pause");
     return 0;

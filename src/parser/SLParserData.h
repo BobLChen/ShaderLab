@@ -14,6 +14,7 @@
 #include <map>
 
 #include "SLParserTypes.h"
+#include "utils/json.h"
 #include "utils/SLStringUtils.h"
 
 namespace shaderlab
@@ -45,12 +46,17 @@ namespace shaderlab
 		{
 			this->ref = ref;
 		}
-
+		
 		std::string toString()
 		{
 			return FormatString("Float(ref=%s,val=%f)", ref.c_str(), val);
 		}
 
+		void ToJson(Json::Value &data)
+		{
+			data["val"] = val;
+			data["ref"] = ref;
+		}
 		float val;
 		std::string ref;
 	};
@@ -96,6 +102,14 @@ namespace shaderlab
 			return !(*this == rhs);
 		}
 
+		void ToJson(Json::Value &data)
+		{
+			data["x"] = x;
+			data["y"] = y;
+			data["z"] = z;
+			data["w"] = w;
+		}
+
 		std::string toString()
 		{
 			return FormatString("Vector4(ref=%s,x=%f,y=%f,z=%f,w=%f)", ref.c_str(), x, y, z, w);
@@ -125,6 +139,14 @@ namespace shaderlab
 			return !(*this == rhs);
 		}
 
+		void ToJson(Json::Value &data)
+		{
+			data["comp"] = comp.val;
+			data["pass"] = pass.val;
+			data["fail"] = fail.val;
+			data["zFail"] = zFail.val;
+		}
+		
 		std::string toString()
 		{
 			return FormatString("StencilOp[comp=%s,pass=%s,fail=%s,zfail=%s]", comp.toString().c_str(), pass.toString().c_str(), fail.toString().c_str(), zFail.toString().c_str());
@@ -151,6 +173,12 @@ namespace shaderlab
 		std::string toString()
 		{
 			return FormatString("TexProp(name=%s,dim=%s)", name.c_str(), GetTextureDimension(dimension).c_str());
+		}
+
+		void ToJson(Json::Value &data)
+		{
+			data["name"] = name;
+			data["dimension"] = GetTextureDimension(dimension);
 		}
 
 		std::string name;
@@ -219,6 +247,21 @@ namespace shaderlab
 			return ret;
 		}
 
+		void ToJson(Json::Value &data)
+		{
+			data["type"] = GetType(type);
+			data["name"] = name;
+			data["description"] = description;
+			for (int i = 0; i < attributes.size(); ++i) {
+				data["attributes"][i] = attributes[i];
+			}
+			data["value"]["x"] = value[0];
+			data["value"]["y"] = value[1];
+			data["value"]["z"] = value[2];
+			data["value"]["w"] = value[3];
+			texture.ToJson(data["texture"]);
+		}
+
 		Type type;
 		std::string name;
 		std::string description;
@@ -237,6 +280,13 @@ namespace shaderlab
 		void AddColorProperty(const char* name, const char* desc, const std::vector<std::string> &atts, const SLVector4 &value);
 		void AddRangeProperty(const char* name, const char* desc, const std::vector<std::string> &atts, float val, float valmin, float valmax);
 		void AddTextureProperty(const char* name, const char* desc, const std::vector<std::string> &atts, const SLPropTexture &tex);
+
+		void ToJson(Json::Value &data)
+		{
+			for (int i = 0; i < props.size(); ++i) {
+				props[i].ToJson(data["props"][i]);
+			}
+		}
 
 		std::string toString()
 		{
@@ -286,6 +336,15 @@ namespace shaderlab
 			{
 				return FormatString("VectorParam(name=%s,type=%s,index=%d,dimension=%d,array=%d)", name.c_str(), GetShaderParamType(type).c_str(), index, dimension, arraySize);
 			}
+
+			void ToJson(Json::Value &data)
+			{
+				data["name"] = name;
+				data["type"] = GetShaderParamType(type);
+				data["index"] = index;
+				data["dimension"] = dimension;
+				data["array"] = arraySize;
+			}
 		};
 
 		struct ParamMatrix {
@@ -315,6 +374,15 @@ namespace shaderlab
 			{
 				return FormatString("MatrixParam(name=%s,index=%d,rows=%d,cols=%d,array=%d)", name.c_str(), index, rows, cols, arraySize);
 			}
+
+			void ToJson(Json::Value &data)
+			{
+				data["name"] = name;
+				data["index"] = index;
+				data["rows"] = rows;
+				data["cols"] = cols;
+				data["array"] = arraySize;
+			}
 		};
 
 		struct ParamTexture {
@@ -341,6 +409,14 @@ namespace shaderlab
 			std::string toString()
 			{
 				return FormatString("TextureParam(name=%s,index=%d,sampler=%d,dim=%s)", name.c_str(), index, samplerIndex, GetTextureDimension(dimension).c_str());
+			}
+
+			void ToJson(Json::Value &data)
+			{
+				data["name"] = name;
+				data["index"] = index;
+				data["sampler"] = samplerIndex;
+				data["dimension"] = GetTextureDimension(dimension);
 			}
 		};
 
@@ -375,6 +451,18 @@ namespace shaderlab
 				ret += "]";
 				return ret;
 			}
+
+			void ToJson(Json::Value &data)
+			{
+				data["size"] = size;
+				data["name"] = name;
+				for (int i = 0; i < vectorParams.size(); ++i) {
+					vectorParams[i].ToJson(data["vector"][i]);
+				}
+				for (int i = 0; i < matrixParams.size(); ++i) {
+					matrixParams[i].ToJson(data["matrix"][i]);
+				}
+			}
 		};
 
 		struct BindChannel
@@ -405,6 +493,12 @@ namespace shaderlab
 				return FormatString("BindChannel(src=%s,dest=%s,stride=%d)", src.c_str(), dest.c_str(), stride);
 			}
 
+			void ToJson(Json::Value &data)
+			{
+				data["src"] = src;
+				data["dest"] = dest;
+				data["stride"] = stride;
+			}
 		};
 
 		struct BindBuffer {
@@ -429,6 +523,12 @@ namespace shaderlab
 			std::string toString()
 			{
 				return FormatString("BindBuffer(name=%s,index=%d)", name.c_str(), index);
+			}
+
+			void ToJson(Json::Value &data)
+			{
+				data["name"] = name;
+				data["index"] = index;
 			}
 		};
 
@@ -456,6 +556,36 @@ namespace shaderlab
 
 		void Bind(const char* src, const char* dest, int stride = 4);
 
+		void ToJson(Json::Value &data)
+		{
+			for (int i = 0; i < bindChannels.size(); ++i) {
+				bindChannels[i].ToJson(data["bindChannels"][i]);
+			}
+			for (int i = 0; i < keywords.size(); ++i) {
+				data["keywords"][i] = keywords[i];
+			}
+			for (int i = 0; i < vectorParams.size(); ++i) {
+				vectorParams[i].ToJson(data["vectorParams"][i]);
+			}
+			for (int i = 0; i < matrixParams.size(); ++i) {
+				matrixParams[i].ToJson(data["matrixParams"][i]);
+			}
+			for (int i = 0; i < textureParams.size(); ++i) {
+				textureParams[i].ToJson(data["textureParams"][i]);
+			}
+			for (int i = 0; i < bufferParams.size(); ++i) {
+				bufferParams[i].ToJson(data["bufferParams"][i]);
+			}
+			for (int i = 0; i < constantBuffers.size(); ++i) {
+				constantBuffers[i].ToJson(data["constantBuffers"][i]);
+			}
+			for (int i = 0; i < constantBufferBindings.size(); ++i) {
+				constantBufferBindings[i].ToJson(data["constantBufferBindings"][i]);
+			}
+			data["name"] = name;
+			data["source"] = source;
+		}
+		
 		std::string toString()
 		{
 			std::string ret("SLSubProgram:\n");
@@ -562,6 +692,14 @@ namespace shaderlab
 			return ret;
 		}
 
+		void ToJson(Json::Value &data)
+		{
+			data["type"] = type;
+			for (int i = 0; i < subPrograms.size(); ++i) {
+				subPrograms[i]->ToJson(data["subPrograms"][i]);
+			}
+		}
+
 		std::string type;
 		std::vector<SLSubProgram*> subPrograms;
 	};
@@ -653,6 +791,40 @@ namespace shaderlab
 			return ret;
 		}
 
+		void ToJson(Json::Value &data)
+		{
+			data["lod"] = lod;
+			data["gpuProgramID"] = gpuProgramID;
+			data["name"] = name;
+			for (auto it = tags.begin(); it != tags.end(); ++it) {
+				data["tags"][it->first] = it->second;
+			}
+			data["fogMode"] = GetFogMode(fogMode);
+			fogStart.ToJson(data["fogStart"]);
+			fogEnd.ToJson(data["fogEnd"]);
+			fogDensity.ToJson(data["fogDensity"]);
+			fogColor.ToJson(data["fogColor"]);
+			colMask.ToJson(data["colMask"]);
+			alphaToMask.ToJson(data["alphaToMask"]);
+			offsetFactor.ToJson(data["offsetFactor"]);
+			offsetUnits.ToJson(data["offsetUnits"]);
+			zTest.ToJson(data["zTest"]);
+			zWrite.ToJson(data["zWrite"]);
+			culling.ToJson(data["culling"]);
+			blendOp.ToJson(data["blendOp"]);
+			blendOpAlpha.ToJson(data["blendOpAlpha"]);
+			srcBlend.ToJson(data["srcBlend"]);
+			destBlend.ToJson(data["destBlend"]);
+			srcBlendAlpha.ToJson(data["srcBlendAlpha"]);
+			destBlendAlpha.ToJson(data["destBlendAlpha"]);
+			stencilRef.ToJson(data["stencilRef"]);
+			stencilReadMask.ToJson(data["stencilReadMask"]);
+			stencilWriteMask.ToJson(data["stencilWriteMask"]);
+			stencilOp.ToJson(data["stencilOp"]);
+			stencilOpFront.ToJson(data["stencilOpFront"]);
+			stencilOpBack.ToJson(data["stencilOpBack"]);
+		}
+
 		int	lod;
 		int gpuProgramID;
 		std::string name;
@@ -707,6 +879,11 @@ namespace shaderlab
 			return "BasePass";
 		}
 
+		virtual void ToJson(Json::Value &data)
+		{
+			data["type"] = "BasePass";
+		}
+
 		PassType type;
 	};
 
@@ -719,6 +896,15 @@ namespace shaderlab
 		bool operator != (const SLNormalPass &rhs) const
 		{
 			return !(*this == rhs);
+		}
+
+		void ToJson(Json::Value &data)
+		{
+			state.ToJson(data["state"]);
+			for (int i = 0; i < programs.size(); ++i) {
+				programs[i]->ToJson(data["programs"][i]);
+			}
+			data["type"] = "Pass";
 		}
 
 		virtual std::string toString() override
@@ -763,6 +949,12 @@ namespace shaderlab
 			ret += FormatString("%-24s:%s\n", "    Type", "UsePass");
 			ret += FormatString("%-24s:%s\n", "    UseName", useName.c_str());
 			return ret;
+		}
+
+		void ToJson(Json::Value &data)
+		{
+			data["name"] = useName;
+			data["type"] = "UsePass";
 		}
 
 		std::string useName;
@@ -816,6 +1008,17 @@ namespace shaderlab
 			return !(*this == rhs);
 		}
 
+		void ToJson(Json::Value &data)
+		{
+			data["lod"] = lod;
+			for (int i = 0; i < passes.size(); ++i) {
+				passes[i]->ToJson(data["passes"][i]);
+			}
+			for (auto it = tags.begin(); it != tags.end(); ++it) {
+				data["tags"][it->first] = it->second;
+			}
+		}
+
 		std::string toString()
 		{
 			std::string ret("SubShader:\n");
@@ -863,6 +1066,16 @@ namespace shaderlab
 			return ret;
 		}
 
+		void ToJson(Json::Value &data)
+		{
+			properties.ToJson(data["properties"]);
+			data["fallbackName"] = fallbackName;
+			data["shaderName"] = shaderName;
+			for (int i = 0; i < subShaders.size(); ++i) {
+				subShaders[i]->ToJson(data["subShaders"][i]);
+			}
+		}
+		
 		SLProperties properties;
 		std::string	fallbackName;
 		std::string shaderName;

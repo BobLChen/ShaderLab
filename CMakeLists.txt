@@ -20,4 +20,4 @@ include_directories(
 add_subdirectory(external/hlsl2glslfork)
 add_subdirectory(external/glsl-optimizer)
 add_subdirectory(src)
-add_subdirectory(test)
+add_subdirectory(Shader2Json)

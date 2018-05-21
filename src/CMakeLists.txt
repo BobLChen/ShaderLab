@@ -20,11 +20,14 @@ set(COMPILER_SRCS
 )
 
 set(UTILS_HDRS
-	utils/SLStringUtils.h	
+	utils/SLStringUtils.h
+	utils/json.h
+	utils/json-forwards.h
 )
 
 set(UTILS_SRCS
 	utils/SLStringUtils.cpp
+	utils/jsoncpp.cpp
 )
 
 add_library(shaderlab STATIC
