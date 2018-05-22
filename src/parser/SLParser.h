@@ -31,11 +31,11 @@ void SetDefaultShaderState(SLShaderState &base)
 	base.gpuProgramID = -1;
 	base.offsetFactor.SetValue(0.0f);
 	base.offsetUnits.SetValue(0.0f);
-	base.fogMode = kFogUnknown;
-	base.fogDensity.SetRef("unity_FogDensity");
-	base.fogStart.SetRef("unity_FogStart");
-	base.fogEnd.SetRef("unity_FogEnd");
-	base.fogColor.SetRef("unity_FogColor");
+	base.fogMode = kFogLinear;
+	base.fogDensity.SetValue(0.0f);
+	base.fogStart.SetValue(0.0);
+	base.fogEnd.SetValue(0.0);
+	base.fogColor.SetValue(1.0f, 1.0f, 1.0f, 1.0f);
 
 	base.culling.SetValue(kCullBack);
 	base.colMask.SetValue(kColorWriteR | kColorWriteG | kColorWriteB | kColorWriteA);
