@@ -1,6 +1,6 @@
 # ShaderLab
 
-A C++ library that convert unity shaderlab to json form webgl or other rendering engine.
+A C++ library that convert unity shaderlab to json for webgl or other rendering engine.
 
 ## Requirement
 cmake 3.0
