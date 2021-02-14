@@ -1,23 +1,38 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.8.0)
 
-project(ShaderLab)
+project(ShaderCross)
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(ALL_LIBS
-	hlsl2glsl
-	glsl_optimizer
 	shaderlab
 )
 
 include_directories(
-	src/
-	external/hlsl2glslfork/include/
-	external/glsl-optimizer/src/glsl/
+	ShaderLab/
 )
 
-add_subdirectory(external/hlsl2glslfork)
-add_subdirectory(external/glsl-optimizer)
-add_subdirectory(src)
-add_subdirectory(Shader2Json)
+add_subdirectory(ShaderLab)
+
+MACRO(SETUP_SAMPLE_START EXE_NAME)
+	UNSET(SOURCE_FILES)
+	UNSET(HEADER_FILES)
+	UNSET(RESOURCE_FILES)
+	UNSET(EFFECT_FILES)
+ENDMACRO(SETUP_SAMPLE_START)
+
+MACRO(SETUP_SAMPLE_END EXE_NAME)
+	SOURCE_GROUP("Source Files" FILES ${SOURCE_FILES})
+	SOURCE_GROUP("Header Files" FILES ${HEADER_FILES})
+	SOURCE_GROUP("Resource Files" FILES ${RESOURCE_FILES})
+	SOURCE_GROUP("Effect Files" FILES ${EFFECT_FILES})
+	ADD_EXECUTABLE(${EXE_NAME} ${SOURCE_FILES} ${HEADER_FILES} ${RESOURCE_FILES} ${EFFECT_FILES})
+	TARGET_LINK_LIBRARIES(${EXE_NAME} ${ALL_LIBS})
+ENDMACRO(SETUP_SAMPLE_END)
+
+SETUP_SAMPLE_START(ShaderCross)
+	SET(SOURCE_FILES
+		main.cpp
+    )
+SETUP_SAMPLE_END(ShaderCross)
