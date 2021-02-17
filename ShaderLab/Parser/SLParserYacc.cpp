@@ -88,6 +88,7 @@
 #include <map>
 #include <vector>
 
+#include "Common/Common.h"
 #include "SLParserData.h"
 
 using namespace shaderlab;
@@ -97,12 +98,12 @@ std::stack<SLShaderState*>	g_ShaderStateStack;
 const char*                 g_CurrentProgramCode;
 ProgramType					g_CurrentProgramType;
 
-extern int yylineno;
+extern int32 yylineno;
 extern char* yytext;
 
-int shaderlaberror(const char *s);
+int32 shaderlaberror(const char *s);
 
-int shaderlablex();
+int32 shaderlablex();
 
 static void PushShaderState();
 static void PopShaderState();
@@ -112,7 +113,7 @@ static void PopShaderState();
 
 
 /* Line 189 of yacc.c  */
-#line 116 "SLParserYacc.cpp"
+#line 117 "SLParserYacc.cpp"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -205,7 +206,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 36 "SLParserYacc.y"
+#line 37 "SLParserYacc.y"
 
 	SLVector4*							vector4;
 	SLFloat*							floatval;
@@ -216,7 +217,7 @@ typedef union YYSTYPE
 	SLSubShader*						subshader;
 	const char*							strval;
 	float								number;
-	int									enumval;
+	int32									enumval;
 	std::vector<std::string>*			strings;
 	std::map<std::string, std::string>* tags;
 	std::vector<SLPassBase*>*			passes;
@@ -224,7 +225,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 228 "SLParserYacc.cpp"
+#line 229 "SLParserYacc.cpp"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -236,7 +237,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 240 "SLParserYacc.cpp"
+#line 241 "SLParserYacc.cpp"
 
 #ifdef short
 # undef short
@@ -569,16 +570,16 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    82,    82,    86,    81,   100,   103,   110,   113,   122,
-     131,   141,   151,   165,   182,   185,   194,   199,   207,   210,
-     214,   221,   228,   227,   238,   237,   256,   261,   266,   272,
-     277,   285,   284,   301,   309,   312,   317,   324,   331,   338,
-     345,   350,   355,   362,   369,   376,   381,   395,   407,   415,
-     425,   434,   447,   457,   462,   467,   474,   481,   488,   495,
-     500,   508,   511,   522,   536,   540,   547,   554,   561,   568,
-     575,   582,   589,   596,   603,   610,   617,   624,   631,   638,
-     647,   654,   661,   666,   675,   682,   689,   696,   703,   710,
-     715,   722,   729
+       0,    83,    83,    87,    82,   101,   104,   111,   114,   123,
+     132,   142,   152,   166,   183,   186,   195,   200,   208,   211,
+     215,   222,   229,   228,   239,   238,   257,   262,   267,   273,
+     278,   286,   285,   302,   310,   313,   318,   325,   332,   339,
+     346,   351,   356,   363,   370,   377,   382,   396,   408,   416,
+     426,   435,   448,   458,   463,   468,   475,   482,   489,   496,
+     501,   509,   512,   523,   537,   541,   548,   555,   562,   569,
+     576,   583,   590,   597,   604,   611,   618,   625,   632,   639,
+     648,   655,   662,   667,   676,   683,   690,   697,   704,   711,
+     716,   723,   730
 };
 #endif
 
@@ -1613,7 +1614,7 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 82 "SLParserYacc.y"
+#line 83 "SLParserYacc.y"
     {
 				g_CurrentShader->shaderName = (yyvsp[(2) - (2)].strval);
 			;}
@@ -1622,7 +1623,7 @@ yyreduce:
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 86 "SLParserYacc.y"
+#line 87 "SLParserYacc.y"
     {
 				if ((yyvsp[(5) - (5)].properties)) 
 				{
@@ -1635,7 +1636,7 @@ yyreduce:
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 94 "SLParserYacc.y"
+#line 95 "SLParserYacc.y"
     {
 
 			;}
@@ -1644,7 +1645,7 @@ yyreduce:
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 100 "SLParserYacc.y"
+#line 101 "SLParserYacc.y"
     {
 				(yyval.properties) = nullptr;
 			;}
@@ -1653,7 +1654,7 @@ yyreduce:
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 104 "SLParserYacc.y"
+#line 105 "SLParserYacc.y"
     {
 				(yyval.properties) = (yyvsp[(3) - (4)].properties); 
 			;}
@@ -1662,7 +1663,7 @@ yyreduce:
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 110 "SLParserYacc.y"
+#line 111 "SLParserYacc.y"
     {
 				(yyval.properties) = new SLProperties();
 			;}
@@ -1671,7 +1672,7 @@ yyreduce:
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 114 "SLParserYacc.y"
+#line 115 "SLParserYacc.y"
     {
 				(yyval.properties) = (yyvsp[(1) - (10)].properties);
 				(yyval.properties)->AddFloatProperty((yyvsp[(3) - (10)].strval), (yyvsp[(5) - (10)].strval), *(yyvsp[(2) - (10)].strings), (yyvsp[(10) - (10)].number));
@@ -1685,7 +1686,7 @@ yyreduce:
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 123 "SLParserYacc.y"
+#line 124 "SLParserYacc.y"
     {
 				(yyval.properties) = (yyvsp[(1) - (15)].properties);
 				(yyval.properties)->AddRangeProperty((yyvsp[(3) - (15)].strval), (yyvsp[(5) - (15)].strval), *(yyvsp[(2) - (15)].strings), (yyvsp[(15) - (15)].number), (yyvsp[(9) - (15)].number), (yyvsp[(11) - (15)].number)); 
@@ -1699,7 +1700,7 @@ yyreduce:
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 132 "SLParserYacc.y"
+#line 133 "SLParserYacc.y"
     {
 				(yyval.properties) = (yyvsp[(1) - (10)].properties);
 				(yyval.properties)->AddVectorProperty((yyvsp[(3) - (10)].strval), (yyvsp[(5) - (10)].strval), *(yyvsp[(2) - (10)].strings), *(yyvsp[(10) - (10)].vector4));
@@ -1714,7 +1715,7 @@ yyreduce:
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 142 "SLParserYacc.y"
+#line 143 "SLParserYacc.y"
     {
 				(yyval.properties) = (yyvsp[(1) - (10)].properties);
 				(yyval.properties)->AddColorProperty((yyvsp[(3) - (10)].strval), (yyvsp[(5) - (10)].strval), *(yyvsp[(2) - (10)].strings), *(yyvsp[(10) - (10)].vector4));
@@ -1729,7 +1730,7 @@ yyreduce:
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 152 "SLParserYacc.y"
+#line 153 "SLParserYacc.y"
     {
 				SLPropTexture texture;
 				texture.name      = (yyvsp[(10) - (10)].strval);
@@ -1748,7 +1749,7 @@ yyreduce:
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 166 "SLParserYacc.y"
+#line 167 "SLParserYacc.y"
     {
 				SLPropTexture texture;
 				texture.name      = (yyvsp[(10) - (12)].strval);
@@ -1767,7 +1768,7 @@ yyreduce:
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 182 "SLParserYacc.y"
+#line 183 "SLParserYacc.y"
     {
 				(yyval.strings) = new std::vector<std::string>();
 			;}
@@ -1776,7 +1777,7 @@ yyreduce:
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 186 "SLParserYacc.y"
+#line 187 "SLParserYacc.y"
     {
 				(yyval.strings) = (yyvsp[(1) - (2)].strings);
 				(yyval.strings)->emplace_back((yyvsp[(2) - (2)].strval));
@@ -1788,7 +1789,7 @@ yyreduce:
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 195 "SLParserYacc.y"
+#line 196 "SLParserYacc.y"
     {
 				(yyval.vector4) = new SLVector4();
 				(yyval.vector4)->SetValue((yyvsp[(2) - (9)].number), (yyvsp[(4) - (9)].number), (yyvsp[(6) - (9)].number), (yyvsp[(8) - (9)].number));
@@ -1798,7 +1799,7 @@ yyreduce:
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 200 "SLParserYacc.y"
+#line 201 "SLParserYacc.y"
     {
 				(yyval.vector4) = new SLVector4();
 				(yyval.vector4)->SetValue((yyvsp[(2) - (7)].number), (yyvsp[(4) - (7)].number), (yyvsp[(6) - (7)].number), 1.0f);
@@ -1808,7 +1809,7 @@ yyreduce:
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 207 "SLParserYacc.y"
+#line 208 "SLParserYacc.y"
     {
 
 			;}
@@ -1817,7 +1818,7 @@ yyreduce:
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 211 "SLParserYacc.y"
+#line 212 "SLParserYacc.y"
     {
 
 			;}
@@ -1826,7 +1827,7 @@ yyreduce:
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 215 "SLParserYacc.y"
+#line 216 "SLParserYacc.y"
     {
 				if ((yyvsp[(2) - (2)].subshader)) 
 				{
@@ -1838,7 +1839,7 @@ yyreduce:
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 222 "SLParserYacc.y"
+#line 223 "SLParserYacc.y"
     {
 				
 			;}
@@ -1847,7 +1848,7 @@ yyreduce:
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 228 "SLParserYacc.y"
+#line 229 "SLParserYacc.y"
     {
 				PushShaderState();
 			;}
@@ -1856,7 +1857,7 @@ yyreduce:
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 232 "SLParserYacc.y"
+#line 233 "SLParserYacc.y"
     {
 				PopShaderState();
 			;}
@@ -1865,7 +1866,7 @@ yyreduce:
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 238 "SLParserYacc.y"
+#line 239 "SLParserYacc.y"
     {
 				PushShaderState();
 			;}
@@ -1874,7 +1875,7 @@ yyreduce:
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 242 "SLParserYacc.y"
+#line 243 "SLParserYacc.y"
     {
 				const SLShaderState* state = g_ShaderStateStack.top();
 
@@ -1892,7 +1893,7 @@ yyreduce:
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 257 "SLParserYacc.y"
+#line 258 "SLParserYacc.y"
     {
 				g_CurrentShader->fallbackName = (yyvsp[(2) - (2)].strval);
 				delete[] (yyvsp[(2) - (2)].strval);
@@ -1902,7 +1903,7 @@ yyreduce:
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 262 "SLParserYacc.y"
+#line 263 "SLParserYacc.y"
     {
 				g_CurrentShader->fallbackName = (yyvsp[(2) - (4)].strval);
 				delete[] (yyvsp[(2) - (4)].strval);
@@ -1912,7 +1913,7 @@ yyreduce:
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 267 "SLParserYacc.y"
+#line 268 "SLParserYacc.y"
     {
 				g_CurrentShader->fallbackName = "";
 			;}
@@ -1921,7 +1922,7 @@ yyreduce:
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 273 "SLParserYacc.y"
+#line 274 "SLParserYacc.y"
     {
 				(yyval.passes) = new std::vector<SLPassBase*>(); 
 				(yyval.passes)->push_back((yyvsp[(2) - (2)].pass)); 
@@ -1931,7 +1932,7 @@ yyreduce:
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 278 "SLParserYacc.y"
+#line 279 "SLParserYacc.y"
     {
 				(yyval.passes) = (yyvsp[(1) - (3)].passes);  
 				(yyval.passes)->push_back((yyvsp[(3) - (3)].pass));
@@ -1941,7 +1942,7 @@ yyreduce:
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 285 "SLParserYacc.y"
+#line 286 "SLParserYacc.y"
     {
 				PushShaderState();
 			;}
@@ -1950,7 +1951,7 @@ yyreduce:
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 289 "SLParserYacc.y"
+#line 290 "SLParserYacc.y"
     {
 				SLNormalPass* pp = new SLNormalPass(*g_ShaderStateStack.top());
 				pp->program.type   = g_CurrentProgramType;
@@ -1968,7 +1969,7 @@ yyreduce:
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 302 "SLParserYacc.y"
+#line 303 "SLParserYacc.y"
     {
 				(yyval.pass) = new SLUsePass((yyvsp[(2) - (2)].strval)); 
 				delete[] (yyvsp[(2) - (2)].strval);
@@ -1978,7 +1979,7 @@ yyreduce:
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 309 "SLParserYacc.y"
+#line 310 "SLParserYacc.y"
     {
 				(yyval.states) = g_ShaderStateStack.top();
 			;}
@@ -1987,17 +1988,17 @@ yyreduce:
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 313 "SLParserYacc.y"
+#line 314 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states); 
-				(yyval.states)->lod = int((yyvsp[(3) - (3)].number));
+				(yyval.states)->lod = int32((yyvsp[(3) - (3)].number));
 			;}
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 318 "SLParserYacc.y"
+#line 319 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states); 
 				(yyval.states)->name = (yyvsp[(3) - (3)].strval);
@@ -2009,7 +2010,7 @@ yyreduce:
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 325 "SLParserYacc.y"
+#line 326 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (5)].states); 
 				(yyval.states)->AddTags(*(yyvsp[(4) - (5)].tags));
@@ -2021,7 +2022,7 @@ yyreduce:
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 332 "SLParserYacc.y"
+#line 333 "SLParserYacc.y"
     {	
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->alphaToMask = *(yyvsp[(3) - (3)].floatval);
@@ -2033,7 +2034,7 @@ yyreduce:
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 339 "SLParserYacc.y"
+#line 340 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->zTest = *(yyvsp[(3) - (3)].floatval);
@@ -2045,7 +2046,7 @@ yyreduce:
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 346 "SLParserYacc.y"
+#line 347 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states); 
 				(yyval.states)->zTest.SetValue(kFuncLEqual);
@@ -2055,7 +2056,7 @@ yyreduce:
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 351 "SLParserYacc.y"
+#line 352 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states); 
 				(yyval.states)->zTest.SetValue(kFuncDisabled);
@@ -2065,7 +2066,7 @@ yyreduce:
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 356 "SLParserYacc.y"
+#line 357 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->zWrite = *(yyvsp[(3) - (3)].floatval);
@@ -2077,7 +2078,7 @@ yyreduce:
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 363 "SLParserYacc.y"
+#line 364 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->colMask = *(yyvsp[(3) - (3)].floatval);
@@ -2089,7 +2090,7 @@ yyreduce:
   case 44:
 
 /* Line 1455 of yacc.c  */
-#line 370 "SLParserYacc.y"
+#line 371 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->culling = *(yyvsp[(3) - (3)].floatval);
@@ -2101,7 +2102,7 @@ yyreduce:
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 377 "SLParserYacc.y"
+#line 378 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states); 
 				(yyval.states)->culling.SetValue(kCullOff);
@@ -2111,7 +2112,7 @@ yyreduce:
   case 46:
 
 /* Line 1455 of yacc.c  */
-#line 382 "SLParserYacc.y"
+#line 383 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (7)].states);
 
@@ -2130,7 +2131,7 @@ yyreduce:
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 396 "SLParserYacc.y"
+#line 397 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (4)].states); 
 
@@ -2147,7 +2148,7 @@ yyreduce:
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 408 "SLParserYacc.y"
+#line 409 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states); 
 				(yyval.states)->srcBlend.SetValue(kBlendOne); 
@@ -2160,7 +2161,7 @@ yyreduce:
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 416 "SLParserYacc.y"
+#line 417 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (5)].states);
 
@@ -2175,7 +2176,7 @@ yyreduce:
   case 50:
 
 /* Line 1455 of yacc.c  */
-#line 426 "SLParserYacc.y"
+#line 427 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				
@@ -2189,7 +2190,7 @@ yyreduce:
   case 51:
 
 /* Line 1455 of yacc.c  */
-#line 435 "SLParserYacc.y"
+#line 436 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (5)].states);
 
@@ -2207,7 +2208,7 @@ yyreduce:
   case 52:
 
 /* Line 1455 of yacc.c  */
-#line 448 "SLParserYacc.y"
+#line 449 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (5)].states);
 
@@ -2222,7 +2223,7 @@ yyreduce:
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 458 "SLParserYacc.y"
+#line 459 "SLParserYacc.y"
     {
 				g_CurrentProgramCode = (yyvsp[(3) - (3)].strval);
 				g_CurrentProgramType = kHLSL;
@@ -2232,7 +2233,7 @@ yyreduce:
   case 54:
 
 /* Line 1455 of yacc.c  */
-#line 463 "SLParserYacc.y"
+#line 464 "SLParserYacc.y"
     {
 				g_CurrentProgramCode = (yyvsp[(3) - (3)].strval);
 				g_CurrentProgramType = kGLSL;
@@ -2242,7 +2243,7 @@ yyreduce:
   case 55:
 
 /* Line 1455 of yacc.c  */
-#line 468 "SLParserYacc.y"
+#line 469 "SLParserYacc.y"
     {
 				g_CurrentProgramCode = (yyvsp[(3) - (3)].strval);
 				g_CurrentProgramType = kCG;
@@ -2252,7 +2253,7 @@ yyreduce:
   case 56:
 
 /* Line 1455 of yacc.c  */
-#line 475 "SLParserYacc.y"
+#line 476 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat(); 
 				(yyval.floatval)->SetRef((yyvsp[(1) - (1)].strval));
@@ -2264,7 +2265,7 @@ yyreduce:
   case 57:
 
 /* Line 1455 of yacc.c  */
-#line 482 "SLParserYacc.y"
+#line 483 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat();
 				(yyval.floatval)->SetValue((yyvsp[(1) - (1)].enumval));
@@ -2274,7 +2275,7 @@ yyreduce:
   case 58:
 
 /* Line 1455 of yacc.c  */
-#line 489 "SLParserYacc.y"
+#line 490 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat(); 
 				(yyval.floatval)->SetRef((yyvsp[(1) - (1)].strval));
@@ -2286,7 +2287,7 @@ yyreduce:
   case 59:
 
 /* Line 1455 of yacc.c  */
-#line 496 "SLParserYacc.y"
+#line 497 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat(); 
 				(yyval.floatval)->SetValue(1);
@@ -2296,7 +2297,7 @@ yyreduce:
   case 60:
 
 /* Line 1455 of yacc.c  */
-#line 501 "SLParserYacc.y"
+#line 502 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat(); 
 				(yyval.floatval)->SetValue(0);
@@ -2306,7 +2307,7 @@ yyreduce:
   case 61:
 
 /* Line 1455 of yacc.c  */
-#line 508 "SLParserYacc.y"
+#line 509 "SLParserYacc.y"
     {
 				(yyval.tags) = new std::map<std::string, std::string>();
 			;}
@@ -2315,7 +2316,7 @@ yyreduce:
   case 62:
 
 /* Line 1455 of yacc.c  */
-#line 512 "SLParserYacc.y"
+#line 513 "SLParserYacc.y"
     {
 				std::string key((yyvsp[(2) - (4)].strval));
 				std::string value((yyvsp[(4) - (4)].strval));
@@ -2331,7 +2332,7 @@ yyreduce:
   case 63:
 
 /* Line 1455 of yacc.c  */
-#line 523 "SLParserYacc.y"
+#line 524 "SLParserYacc.y"
     {
 				std::string key((yyvsp[(2) - (4)].strval));
 				std::string value((yyvsp[(4) - (4)].strval));
@@ -2347,7 +2348,7 @@ yyreduce:
   case 64:
 
 /* Line 1455 of yacc.c  */
-#line 536 "SLParserYacc.y"
+#line 537 "SLParserYacc.y"
     {
 				PushShaderState(); 
 				(yyval.states) = g_ShaderStateStack.top();
@@ -2357,7 +2358,7 @@ yyreduce:
   case 65:
 
 /* Line 1455 of yacc.c  */
-#line 541 "SLParserYacc.y"
+#line 542 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilRef = *(yyvsp[(3) - (3)].floatval);
@@ -2369,7 +2370,7 @@ yyreduce:
   case 66:
 
 /* Line 1455 of yacc.c  */
-#line 548 "SLParserYacc.y"
+#line 549 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states); 
 				(yyval.states)->stencilReadMask = *(yyvsp[(3) - (3)].floatval);
@@ -2381,7 +2382,7 @@ yyreduce:
   case 67:
 
 /* Line 1455 of yacc.c  */
-#line 555 "SLParserYacc.y"
+#line 556 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilWriteMask = *(yyvsp[(3) - (3)].floatval);
@@ -2393,7 +2394,7 @@ yyreduce:
   case 68:
 
 /* Line 1455 of yacc.c  */
-#line 562 "SLParserYacc.y"
+#line 563 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilOp.comp = *(yyvsp[(3) - (3)].floatval);
@@ -2405,7 +2406,7 @@ yyreduce:
   case 69:
 
 /* Line 1455 of yacc.c  */
-#line 569 "SLParserYacc.y"
+#line 570 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilOp.pass = *(yyvsp[(3) - (3)].floatval);
@@ -2417,7 +2418,7 @@ yyreduce:
   case 70:
 
 /* Line 1455 of yacc.c  */
-#line 576 "SLParserYacc.y"
+#line 577 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilOp.fail = *(yyvsp[(3) - (3)].floatval);
@@ -2429,7 +2430,7 @@ yyreduce:
   case 71:
 
 /* Line 1455 of yacc.c  */
-#line 583 "SLParserYacc.y"
+#line 584 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilOp.zFail = *(yyvsp[(3) - (3)].floatval);
@@ -2441,7 +2442,7 @@ yyreduce:
   case 72:
 
 /* Line 1455 of yacc.c  */
-#line 590 "SLParserYacc.y"
+#line 591 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilOpFront.comp = *(yyvsp[(3) - (3)].floatval);
@@ -2453,7 +2454,7 @@ yyreduce:
   case 73:
 
 /* Line 1455 of yacc.c  */
-#line 597 "SLParserYacc.y"
+#line 598 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilOpFront.pass = *(yyvsp[(3) - (3)].floatval);
@@ -2465,7 +2466,7 @@ yyreduce:
   case 74:
 
 /* Line 1455 of yacc.c  */
-#line 604 "SLParserYacc.y"
+#line 605 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilOpFront.fail = *(yyvsp[(3) - (3)].floatval);
@@ -2477,7 +2478,7 @@ yyreduce:
   case 75:
 
 /* Line 1455 of yacc.c  */
-#line 611 "SLParserYacc.y"
+#line 612 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilOpFront.zFail = *(yyvsp[(3) - (3)].floatval);
@@ -2489,7 +2490,7 @@ yyreduce:
   case 76:
 
 /* Line 1455 of yacc.c  */
-#line 618 "SLParserYacc.y"
+#line 619 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilOpBack.comp = *(yyvsp[(3) - (3)].floatval);
@@ -2501,7 +2502,7 @@ yyreduce:
   case 77:
 
 /* Line 1455 of yacc.c  */
-#line 625 "SLParserYacc.y"
+#line 626 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilOpBack.pass = *(yyvsp[(3) - (3)].floatval);
@@ -2513,7 +2514,7 @@ yyreduce:
   case 78:
 
 /* Line 1455 of yacc.c  */
-#line 632 "SLParserYacc.y"
+#line 633 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilOpBack.fail = *(yyvsp[(3) - (3)].floatval);
@@ -2525,7 +2526,7 @@ yyreduce:
   case 79:
 
 /* Line 1455 of yacc.c  */
-#line 639 "SLParserYacc.y"
+#line 640 "SLParserYacc.y"
     {
 				(yyval.states) = (yyvsp[(1) - (3)].states);
 				(yyval.states)->stencilOpBack.zFail = *(yyvsp[(3) - (3)].floatval);
@@ -2537,7 +2538,7 @@ yyreduce:
   case 80:
 
 /* Line 1455 of yacc.c  */
-#line 648 "SLParserYacc.y"
+#line 649 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat(); 
 				(yyval.floatval)->SetRef((yyvsp[(1) - (1)].strval));
@@ -2549,7 +2550,7 @@ yyreduce:
   case 81:
 
 /* Line 1455 of yacc.c  */
-#line 655 "SLParserYacc.y"
+#line 656 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat();
 				(yyval.floatval)->SetValue ((yyvsp[(1) - (1)].enumval));
@@ -2559,7 +2560,7 @@ yyreduce:
   case 82:
 
 /* Line 1455 of yacc.c  */
-#line 662 "SLParserYacc.y"
+#line 663 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat(); 
 				(yyval.floatval)->SetValue((yyvsp[(1) - (1)].number));
@@ -2569,7 +2570,7 @@ yyreduce:
   case 83:
 
 /* Line 1455 of yacc.c  */
-#line 667 "SLParserYacc.y"
+#line 668 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat();
 				(yyval.floatval)->SetRef((yyvsp[(1) - (1)].strval));
@@ -2581,7 +2582,7 @@ yyreduce:
   case 84:
 
 /* Line 1455 of yacc.c  */
-#line 676 "SLParserYacc.y"
+#line 677 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat(); 
 				(yyval.floatval)->SetRef((yyvsp[(1) - (1)].strval));
@@ -2593,7 +2594,7 @@ yyreduce:
   case 85:
 
 /* Line 1455 of yacc.c  */
-#line 683 "SLParserYacc.y"
+#line 684 "SLParserYacc.y"
     { 
 				(yyval.floatval) = new SLFloat(); 
 				(yyval.floatval)->SetValue((yyvsp[(1) - (1)].enumval));
@@ -2603,7 +2604,7 @@ yyreduce:
   case 86:
 
 /* Line 1455 of yacc.c  */
-#line 690 "SLParserYacc.y"
+#line 691 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat();
 				(yyval.floatval)->SetRef((yyvsp[(1) - (1)].strval));
@@ -2615,7 +2616,7 @@ yyreduce:
   case 87:
 
 /* Line 1455 of yacc.c  */
-#line 697 "SLParserYacc.y"
+#line 698 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat();
 				(yyval.floatval)->SetValue((yyvsp[(1) - (1)].enumval));
@@ -2625,7 +2626,7 @@ yyreduce:
   case 88:
 
 /* Line 1455 of yacc.c  */
-#line 704 "SLParserYacc.y"
+#line 705 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat();
 				(yyval.floatval)->SetRef((yyvsp[(1) - (1)].strval));
@@ -2637,7 +2638,7 @@ yyreduce:
   case 89:
 
 /* Line 1455 of yacc.c  */
-#line 711 "SLParserYacc.y"
+#line 712 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat();
 				(yyval.floatval)->SetValue((yyvsp[(1) - (1)].enumval));
@@ -2647,7 +2648,7 @@ yyreduce:
   case 90:
 
 /* Line 1455 of yacc.c  */
-#line 716 "SLParserYacc.y"
+#line 717 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat();
 				(yyval.floatval)->SetValue(0);
@@ -2657,7 +2658,7 @@ yyreduce:
   case 91:
 
 /* Line 1455 of yacc.c  */
-#line 723 "SLParserYacc.y"
+#line 724 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat();
 				(yyval.floatval)->SetRef((yyvsp[(1) - (1)].strval));
@@ -2669,7 +2670,7 @@ yyreduce:
   case 92:
 
 /* Line 1455 of yacc.c  */
-#line 730 "SLParserYacc.y"
+#line 731 "SLParserYacc.y"
     {
 				(yyval.floatval) = new SLFloat();
 				(yyval.floatval)->SetValue((yyvsp[(1) - (1)].enumval));
@@ -2679,7 +2680,7 @@ yyreduce:
 
 
 /* Line 1455 of yacc.c  */
-#line 2683 "SLParserYacc.cpp"
+#line 2684 "SLParserYacc.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2891,10 +2892,10 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 736 "SLParserYacc.y"
+#line 737 "SLParserYacc.y"
 
 
-int shaderlaberror(const char *s)
+int32 shaderlaberror(const char *s)
 {
     printf("shaderlaberror line %d %s\n", yylineno, s);
 	return 0;

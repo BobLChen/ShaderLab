@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.8.0)
 
 project(ShaderCross)
 
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DNOMINMAX=1")
+
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(ALL_LIBS
@@ -14,6 +15,7 @@ include_directories(
 )
 
 add_subdirectory(ShaderLab)
+add_subdirectory(ThirdParty)
 
 MACRO(SETUP_SAMPLE_START EXE_NAME)
 	UNSET(SOURCE_FILES)

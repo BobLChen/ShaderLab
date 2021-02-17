@@ -105,7 +105,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1676 of yacc.c  */
-#line 36 "SLParserYacc.y"
+#line 37 "SLParserYacc.y"
 
 	SLVector4*							vector4;
 	SLFloat*							floatval;
@@ -116,7 +116,7 @@ typedef union YYSTYPE
 	SLSubShader*						subshader;
 	const char*							strval;
 	float								number;
-	int									enumval;
+	int32									enumval;
 	std::vector<std::string>*			strings;
 	std::map<std::string, std::string>* tags;
 	std::vector<SLPassBase*>*			passes;

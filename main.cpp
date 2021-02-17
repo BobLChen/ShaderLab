@@ -1,7 +1,9 @@
 ﻿#include <stdio.h>
 #include <string>
 
-#include "SLParser.h"
+#include "Parser/SLParser.h"
+#include "Compiler/SLCompiler.h"
+#include "Compiler/HLSLCompiler.h"
 
 bool ReadTextFile(const std::string &filename, std::string &output)
 {
@@ -27,14 +29,28 @@ bool ReadTextFile(const std::string &filename, std::string &output)
 
 int main(int argc, char const *argv[])
 {
-    std::string data;
+    /*std::string data;
     ReadTextFile("CGSourceShader.shader", data);
-	
 	shaderlab::SLShader* shader = ParseShaderLab(data.c_str(), data.size());
+	delete shader;*/
+
+	shaderlab::SLCompiler::Init();
+
+	std::string data0;
+	ReadTextFile("CalcLight.hlsl", data0);
+
+	shaderlab::ShaderSnippet snippet;
+	snippet.fileName = "CalcLight.hlsl";
+	snippet.source = data0.data();
+	snippet.sourceLength = data0.size();
+	snippet.entryPoint = "main";
+	snippet.shaderModel.majorVer = 6;
+	snippet.shaderModel.minorVer = 0;
+	snippet.shaderTarget = shaderlab::ShaderTarget::kShaderTargetGLES20;
+	snippet.stage = shaderlab::ShaderStage::kProgramFragment;
+	shaderlab::HLSLCompiler::Compile(snippet);
 
     printf("Done\n");
-
-    delete shader;
 
     return 0;
 }

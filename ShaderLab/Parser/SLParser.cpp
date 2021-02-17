@@ -32,7 +32,7 @@ void SetDefaultShaderState(SLShaderState& base)
 	base.stencilOpBack = base.stencilOp;
 }
 
-SLShader* ParseShaderLab(const char* data, size_t size)
+SLShader* ParseShaderLab(const char* data, int32 size)
 {
 	if (data == nullptr || size < 3)
 	{

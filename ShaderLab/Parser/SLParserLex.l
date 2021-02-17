@@ -9,9 +9,10 @@
 #include <vector>
 #include <string>
 
+#include "Common/Common.h"
 #include "SLParserTypes.h"
 
-int shaderlaberror(const char *s);
+int32 shaderlaberror(const char *s);
 
 namespace shaderlab
 {
@@ -32,7 +33,7 @@ using namespace shaderlab;
 #define yylex shaderlablex
 #include "SLParserYacc.hpp"
 
-static int yyinput();
+static int32 yyinput();
 
 bool ParseAndEatLine(std::string &outstring);
 
@@ -40,7 +41,7 @@ static char* CreateBracketString(const char* src);
 
 static char* CreateNormalString(const char* src);
 
-inline int GetYYLineno() 
+inline int32 GetYYLineno() 
 {
 	return yylineno;
 }
@@ -714,8 +715,8 @@ fallback				{
 								}
 
 "/*"        					{
-									int c;
-									int depth = 1;
+									int32 c;
+									int32 depth = 1;
 									while (true) 
 									{
 										while ((c = yyinput()) != '*' && c != '/' && c != EOF && c != '\0') 
@@ -774,7 +775,7 @@ fallback				{
 
 %%
 
-inline bool IsEndChar(int c) 
+inline bool IsEndChar(int32 c) 
 {
 	if (c == EOF || c == '\0' || c == '\r' || c == '\n') 
 	{
@@ -785,7 +786,7 @@ inline bool IsEndChar(int c)
 	}
 }
 
-void InitLex(const char *data, size_t dataSize) 
+void InitLex(const char *data, int32 dataSize) 
 {
 	g_LexTempString.reserve(64 * 1024);
 	YY_BUFFER_STATE b = yy_scan_bytes(data, dataSize);
@@ -801,7 +802,7 @@ void FreeLex()
 
 bool ParseAndEatLine(std::string &outstring)
 {
-	int c = 0;
+	int32 c = 0;
 	while ((c = yyinput()) && (c==' ' || c=='\t')) 
 	{
         ;
@@ -826,7 +827,7 @@ bool ParseAndEatLine(std::string &outstring)
 
 static char* CreateBracketString(const char *src) 
 {
-	int size = strlen(src);
+	int32 size = strlen(src);
 	char *buffer = new char[size - 1];
 	memcpy(buffer, src + 1, size - 2);
 	buffer[size - 2] = '\0';
@@ -835,7 +836,7 @@ static char* CreateBracketString(const char *src)
 
 static char* CreateNormalString(const char *src) 
 {
-	int size = strlen(src) + 1;
+	int32 size = strlen(src) + 1;
 	char *buffer = new char[size];
 	memcpy(buffer, src, size);
 	buffer[size - 1] = '\0';

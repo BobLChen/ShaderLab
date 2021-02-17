@@ -4,6 +4,7 @@
 #include <string>
 #include <map>
 
+#include "Common/Common.h"
 #include "SLParserTypes.h"
 
 namespace shaderlab
@@ -37,8 +38,8 @@ namespace shaderlab
 			this->ref = ref;
 		}
 
-		float       val;
-		std::string ref;
+		float			val;
+		std::string		ref;
 	};
 
 	struct SLVector4 
@@ -91,11 +92,11 @@ namespace shaderlab
 			return !(*this == rhs);
 		}
 
-		float		x;
-		float		y;
-		float		z;
-		float		w;
-		std::string ref;
+		float			x;
+		float			y;
+		float			z;
+		float			w;
+		std::string		ref;
 	};
 
 	struct SLStencilOperation 
@@ -110,10 +111,10 @@ namespace shaderlab
 			return !(*this == rhs);
 		}
 
-		SLFloat		comp;
-		SLFloat		pass;
-		SLFloat		fail;
-		SLFloat		zFail;
+		SLFloat			comp;
+		SLFloat			pass;
+		SLFloat			fail;
+		SLFloat			zFail;
 	};
 
 	struct SLPropTexture
@@ -218,7 +219,7 @@ namespace shaderlab
 				return false;
 			}
 
-			for (std::size_t i = 0; i < props.size(); ++i) 
+			for (int32 i = 0; i < props.size(); ++i) 
 			{
 				if (props[i] != rhs.props[i]) 
 				{
@@ -325,7 +326,7 @@ namespace shaderlab
 			tags.insert(tagsMap.begin(), tagsMap.end());
 		}
 
-		int									lod;
+		int32								lod;
 		std::string							name;
 		std::map<std::string, std::string>	tags;
 
@@ -369,7 +370,7 @@ namespace shaderlab
 
 		}
 
-		PassType	type;
+		PassType		type;
 	};
 
 	struct SLProgram
@@ -390,8 +391,8 @@ namespace shaderlab
 			return !(*this == rhs);
 		}
 
-		ProgramType    type;
-		std::string	   source;
+		ProgramType		type;
+		std::string		source;
 	};
 
 	struct SLNormalPass : public SLPassBase 
@@ -478,7 +479,7 @@ namespace shaderlab
 				return false;
 			}
 
-			for (std::size_t i = 0; i < passes.size(); ++i) 
+			for (int32 i = 0; i < passes.size(); ++i) 
 			{
 				SLPassBase* lp = passes[i];
 				SLPassBase* rp = rhs.passes[i];
@@ -516,7 +517,7 @@ namespace shaderlab
 			return !(*this == rhs);
 		}
 
-		int									lod;
+		int32								lod;
 		std::map<std::string, std::string> 	tags;
 		std::vector<SLPassBase*>			passes;
 	};

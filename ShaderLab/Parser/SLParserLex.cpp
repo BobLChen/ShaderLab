@@ -989,9 +989,10 @@ char *yytext;
 #include <vector>
 #include <string>
 
+#include "Common/Common.h"
 #include "SLParserTypes.h"
 
-int shaderlaberror(const char *s);
+int32 shaderlaberror(const char *s);
 
 namespace shaderlab
 {
@@ -1012,7 +1013,7 @@ using namespace shaderlab;
 #define yylex shaderlablex
 #include "SLParserYacc.hpp"
 
-static int yyinput();
+static int32 yyinput();
 
 bool ParseAndEatLine(std::string &outstring);
 
@@ -1020,7 +1021,7 @@ static char* CreateBracketString(const char* src);
 
 static char* CreateNormalString(const char* src);
 
-inline int GetYYLineno() 
+inline int32 GetYYLineno() 
 {
 	return yylineno;
 }
@@ -1031,7 +1032,7 @@ static std::string g_LexTempString;
 
 
 
-#line 1035 "SLParserLex.cpp"
+#line 1036 "SLParserLex.cpp"
 
 #define INITIAL 0
 #define STATE_STENIL 1
@@ -1209,10 +1210,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 64 "SLParserLex.l"
+#line 65 "SLParserLex.l"
 
 
-#line 1216 "SLParserLex.cpp"
+#line 1217 "SLParserLex.cpp"
 
 	if ( !(yy_init) )
 		{
@@ -1293,56 +1294,56 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 66 "SLParserLex.l"
+#line 67 "SLParserLex.l"
 { 	
 							return TOKEN_SHADER; 
 						}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 70 "SLParserLex.l"
+#line 71 "SLParserLex.l"
 { 	
 							return TOKEN_TAGS; 
 						}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 74 "SLParserLex.l"
+#line 75 "SLParserLex.l"
 { 	
 							return TOKEN_LOD; 
 						}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 78 "SLParserLex.l"
+#line 79 "SLParserLex.l"
 { 	
 							return TOKEN_CATEGORY; 
 						}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 82 "SLParserLex.l"
+#line 83 "SLParserLex.l"
 { 	
 							return TOKEN_SUBSHADER; 
 						}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 86 "SLParserLex.l"
+#line 87 "SLParserLex.l"
 { 	
 							return TOKEN_PROPERTIES; 
 						}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 90 "SLParserLex.l"
+#line 91 "SLParserLex.l"
 {
 							return TOKEN_RANGE; 
 						}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 94 "SLParserLex.l"
+#line 95 "SLParserLex.l"
 {
 							shaderlablval.enumval = kTexDim2D;
 							return VAL_TEX_DIM;
@@ -1350,7 +1351,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 99 "SLParserLex.l"
+#line 100 "SLParserLex.l"
 {
 							shaderlablval.enumval = kTexDim3D;
 							return VAL_TEX_DIM;
@@ -1358,7 +1359,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 104 "SLParserLex.l"
+#line 105 "SLParserLex.l"
 {
 							shaderlablval.enumval = kTexDimCUBE;
 							return VAL_TEX_DIM;
@@ -1366,70 +1367,70 @@ YY_RULE_SETUP
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 109 "SLParserLex.l"
+#line 110 "SLParserLex.l"
 {	
 							return TOKEN_COLOR; 
 						}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 113 "SLParserLex.l"
+#line 114 "SLParserLex.l"
 {
 							return TOKEN_FLOAT; 
 						}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 117 "SLParserLex.l"
+#line 118 "SLParserLex.l"
 { 	
 							return TOKEN_VECTOR; 
 						}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 121 "SLParserLex.l"
+#line 122 "SLParserLex.l"
 { 	
 							return TOKEN_FLOAT; 
 						}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 125 "SLParserLex.l"
+#line 126 "SLParserLex.l"
 { 	
 							return TOKEN_TRUE; 
 						}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 129 "SLParserLex.l"
+#line 130 "SLParserLex.l"
 {	
 							return TOKEN_FALSE; 
 						}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 133 "SLParserLex.l"
+#line 134 "SLParserLex.l"
 {	
 							return TOKEN_OFFSET; 
 						}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 137 "SLParserLex.l"
+#line 138 "SLParserLex.l"
 {	
 							return TOKEN_NAME; 
 						}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 141 "SLParserLex.l"
+#line 142 "SLParserLex.l"
 { 	
 							return TOKEN_ZWRITE; 
 						}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 145 "SLParserLex.l"
+#line 146 "SLParserLex.l"
 {
 							BEGIN(STATE_ZTEST); 
 							return TOKEN_ZTEST; 
@@ -1438,7 +1439,7 @@ YY_RULE_SETUP
 
 case 21:
 YY_RULE_SETUP
-#line 151 "SLParserLex.l"
+#line 152 "SLParserLex.l"
 {
 							BEGIN(INITIAL);
 							shaderlablval.enumval = kFuncNever;
@@ -1447,7 +1448,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 156 "SLParserLex.l"
+#line 157 "SLParserLex.l"
 {
 							BEGIN(INITIAL);
 							shaderlablval.enumval = kFuncLess;
@@ -1456,7 +1457,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 161 "SLParserLex.l"
+#line 162 "SLParserLex.l"
 {
 							BEGIN(INITIAL); 
 							shaderlablval.enumval = kFuncGreater;
@@ -1465,7 +1466,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 166 "SLParserLex.l"
+#line 167 "SLParserLex.l"
 {
 							BEGIN(INITIAL); 
 							shaderlablval.enumval = kFuncLEqual;
@@ -1474,7 +1475,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 171 "SLParserLex.l"
+#line 172 "SLParserLex.l"
 {
 							BEGIN(INITIAL); 
 							shaderlablval.enumval = kFuncGEqual;
@@ -1483,7 +1484,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 176 "SLParserLex.l"
+#line 177 "SLParserLex.l"
 {
 							BEGIN(INITIAL); 
 							shaderlablval.enumval = kFuncEqual;
@@ -1492,7 +1493,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 181 "SLParserLex.l"
+#line 182 "SLParserLex.l"
 {
 							BEGIN(INITIAL); 
 							shaderlablval.enumval = kFuncNotEqual;
@@ -1501,7 +1502,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 186 "SLParserLex.l"
+#line 187 "SLParserLex.l"
 {
 							BEGIN(INITIAL); 
 							shaderlablval.enumval = kFuncAlways;
@@ -1511,7 +1512,7 @@ YY_RULE_SETUP
 
 case 29:
 YY_RULE_SETUP
-#line 193 "SLParserLex.l"
+#line 194 "SLParserLex.l"
 {	
 							BEGIN(STATE_STENIL);
 							return TOKEN_STENCIL;
@@ -1520,56 +1521,56 @@ YY_RULE_SETUP
 
 case 30:
 YY_RULE_SETUP
-#line 199 "SLParserLex.l"
+#line 200 "SLParserLex.l"
 {
 							return TOKEN_REF; 
 						}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 202 "SLParserLex.l"
+#line 203 "SLParserLex.l"
 {
 							return TOKEN_READ_MASK; 
 						}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 205 "SLParserLex.l"
+#line 206 "SLParserLex.l"
 {
 							return TOKEN_WRITE_MASK; 
 						}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 208 "SLParserLex.l"
+#line 209 "SLParserLex.l"
 {
 							return TOKEN_COMP; 
 						}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 211 "SLParserLex.l"
+#line 212 "SLParserLex.l"
 {
 							return TOKEN_OP_PASS; 
 						}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 214 "SLParserLex.l"
+#line 215 "SLParserLex.l"
 {
 							return TOKEN_OP_FAIL; 
 						}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 217 "SLParserLex.l"
+#line 218 "SLParserLex.l"
 {
 							return TOKEN_OP_ZFAIL; 
 						}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 220 "SLParserLex.l"
+#line 221 "SLParserLex.l"
 {
 							shaderlablval.enumval = kFuncGreater;
 							return VAL_COMPARE_MODE;
@@ -1577,7 +1578,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 224 "SLParserLex.l"
+#line 225 "SLParserLex.l"
 {
 							shaderlablval.enumval = kFuncGEqual;
 							return VAL_COMPARE_MODE;
@@ -1585,7 +1586,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 228 "SLParserLex.l"
+#line 229 "SLParserLex.l"
 {
 							shaderlablval.enumval = kFuncLess;
 							return VAL_COMPARE_MODE;
@@ -1593,7 +1594,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 232 "SLParserLex.l"
+#line 233 "SLParserLex.l"
 {
 							shaderlablval.enumval = kFuncLEqual;
 							return VAL_COMPARE_MODE;
@@ -1601,7 +1602,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 236 "SLParserLex.l"
+#line 237 "SLParserLex.l"
 {
 							shaderlablval.enumval = kFuncEqual;
 							return VAL_COMPARE_MODE;
@@ -1609,7 +1610,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 240 "SLParserLex.l"
+#line 241 "SLParserLex.l"
 { 
 							shaderlablval.enumval = kFuncNotEqual;
 							return VAL_COMPARE_MODE;
@@ -1617,7 +1618,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 244 "SLParserLex.l"
+#line 245 "SLParserLex.l"
 { 
 							shaderlablval.enumval = kFuncAlways;
 							return VAL_COMPARE_MODE;
@@ -1625,7 +1626,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 248 "SLParserLex.l"
+#line 249 "SLParserLex.l"
 {
 							shaderlablval.enumval = kFuncNever;
 							return VAL_COMPARE_MODE;
@@ -1633,7 +1634,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 252 "SLParserLex.l"
+#line 253 "SLParserLex.l"
 {
 							shaderlablval.enumval = kStencilOpKeep;
 							return VAL_STENCIL_ACTION;
@@ -1641,7 +1642,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 256 "SLParserLex.l"
+#line 257 "SLParserLex.l"
 { 
 							shaderlablval.enumval = kStencilOpZero;
 							return VAL_STENCIL_ACTION;
@@ -1649,7 +1650,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 260 "SLParserLex.l"
+#line 261 "SLParserLex.l"
 { 
 							shaderlablval.enumval = kStencilOpReplace;
 							return VAL_STENCIL_ACTION;
@@ -1657,7 +1658,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 264 "SLParserLex.l"
+#line 265 "SLParserLex.l"
 {
 							shaderlablval.enumval = kStencilOpIncrSat;
 							return VAL_STENCIL_ACTION;
@@ -1665,7 +1666,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 268 "SLParserLex.l"
+#line 269 "SLParserLex.l"
 {
 							shaderlablval.enumval = kStencilOpDecrSat;
 							return VAL_STENCIL_ACTION;
@@ -1673,7 +1674,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 272 "SLParserLex.l"
+#line 273 "SLParserLex.l"
 {
 							shaderlablval.enumval = kStencilOpInvert;
 							return VAL_STENCIL_ACTION;
@@ -1681,7 +1682,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 276 "SLParserLex.l"
+#line 277 "SLParserLex.l"
 {
 							shaderlablval.enumval = kStencilOpIncrWrap;
 							return VAL_STENCIL_ACTION;
@@ -1689,7 +1690,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 280 "SLParserLex.l"
+#line 281 "SLParserLex.l"
 {
 							shaderlablval.enumval = kStencilOpDecrWrap;
 							return VAL_STENCIL_ACTION;
@@ -1697,63 +1698,63 @@ YY_RULE_SETUP
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 284 "SLParserLex.l"
+#line 285 "SLParserLex.l"
 {
 							return TOKEN_COMP_FRONT;
 						}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 287 "SLParserLex.l"
+#line 288 "SLParserLex.l"
 {
 							return TOKEN_COMP_BACK; 
 						}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 290 "SLParserLex.l"
+#line 291 "SLParserLex.l"
 {
 							return TOKEN_OP_PASS_FRONT; 
 						}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 293 "SLParserLex.l"
+#line 294 "SLParserLex.l"
 {
 							return TOKEN_OP_FAIL_FRONT; 
 						}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 296 "SLParserLex.l"
+#line 297 "SLParserLex.l"
 {
 							return TOKEN_OP_ZFAIL_FRONT; 
 						}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 299 "SLParserLex.l"
+#line 300 "SLParserLex.l"
 {
 							return TOKEN_OP_PASS_BACK; 
 						}
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 302 "SLParserLex.l"
+#line 303 "SLParserLex.l"
 {
 							return TOKEN_OP_FAIL_BACK; 
 						}
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 305 "SLParserLex.l"
+#line 306 "SLParserLex.l"
 {
 							return TOKEN_OP_ZFAIL_BACK; 
 						}
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 308 "SLParserLex.l"
+#line 309 "SLParserLex.l"
 {
 							BEGIN(INITIAL);
 							return '}';
@@ -1762,7 +1763,7 @@ YY_RULE_SETUP
 
 case 62:
 YY_RULE_SETUP
-#line 314 "SLParserLex.l"
+#line 315 "SLParserLex.l"
 {
 							BEGIN(STATE_COLMASK); 
 							shaderlablval.enumval = 0;
@@ -1771,7 +1772,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
-#line 320 "SLParserLex.l"
+#line 321 "SLParserLex.l"
 {
 							BEGIN(INITIAL);
 							shaderlablval.enumval = 0;
@@ -1804,21 +1805,21 @@ YY_RULE_SETUP
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
-#line 350 "SLParserLex.l"
+#line 351 "SLParserLex.l"
 { 	
 							return TOKEN_ALPHA_TO_MASK; 
 						}
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
-#line 354 "SLParserLex.l"
+#line 355 "SLParserLex.l"
 { 	
 							return TOKEN_CULL; 
 						}
 	YY_BREAK
 case 66:
 YY_RULE_SETUP
-#line 358 "SLParserLex.l"
+#line 359 "SLParserLex.l"
 { 
 							shaderlablval.enumval = kCullFront;
 							return VAL_TRIANGLE_FACE;
@@ -1826,7 +1827,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 67:
 YY_RULE_SETUP
-#line 363 "SLParserLex.l"
+#line 364 "SLParserLex.l"
 {
 							shaderlablval.enumval = kCullBack;
 							return VAL_TRIANGLE_FACE;
@@ -1834,7 +1835,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 68:
 YY_RULE_SETUP
-#line 368 "SLParserLex.l"
+#line 369 "SLParserLex.l"
 {
 							shaderlablval.enumval = kCullFrontAndBack;
 							return VAL_TRIANGLE_FACE;
@@ -1842,14 +1843,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 69:
 YY_RULE_SETUP
-#line 373 "SLParserLex.l"
+#line 374 "SLParserLex.l"
 {
 							return TOKEN_BLEND;
 						}
 	YY_BREAK
 case 70:
 YY_RULE_SETUP
-#line 377 "SLParserLex.l"
+#line 378 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendZero;
 							return VAL_BLEND_FACTOR;
@@ -1857,7 +1858,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 71:
 YY_RULE_SETUP
-#line 382 "SLParserLex.l"
+#line 383 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOne;
 							return VAL_BLEND_FACTOR;
@@ -1865,7 +1866,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 72:
 YY_RULE_SETUP
-#line 387 "SLParserLex.l"
+#line 388 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendSrcColor;
 							return VAL_BLEND_FACTOR;
@@ -1873,7 +1874,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 73:
 YY_RULE_SETUP
-#line 392 "SLParserLex.l"
+#line 393 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendSrcAlpha;
 							return VAL_BLEND_FACTOR;
@@ -1881,7 +1882,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 74:
 YY_RULE_SETUP
-#line 397 "SLParserLex.l"
+#line 398 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendDstColor;
 							return VAL_BLEND_FACTOR;
@@ -1889,7 +1890,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 75:
 YY_RULE_SETUP
-#line 402 "SLParserLex.l"
+#line 403 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendDstAlpha;
 							return VAL_BLEND_FACTOR;
@@ -1897,7 +1898,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 76:
 YY_RULE_SETUP
-#line 407 "SLParserLex.l"
+#line 408 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOneMinusSrcColor;
 							return VAL_BLEND_FACTOR;
@@ -1905,7 +1906,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 77:
 YY_RULE_SETUP
-#line 412 "SLParserLex.l"
+#line 413 "SLParserLex.l"
 {	
 							shaderlablval.enumval = kBlendOneMinusSrcAlpha;
 							return VAL_BLEND_FACTOR;
@@ -1913,7 +1914,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 78:
 YY_RULE_SETUP
-#line 417 "SLParserLex.l"
+#line 418 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOneMinusDstColor;
 							return VAL_BLEND_FACTOR;
@@ -1921,7 +1922,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 79:
 YY_RULE_SETUP
-#line 422 "SLParserLex.l"
+#line 423 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOneMinusDstAlpha;
 							return VAL_BLEND_FACTOR;
@@ -1929,7 +1930,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 80:
 YY_RULE_SETUP
-#line 427 "SLParserLex.l"
+#line 428 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendSrcAlphaSaturate;
 							return VAL_BLEND_FACTOR;
@@ -1937,14 +1938,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 81:
 YY_RULE_SETUP
-#line 432 "SLParserLex.l"
+#line 433 "SLParserLex.l"
 {
 							return TOKEN_BLEND_OP;
 						}
 	YY_BREAK
 case 82:
 YY_RULE_SETUP
-#line 436 "SLParserLex.l"
+#line 437 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpAdd;
 							return VAL_BLEND_OP_MODE;
@@ -1952,7 +1953,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 83:
 YY_RULE_SETUP
-#line 441 "SLParserLex.l"
+#line 442 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpSub;
 							return VAL_BLEND_OP_MODE;
@@ -1960,7 +1961,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 84:
 YY_RULE_SETUP
-#line 446 "SLParserLex.l"
+#line 447 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpRevSub;
 							return VAL_BLEND_OP_MODE;
@@ -1968,7 +1969,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 85:
 YY_RULE_SETUP
-#line 451 "SLParserLex.l"
+#line 452 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpMin;
 							return VAL_BLEND_OP_MODE;
@@ -1976,7 +1977,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 86:
 YY_RULE_SETUP
-#line 456 "SLParserLex.l"
+#line 457 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpMax;
 							return VAL_BLEND_OP_MODE;
@@ -1984,7 +1985,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 87:
 YY_RULE_SETUP
-#line 461 "SLParserLex.l"
+#line 462 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalClear;
 							return VAL_BLEND_OP_MODE;
@@ -1992,7 +1993,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 88:
 YY_RULE_SETUP
-#line 466 "SLParserLex.l"
+#line 467 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalSet;
 							return VAL_BLEND_OP_MODE;
@@ -2000,7 +2001,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 89:
 YY_RULE_SETUP
-#line 471 "SLParserLex.l"
+#line 472 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalCopy;
 							return VAL_BLEND_OP_MODE;
@@ -2008,7 +2009,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 90:
 YY_RULE_SETUP
-#line 476 "SLParserLex.l"
+#line 477 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalCopyInverted;
 							return VAL_BLEND_OP_MODE;
@@ -2016,7 +2017,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 91:
 YY_RULE_SETUP
-#line 481 "SLParserLex.l"
+#line 482 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalNoop;
 							return VAL_BLEND_OP_MODE;
@@ -2024,7 +2025,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 92:
 YY_RULE_SETUP
-#line 486 "SLParserLex.l"
+#line 487 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalInvert;
 							return VAL_BLEND_OP_MODE;
@@ -2032,7 +2033,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 93:
 YY_RULE_SETUP
-#line 491 "SLParserLex.l"
+#line 492 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalAnd;
 							return VAL_BLEND_OP_MODE;
@@ -2040,7 +2041,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 94:
 YY_RULE_SETUP
-#line 496 "SLParserLex.l"
+#line 497 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalNand;
 							return VAL_BLEND_OP_MODE;
@@ -2048,7 +2049,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 95:
 YY_RULE_SETUP
-#line 501 "SLParserLex.l"
+#line 502 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalOr;
 							return VAL_BLEND_OP_MODE;
@@ -2056,7 +2057,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 96:
 YY_RULE_SETUP
-#line 506 "SLParserLex.l"
+#line 507 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalNor;
 							return VAL_BLEND_OP_MODE;
@@ -2064,7 +2065,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 97:
 YY_RULE_SETUP
-#line 511 "SLParserLex.l"
+#line 512 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalXor;
 							return VAL_BLEND_OP_MODE;
@@ -2072,7 +2073,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 98:
 YY_RULE_SETUP
-#line 516 "SLParserLex.l"
+#line 517 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalEquiv;
 							return VAL_BLEND_OP_MODE;
@@ -2080,7 +2081,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 99:
 YY_RULE_SETUP
-#line 521 "SLParserLex.l"
+#line 522 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalAndReverse;
 							return VAL_BLEND_OP_MODE;
@@ -2088,7 +2089,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 100:
 YY_RULE_SETUP
-#line 526 "SLParserLex.l"
+#line 527 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalAndInverted;
 							return VAL_BLEND_OP_MODE;
@@ -2096,7 +2097,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 101:
 YY_RULE_SETUP
-#line 531 "SLParserLex.l"
+#line 532 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalOrReverse;
 							return VAL_BLEND_OP_MODE;
@@ -2104,7 +2105,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 102:
 YY_RULE_SETUP
-#line 536 "SLParserLex.l"
+#line 537 "SLParserLex.l"
 {
 							shaderlablval.enumval = kBlendOpLogicalOrInverted;
 							return VAL_BLEND_OP_MODE;
@@ -2112,7 +2113,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 103:
 YY_RULE_SETUP
-#line 541 "SLParserLex.l"
+#line 542 "SLParserLex.l"
 {
 							BEGIN(INITIAL);
 							return TOKEN_PASS;
@@ -2120,7 +2121,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 104:
 YY_RULE_SETUP
-#line 546 "SLParserLex.l"
+#line 547 "SLParserLex.l"
 {
 							BEGIN(INITIAL);
 							return TOKEN_USEPASS;
@@ -2128,7 +2129,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 105:
 YY_RULE_SETUP
-#line 551 "SLParserLex.l"
+#line 552 "SLParserLex.l"
 {
 							g_LexTempString.clear();
 							BEGIN(STATE_PROGRAM);
@@ -2137,7 +2138,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 106:
 YY_RULE_SETUP
-#line 557 "SLParserLex.l"
+#line 558 "SLParserLex.l"
 {
 							g_LexTempString.clear();
 							BEGIN(STATE_PROGRAM);
@@ -2146,7 +2147,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 107:
 YY_RULE_SETUP
-#line 563 "SLParserLex.l"
+#line 564 "SLParserLex.l"
 {
 							g_LexTempString.clear();
 							BEGIN(STATE_PROGRAM);
@@ -2156,7 +2157,7 @@ YY_RULE_SETUP
 
 case 108:
 YY_RULE_SETUP
-#line 571 "SLParserLex.l"
+#line 572 "SLParserLex.l"
 {
 							BEGIN(INITIAL);
 							shaderlablval.strval = g_LexTempString.c_str();
@@ -2165,7 +2166,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 109:
 YY_RULE_SETUP
-#line 577 "SLParserLex.l"
+#line 578 "SLParserLex.l"
 {
 							char* temp = yytext;
 							while (*temp)
@@ -2177,7 +2178,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 110:
 YY_RULE_SETUP
-#line 586 "SLParserLex.l"
+#line 587 "SLParserLex.l"
 {
 							char* temp = yytext;
 							while (*temp)
@@ -2190,7 +2191,7 @@ YY_RULE_SETUP
 case 111:
 /* rule 111 can match eol */
 YY_RULE_SETUP
-#line 595 "SLParserLex.l"
+#line 596 "SLParserLex.l"
 { 	
 							char* temp = yytext;
 							while (*temp)
@@ -2204,7 +2205,7 @@ YY_RULE_SETUP
 case 112:
 /* rule 112 can match eol */
 YY_RULE_SETUP
-#line 605 "SLParserLex.l"
+#line 606 "SLParserLex.l"
 { 	
 							char* temp = yytext;
 							while (*temp)
@@ -2217,7 +2218,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 113:
 YY_RULE_SETUP
-#line 615 "SLParserLex.l"
+#line 616 "SLParserLex.l"
 { 	
 							char* temp = yytext;
 							while (*temp)
@@ -2231,7 +2232,7 @@ YY_RULE_SETUP
 case 114:
 /* rule 114 can match eol */
 YY_RULE_SETUP
-#line 625 "SLParserLex.l"
+#line 626 "SLParserLex.l"
 {	
 							char* temp = yytext;
 							while (*temp)
@@ -2244,7 +2245,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 115:
 YY_RULE_SETUP
-#line 635 "SLParserLex.l"
+#line 636 "SLParserLex.l"
 {
 							char* temp = yytext;
 							while (*temp)
@@ -2257,7 +2258,7 @@ YY_RULE_SETUP
 
 case 116:
 YY_RULE_SETUP
-#line 646 "SLParserLex.l"
+#line 647 "SLParserLex.l"
 { 	
 							return TOKEN_FALLBACK; 
 						}
@@ -2265,7 +2266,7 @@ YY_RULE_SETUP
 
 case 117:
 YY_RULE_SETUP
-#line 652 "SLParserLex.l"
+#line 653 "SLParserLex.l"
 {
 									shaderlablval.strval = CreateBracketString(yytext);
 									return VAL_BRACKET_ID;
@@ -2273,7 +2274,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 118:
 YY_RULE_SETUP
-#line 657 "SLParserLex.l"
+#line 658 "SLParserLex.l"
 {
 									shaderlablval.number = atof(yytext);
 									return VAL_NUMBER;
@@ -2281,7 +2282,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 119:
 YY_RULE_SETUP
-#line 662 "SLParserLex.l"
+#line 663 "SLParserLex.l"
 {
 									shaderlablval.number = atof(yytext);
 									return VAL_NUMBER;
@@ -2289,7 +2290,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 120:
 YY_RULE_SETUP
-#line 667 "SLParserLex.l"
+#line 668 "SLParserLex.l"
 {
 									shaderlablval.strval = CreateNormalString(yytext);
 									return VAL_ID;
@@ -2298,7 +2299,7 @@ YY_RULE_SETUP
 case 121:
 /* rule 121 can match eol */
 YY_RULE_SETUP
-#line 672 "SLParserLex.l"
+#line 673 "SLParserLex.l"
 {
 									shaderlablval.strval = CreateBracketString(yytext);
 									const char *temp = shaderlablval.strval;
@@ -2316,7 +2317,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 122:
 YY_RULE_SETUP
-#line 687 "SLParserLex.l"
+#line 688 "SLParserLex.l"
 {
 									BEGIN(INITIAL);
 									return *yytext;
@@ -2324,14 +2325,14 @@ YY_RULE_SETUP
 	YY_BREAK
 case 123:
 YY_RULE_SETUP
-#line 692 "SLParserLex.l"
+#line 693 "SLParserLex.l"
 {
 
  								}
 	YY_BREAK
 case 124:
 YY_RULE_SETUP
-#line 696 "SLParserLex.l"
+#line 697 "SLParserLex.l"
 {
 
 								}
@@ -2339,7 +2340,7 @@ YY_RULE_SETUP
 case 125:
 /* rule 125 can match eol */
 YY_RULE_SETUP
-#line 700 "SLParserLex.l"
+#line 701 "SLParserLex.l"
 { 	
 									yylineno++; 
 								}
@@ -2347,14 +2348,14 @@ YY_RULE_SETUP
 case 126:
 /* rule 126 can match eol */
 YY_RULE_SETUP
-#line 704 "SLParserLex.l"
+#line 705 "SLParserLex.l"
 { 	
 									yylineno++; 
 								}
 	YY_BREAK
 case 127:
 YY_RULE_SETUP
-#line 708 "SLParserLex.l"
+#line 709 "SLParserLex.l"
 { 	
 									yylineno++; 
 								}
@@ -2362,17 +2363,17 @@ YY_RULE_SETUP
 case 128:
 /* rule 128 can match eol */
 YY_RULE_SETUP
-#line 712 "SLParserLex.l"
+#line 713 "SLParserLex.l"
 {	
 									yylineno++; 
 								}
 	YY_BREAK
 case 129:
 YY_RULE_SETUP
-#line 716 "SLParserLex.l"
+#line 717 "SLParserLex.l"
 {
-									int c;
-									int depth = 1;
+									int32 c;
+									int32 depth = 1;
 									while (true) 
 									{
 										while ((c = yyinput()) != '*' && c != '/' && c != EOF && c != '\0') 
@@ -2425,7 +2426,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 130:
 YY_RULE_SETUP
-#line 769 "SLParserLex.l"
+#line 770 "SLParserLex.l"
 { 	
 									return *yytext; 
 								}
@@ -2433,10 +2434,10 @@ YY_RULE_SETUP
 
 case 131:
 YY_RULE_SETUP
-#line 775 "SLParserLex.l"
+#line 776 "SLParserLex.l"
 ECHO;
 	YY_BREAK
-#line 2440 "SLParserLex.cpp"
+#line 2441 "SLParserLex.cpp"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(STATE_STENIL):
 case YY_STATE_EOF(STATE_PROGRAM):
@@ -3435,11 +3436,11 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 775 "SLParserLex.l"
+#line 776 "SLParserLex.l"
 
 
 
-inline bool IsEndChar(int c) 
+inline bool IsEndChar(int32 c) 
 {
 	if (c == EOF || c == '\0' || c == '\r' || c == '\n') 
 	{
@@ -3450,7 +3451,7 @@ inline bool IsEndChar(int c)
 	}
 }
 
-void InitLex(const char *data, size_t dataSize) 
+void InitLex(const char *data, int32 dataSize) 
 {
 	g_LexTempString.reserve(64 * 1024);
 	YY_BUFFER_STATE b = yy_scan_bytes(data,dataSize);
@@ -3466,7 +3467,7 @@ void FreeLex()
 
 bool ParseAndEatLine(std::string &outstring)
 {
-	int c = 0;
+	int32 c = 0;
 	while ((c = yyinput()) && (c==' ' || c=='\t')) 
 	{
         ;
@@ -3491,7 +3492,7 @@ bool ParseAndEatLine(std::string &outstring)
 
 static char* CreateBracketString(const char *src) 
 {
-	int size = strlen(src);
+	int32 size = strlen(src);
 	char *buffer = new char[size - 1];
 	memcpy(buffer, src + 1, size - 2);
 	buffer[size - 2] = '\0';
@@ -3500,7 +3501,7 @@ static char* CreateBracketString(const char *src)
 
 static char* CreateNormalString(const char *src) 
 {
-	int size = strlen(src) + 1;
+	int32 size = strlen(src) + 1;
 	char *buffer = new char[size];
 	memcpy(buffer, src, size);
 	buffer[size - 1] = '\0';

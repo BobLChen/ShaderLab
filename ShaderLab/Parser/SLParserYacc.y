@@ -9,6 +9,7 @@
 #include <map>
 #include <vector>
 
+#include "Common/Common.h"
 #include "SLParserData.h"
 
 using namespace shaderlab;
@@ -18,12 +19,12 @@ std::stack<SLShaderState*>	g_ShaderStateStack;
 const char*                 g_CurrentProgramCode;
 ProgramType					g_CurrentProgramType;
 
-extern int yylineno;
+extern int32 yylineno;
 extern char* yytext;
 
-int shaderlaberror(const char *s);
+int32 shaderlaberror(const char *s);
 
-int shaderlablex();
+int32 shaderlablex();
 
 static void PushShaderState();
 static void PopShaderState();
@@ -43,7 +44,7 @@ static void PopShaderState();
 	SLSubShader*						subshader;
 	const char*							strval;
 	float								number;
-	int									enumval;
+	int32									enumval;
 	std::vector<std::string>*			strings;
 	std::map<std::string, std::string>* tags;
 	std::vector<SLPassBase*>*			passes;
@@ -312,7 +313,7 @@ states:
 			| states TOKEN_LOD VAL_NUMBER					
 			{
 				$$ = $1; 
-				$$->lod = int($3);
+				$$->lod = int32($3);
 			}
 			| states TOKEN_NAME VAL_STRING					
 			{
@@ -735,7 +736,7 @@ funcval: 	VAL_BRACKET_ID
 
 %%
 
-int shaderlaberror(const char *s)
+int32 shaderlaberror(const char *s)
 {
     printf("shaderlaberror line %d %s\n", yylineno, s);
 	return 0;
