@@ -33,7 +33,7 @@ namespace shaderlab
 	{
 	public:
 
-		explicit ScIncludeHandler(std::function<IncludeData(const char* includeName)> loadCallback)
+		explicit ScIncludeHandler(std::function<std::string(const char* includeName)> loadCallback)
 			: m_LoadCallback(std::move(loadCallback))
 		{
 
@@ -52,10 +52,10 @@ namespace shaderlab
 				return E_FAIL;
 			}
 
-			IncludeData includeData = m_LoadCallback(utf8FileName.c_str());
+			std::string includeData = m_LoadCallback(utf8FileName.c_str());
 			
 			*includeSource = nullptr;
-			return G_DXLibrary->CreateBlobWithEncodingOnHeapCopy(includeData.data, includeData.size, CP_UTF8, reinterpret_cast<IDxcBlobEncoding**>(includeSource));
+			return G_DXLibrary->CreateBlobWithEncodingOnHeapCopy(includeData.c_str(), includeData.size(), CP_UTF8, reinterpret_cast<IDxcBlobEncoding**>(includeSource));
 		}
 
 		ULONG STDMETHODCALLTYPE AddRef() override
@@ -96,7 +96,7 @@ namespace shaderlab
 		}
 
 	private:
-		std::function<IncludeData(const char* includeName)>		m_LoadCallback;
+		std::function<std::string(const char* includeName)>		m_LoadCallback;
 		std::atomic<ULONG>										m_Ref = 0;
 	};
 

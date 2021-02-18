@@ -82,12 +82,6 @@ namespace shaderlab
 
 	ShaderTarget GetShaderTarget(const std::string& name);
 
-	struct IncludeData
-	{
-		const char*					data;
-		int32						size;
-	};
-
 	struct PragmaParam
 	{
 		std::string					option;
@@ -222,7 +216,7 @@ namespace shaderlab
 		const char*						value;
 	};
 
-	typedef std::function<IncludeData(const char* includeName)> IncludeCallback;
+	typedef std::function<std::string(const char* includeName)> IncludeCallback;
 
 	struct ShaderSnippet
 	{
