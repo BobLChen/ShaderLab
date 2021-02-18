@@ -13,8 +13,7 @@ namespace shaderlab
 	struct HLSLCompileResult
 	{
 		std::vector<uint8_t>			data;
-		std::string						errorMsg;
-		std::string						warningMsg;
+		std::string						warningErrorMsg;
 	};
 
 	class HLSLCompiler

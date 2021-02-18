@@ -248,15 +248,7 @@ namespace shaderlab
 		if (compileErrors != nullptr)
 		{
 			const char* buffer = (const char*)compileErrors->GetBufferPointer();
-			if (SUCCEEDED(compileStatus))
-			{
-				hlslCompileResult.warningMsg = std::string(buffer, buffer + compileErrors->GetBufferSize());
-			}
-			else
-			{
-				hlslCompileResult.errorMsg = std::string(buffer, buffer + compileErrors->GetBufferSize());
-			}
-
+			hlslCompileResult.warningErrorMsg = std::string(buffer, buffer + compileErrors->GetBufferSize());
 			compileErrors->Release();
 		}
 

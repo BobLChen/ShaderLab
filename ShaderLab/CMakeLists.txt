@@ -31,7 +31,6 @@ set(SL_COMMON_SRCS
     
 )
 
-
 add_library(shaderlab STATIC
 	${SL_PARSER_HDRS}
 	${SL_PARSER_SRCS}
@@ -46,6 +45,17 @@ add_library(shaderlab STATIC
 source_group(Parser\\ FILES ${SL_PARSER_HDRS} ${SL_PARSER_SRCS})
 source_group(Compiler\\ FILES ${SL_COMPILER_HDRS} ${SL_COMPILER_SRCS})
 source_group(Common\\ FILES ${SL_COMMON_HDRS} ${SL_COMMON_SRCS})
+
+set(DXCompilerName "dxcompiler.dll")
+
+add_custom_target(CopyDxcompiler ALL
+    COMMAND 
+        ${CMAKE_COMMAND} -E copy
+        ${CMAKE_BINARY_DIR}/ThirdParty/DirectXShaderCompiler/${CMAKE_CFG_INTDIR}/bin/${DXCompilerName}
+        ${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${DXCompilerName}
+    COMMENT "Copying dxcompiler..."
+)
+add_dependencies(CopyDxcompiler dxcompiler)
 
 include_directories(
     ${CMAKE_SOURCE_DIR}/ThirdParty/DirectXShaderCompiler/include
@@ -68,10 +78,11 @@ target_link_libraries(
 )
 
 add_dependencies(
-    shaderlab 
+    shaderlab
     spirv-cross-core 
     spirv-cross-glsl 
     spirv-cross-hlsl 
     spirv-cross-msl
+    CopyDxcompiler
     SPIRV-Tools
 )
