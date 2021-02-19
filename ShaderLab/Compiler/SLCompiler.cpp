@@ -152,7 +152,7 @@ namespace shaderlab
 		}
 	}
 
-	void ProcessShaderSnippets(const CompileShaderInfo& shaderInfo, const SLProgram& program, const ProgramParameters& params, std::vector<ShaderSnippet>& snippets)
+	void ProcessShaderSnippets(const CompileShaderInfo& shaderInfo, const std::string& source, const ProgramParameters& params, std::vector<ShaderSnippet>& snippets)
 	{
 		// variants
 		std::vector<std::string> temp;
@@ -185,8 +185,8 @@ namespace shaderlab
 					{
 						ShaderSnippet snippet   = {};
 						snippet.fileName        = shaderInfo.fileName;
-						snippet.source          = program.source.c_str();
-						snippet.sourceLength    = program.source.size();
+						snippet.source          = source.c_str();
+						snippet.sourceLength    = source.size();
 						snippet.entryPoint      = params.entryName[programIndex].c_str();
 						snippet.defines			= defines;
 						snippet.stage           = stage;
@@ -208,13 +208,17 @@ namespace shaderlab
 		std::vector<PragmaParam> pragmaParams;
 		ProcessPragmaArgs(program.source.data(), program.source.size(), "#pragma ", strlen("#pragma "), pragmaParams);
 
+		// disable pragma
+		std::string source = program.source;
+		ReplaceString(source, "#pragma", "// #pragma");
+
 		// program params
 		ProgramParameters programParams;
 		programParams.SetPragmaParams(pragmaParams);
 
 		// generate snippet
 		std::vector<ShaderSnippet> snippets;
-		ProcessShaderSnippets(shaderInfo, program, programParams, snippets);
+		ProcessShaderSnippets(shaderInfo, source, programParams, snippets);
 
 		// compile code
 		for (int32 snippetIndex = 0; snippetIndex < snippets.size(); ++snippetIndex)

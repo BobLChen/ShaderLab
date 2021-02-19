@@ -108,4 +108,20 @@ namespace shaderlab
 
 		return ret;
 	}
+
+	void ReplaceString(std::string& target, const std::string& search, const std::string& replace, int32 startPos)
+	{
+		if (search.empty()) 
+		{
+			return;
+		}
+
+		int32 p = startPos;
+		while ((p = target.find(search, p)) != std::string::npos) 
+		{
+			target.replace(p, search.size(), replace);
+			p += replace.size();
+		}
+
+	}
 }

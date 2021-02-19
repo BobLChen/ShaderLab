@@ -36,4 +36,6 @@ namespace shaderlab
 	int32 ReadLine(const char* text, int32 size, int32 startPos);
 
 	std::string ReadNonWhiteSpace(const char* text, int32 end, int32& startPos);
+
+	void ReplaceString(std::string& target, const std::string& search, const std::string& replace, int32 startPos = 0);
 }
