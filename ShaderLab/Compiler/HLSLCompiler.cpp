@@ -171,18 +171,18 @@ namespace shaderlab
 			const wchar_t* nameUtf16  = nullptr;
 			const wchar_t* valueUtf16 = nullptr;
 
-			if (define.name != nullptr)
+			if (!define.name.empty())
 			{
 				std::wstring utf16Str;
-				Unicode::UTF8ToUTF16String(define.name, &utf16Str);
+				Unicode::UTF8ToUTF16String(define.name.c_str(), &utf16Str);
 				tempStrings.emplace_back(std::move(utf16Str));
 				nameUtf16 = tempStrings.back().c_str();
 			}
 
-			if (define.value != nullptr)
+			if (!define.value.empty())
 			{
 				std::wstring utf16Str;
-				Unicode::UTF8ToUTF16String(define.value, &utf16Str);
+				Unicode::UTF8ToUTF16String(define.value.c_str(), &utf16Str);
 				tempStrings.emplace_back(std::move(utf16Str));
 				valueUtf16 = tempStrings.back().c_str();
 			}

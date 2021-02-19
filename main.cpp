@@ -110,33 +110,12 @@ int main(int argc, char const *argv[])
 	// init compiler
 	shaderlab::SLCompiler::Init();
 
-	// compile hlsl
-	for (int32 shaderIdx = 0; shaderIdx < shader->subShaders.size(); ++shaderIdx)
-	{
-		shaderlab::SLSubShader* subShader = shader->subShaders[shaderIdx];
-		for (int32 subShaderIdx = 0; subShaderIdx < subShader->passes.size(); ++subShaderIdx)
-		{
-			shaderlab::SLPassBase* slpass = subShader->passes[subShaderIdx];
-			if (slpass->type == shaderlab::SLPassBase::kPassNormal)
-			{
-				shaderlab::SLNormalPass* npass = (shaderlab::SLNormalPass*)slpass;
-				shaderlab::SLProgram& program  = npass->program;
-				
-				shaderlab::ShaderSnippet snippet;
-				snippet.fileName        = option.input.c_str();
-				snippet.source          = program.source.c_str();
-				snippet.sourceLength    = program.source.size();
-				snippet.entryPoint      = "main";
-				snippet.shaderModel     = { 6, 0 };
-				snippet.shaderTarget    = shaderlab::ShaderTarget::kShaderTargetGLES20;
-				snippet.stage		    = shaderlab::ShaderStage::kProgramFragment;
-				snippet.includeCallback = OnLoadInlcudeCallback;
-
-				shaderlab::HLSLCompileResult result = shaderlab::HLSLCompiler::Compile(snippet);
-				printf("Status:%d Message:%s\n", result.data.size() != 0 ? "Success" : "Failed", result.warningErrorMsg.c_str());
-			}
-		}
-	}
+	// compile shader
+	shaderlab::CompileShaderInfo info = { };
+	info.shader          = shader;
+	info.fileName        = option.input.c_str();
+	info.includeCallback = OnLoadInlcudeCallback;
+	shaderlab::SLCompiler::Compile(info);
 
 	delete shader;
     return 0;

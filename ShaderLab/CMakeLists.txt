@@ -33,6 +33,13 @@ set(SL_COMMON_SRCS
     
 )
 
+set(SL_UTILS_HDRS
+    Utils/StringUtils.h
+)
+set(SL_UTILS_SRCS
+    Utils/StringUtils.cpp
+)
+
 add_library(shaderlab STATIC
 	${SL_PARSER_HDRS}
 	${SL_PARSER_SRCS}
@@ -42,11 +49,15 @@ add_library(shaderlab STATIC
 
     ${SL_COMMON_HDRS}
     ${SL_COMMON_SRCS}
+
+    ${SL_UTILS_HDRS}
+    ${SL_UTILS_SRCS}
 )
 
 source_group(Parser\\ FILES ${SL_PARSER_HDRS} ${SL_PARSER_SRCS})
 source_group(Compiler\\ FILES ${SL_COMPILER_HDRS} ${SL_COMPILER_SRCS})
 source_group(Common\\ FILES ${SL_COMMON_HDRS} ${SL_COMMON_SRCS})
+source_group(Utils\\ FILES ${SL_UTILS_HDRS} ${SL_UTILS_SRCS})
 
 set(DXCompilerName "dxcompiler.dll")
 

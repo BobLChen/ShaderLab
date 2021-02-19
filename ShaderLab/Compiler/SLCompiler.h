@@ -7,6 +7,7 @@
 #include <functional>
 
 #include "Common/Common.h"
+#include "Parser/SLParser.h"
 
 namespace shaderlab
 {
@@ -127,59 +128,59 @@ namespace shaderlab
 				}
 				else if (pragma.option == "fragment")
 				{
-					entryName[kProgramFragment] = pragma.values[1];
+					entryName[kProgramFragment] = pragma.values[0];
 				}
 				else if (pragma.option == "compute")
 				{
-					entryName[kProgramCompute] = pragma.values[1];
+					entryName[kProgramCompute] = pragma.values[0];
 				}
 				else if (pragma.option == "geometry")
 				{
-					entryName[kProgramGeometry] = pragma.values[1];
+					entryName[kProgramGeometry] = pragma.values[0];
 				}
 				else if (pragma.option == "hull")
 				{
-					entryName[kProgramHull] = pragma.values[1];
+					entryName[kProgramHull] = pragma.values[0];
 				}
 				else if (pragma.option == "domain")
 				{
-					entryName[kProgramDomain] = pragma.values[1];
+					entryName[kProgramDomain] = pragma.values[0];
 				}
 				else if (pragma.option == "mesh")
 				{
-					entryName[kProgramMesh] = pragma.values[1];
+					entryName[kProgramMesh] = pragma.values[0];
 				}
 				else if (pragma.option == "task")
 				{
-					entryName[kProgramTask] = pragma.values[1];
+					entryName[kProgramTask] = pragma.values[0];
 				}
 				else if (pragma.option == "rgen")
 				{
-					entryName[kProgramRayGen] = pragma.values[1];
+					entryName[kProgramRayGen] = pragma.values[0];
 				}
 				else if (pragma.option == "rint")
 				{
-					entryName[kProgramRayInt] = pragma.values[1];
+					entryName[kProgramRayInt] = pragma.values[0];
 				}
 				else if (pragma.option == "rahit")
 				{
-					entryName[kProgramRayAHit] = pragma.values[1];
+					entryName[kProgramRayAHit] = pragma.values[0];
 				}
 				else if (pragma.option == "rchit")
 				{
-					entryName[kProgramRayCHit] = pragma.values[1];
+					entryName[kProgramRayCHit] = pragma.values[0];
 				}
 				else if (pragma.option == "rmiss")
 				{
-					entryName[kProgramRayMiss] = pragma.values[1];
+					entryName[kProgramRayMiss] = pragma.values[0];
 				}
 				else if (pragma.option == "rcall")
 				{
-					entryName[kProgramRayRcall] = pragma.values[1];
+					entryName[kProgramRayRcall] = pragma.values[0];
 				}
 				else if (pragma.option == "target")
 				{
-					for (size_t idx = 1; idx < pragma.values.size(); ++idx)
+					for (size_t idx = 0; idx < pragma.values.size(); ++idx)
 					{
 						shaderTarget = shaderTarget | (1 << GetShaderTarget(pragma.values[idx]));
 					}
@@ -205,15 +206,14 @@ namespace shaderlab
 		}
 
 		uint32							shaderTarget;
-		std::string						source;
 		std::vector<MultiCompileParam>	keywords;
 		std::string						entryName[kProgramCount];
 	};
 
 	struct MacroDefine
 	{
-		const char*						name;
-		const char*						value;
+		std::string						name;
+		std::string						value;
 	};
 
 	typedef std::function<std::string(const char* includeName)> IncludeCallback;
@@ -231,6 +231,13 @@ namespace shaderlab
 		IncludeCallback					includeCallback;
 	};
 
+	struct CompileShaderInfo
+	{
+		SLShader*						shader;
+		const char*						fileName;
+		IncludeCallback					includeCallback;
+	};
+
 	struct ShaderCompileResult
 	{
 		
@@ -244,7 +251,7 @@ namespace shaderlab
 
 		static bool Destroy();
 
-	private:
+		static void Compile(const CompileShaderInfo& shader);
 
 	};
 }
