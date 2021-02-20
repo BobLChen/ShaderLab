@@ -3,6 +3,16 @@
 
 #include "Utils/StringUtils.h"
 
+#include "spirv-tools/libspirv.h"
+#include "spirv.hpp"
+#include "spirv_cross.hpp"
+#include "spirv_glsl.hpp"
+#include "spirv_hlsl.hpp"
+#include "spirv_msl.hpp"
+#include "spirv_cross_util.hpp"
+
+#include <memory>
+
 namespace shaderlab
 {
 	std::string GetShaderTargetName(ShaderTarget shaderTarget)
@@ -19,9 +29,13 @@ namespace shaderlab
 		{
 			return "gles30";
 		}
-		else if (shaderTarget == kShaderTargetMetal)
+		else if (shaderTarget == kShaderTargetMetalIOS)
 		{
-			return "metal";
+			return "ios";
+		}
+		else if (shaderTarget == kShaderTargetMetalMac)
+		{
+			return "mac";
 		}
 		else if (shaderTarget == kShaderTargetVulkan)
 		{
@@ -31,6 +45,7 @@ namespace shaderlab
 		{
 			return "hlsl";
 		}
+
 		return "gles20";
 	}
 
@@ -48,9 +63,13 @@ namespace shaderlab
 		{
 			return kShaderTargetGLES30;
 		}
-		else if (strcmp(name.c_str(), "metal") == 0)
+		else if (strcmp(name.c_str(), "ios") == 0)
 		{
-			return kShaderTargetMetal;
+			return kShaderTargetMetalIOS;
+		}
+		else if (strcmp(name.c_str(), "mac") == 0)
+		{
+			return kShaderTargetMetalMac;
 		}
 		else if (strcmp(name.c_str(), "vulkan") == 0)
 		{
@@ -152,7 +171,7 @@ namespace shaderlab
 		}
 	}
 
-	void ProcessShaderSnippets(const CompileShaderInfo& shaderInfo, const std::string& source, const ProgramParameters& params, std::vector<ShaderSnippet>& snippets)
+	void ProcessShaderSnippets(const CompileShaderInfo& shaderInfo, shaderlab::ProgramType sourceType, const std::string& source, const ProgramParameters& params, std::vector<ShaderSnippet>& snippets)
 	{
 		// variants
 		std::vector<std::string> temp;
@@ -185,6 +204,7 @@ namespace shaderlab
 					{
 						ShaderSnippet snippet   = {};
 						snippet.fileName        = shaderInfo.fileName;
+						snippet.sourceType      = sourceType;
 						snippet.source          = source.c_str();
 						snippet.sourceLength    = source.size();
 						snippet.entryPoint      = params.entryName[programIndex].c_str();
@@ -198,6 +218,254 @@ namespace shaderlab
 				}
 			}
 		}
+	}
+
+	void FixupSampler(std::shared_ptr<spirv_cross::Compiler> compiler, bool buildDummySampler, bool combinedImageSamplers)
+	{
+		if (buildDummySampler)
+		{
+			const uint32_t sampler = compiler->build_dummy_sampler_for_combined_images();
+			if (sampler != 0)
+			{
+				compiler->set_decoration(sampler, spv::DecorationDescriptorSet, 0);
+				compiler->set_decoration(sampler, spv::DecorationBinding, 0);
+			}
+		}
+
+		if (combinedImageSamplers)
+		{
+			compiler->build_combined_image_samplers();
+			for (auto& remap : compiler->get_combined_image_samplers())
+			{
+				compiler->set_name(remap.combined_id, "SPIRV_Cross_Combined" + compiler->get_name(remap.image_id) + compiler->get_name(remap.sampler_id));
+			}
+		}
+	}
+
+	void FixupLegacyMetal(const ShaderSnippet& snippet, std::shared_ptr<spirv_cross::Compiler> compiler)
+	{
+		auto* mslCompiler = static_cast<spirv_cross::CompilerMSL*>(compiler.get());
+		auto mslOpts = mslCompiler->get_msl_options();
+		mslOpts.msl_version = 0;
+		mslOpts.swizzle_texture_samples = false;
+		mslOpts.platform = (snippet.shaderTarget == ShaderTarget::kShaderTargetMetalIOS) ? spirv_cross::CompilerMSL::Options::iOS : spirv_cross::CompilerMSL::Options::macOS;
+		mslCompiler->set_msl_options(mslOpts);
+
+		const auto& resources = mslCompiler->get_shader_resources();
+
+		uint32_t textureBinding = 0;
+		for (const auto& image : resources.separate_images)
+		{
+			mslCompiler->set_decoration(image.id, spv::DecorationBinding, textureBinding);
+			++textureBinding;
+		}
+
+		uint32_t samplerBinding = 0;
+		for (const auto& sampler : resources.separate_samplers)
+		{
+			mslCompiler->set_decoration(sampler.id, spv::DecorationBinding, samplerBinding);
+			++samplerBinding;
+		}
+	}
+
+	void FixupLegacyGLSL(const ShaderSnippet& snippet, std::shared_ptr<spirv_cross::Compiler> compiler)
+	{
+		auto variables = compiler->get_active_interface_variables();
+		for (auto& var : variables)
+		{
+			auto varClass = compiler->get_storage_class(var);
+			if ((snippet.stage == ShaderStage::kProgramVertex) && (varClass == spv::StorageClass::StorageClassOutput))
+			{
+				auto name = compiler->get_name(var);
+				if (name.find("out.var.") == 0)
+				{
+					name.replace(0, 8, "out_var_");
+					compiler->set_name(var, name);
+				}
+			}
+			else if ((snippet.stage == ShaderStage::kProgramFragment) && (varClass == spv::StorageClass::StorageClassInput))
+			{
+				auto name = compiler->get_name(var);
+				if (name.find("in.var.") == 0)
+				{
+					name.replace(0, 7, "in_var_");
+					compiler->set_name(var, name);
+				}
+			}
+		}
+	}
+
+	int32 GetGLSLTargetVersion(ShaderTarget shaderTarget)
+	{
+		int32 version = 0;
+
+		if (shaderTarget == ShaderTarget::kShaderTargetGLES20)
+		{
+			version = 100;
+		}
+		else if (shaderTarget == ShaderTarget::kShaderTargetGLES30)
+		{
+			version = 320;
+		}
+		else
+		{
+			version = 460;
+		}
+
+		return version;
+	}
+
+	spv::ExecutionModel GetExecutionModel(ShaderStage stage)
+	{
+		spv::ExecutionModel model = spv::ExecutionModelMax;
+		switch (stage)
+		{
+			case ShaderStage::kProgramVertex:
+			{
+				model = spv::ExecutionModelVertex;
+				break;
+			}
+			case ShaderStage::kProgramHull:
+			{
+				model = spv::ExecutionModelTessellationControl;
+				break;
+			}
+			case ShaderStage::kProgramDomain:
+			{
+				model = spv::ExecutionModelTessellationEvaluation;
+				break;
+			}
+			case ShaderStage::kProgramGeometry:
+			{
+				model = spv::ExecutionModelGeometry;
+				break;
+			}
+			case ShaderStage::kProgramFragment:
+			{
+				model = spv::ExecutionModelFragment;
+				break;
+			}
+			case ShaderStage::kProgramCompute:
+			{
+				model = spv::ExecutionModelGLCompute;
+				break;
+			}
+			default:
+			{
+				break;
+			}
+		}
+		return model;
+	}
+
+	void CrossCompile(const ShaderSnippet& snippet, const HLSLCompileResult& result)
+	{
+		// get spirv
+		const uint32* spirvData = (const uint32*)result.data.data();
+		const int32   spirvSize = result.data.size() / sizeof(uint32);
+
+		bool buildDummySampler     = false;
+		bool combinedImageSamplers = false;
+		std::shared_ptr<spirv_cross::CompilerGLSL> compiler = nullptr;
+
+		// make version and compiler
+		int32 version = 0;
+		if (snippet.shaderTarget == ShaderTarget::kShaderTargetGLES20 ||
+			snippet.shaderTarget == ShaderTarget::kShaderTargetGLES30 ||
+			snippet.shaderTarget == ShaderTarget::kShaderTargetOpenGL
+		)
+		{
+			version = GetGLSLTargetVersion(snippet.shaderTarget);
+			compiler = std::make_unique<spirv_cross::CompilerGLSL>(spirvData, spirvSize);
+			buildDummySampler = true;
+			combinedImageSamplers = true;
+			if (version <= 300)
+			{
+				FixupLegacyGLSL(snippet, compiler);
+			}
+		}
+		else if (snippet.shaderTarget == ShaderTarget::kShaderTargetMetalIOS || snippet.shaderTarget == ShaderTarget::kShaderTargetMetalMac)
+		{
+			compiler = std::make_unique<spirv_cross::CompilerMSL>(spirvData, spirvSize);
+		}
+
+		if (compiler == nullptr)
+		{
+			// TODO:return error
+			return;
+		}
+
+		// get model
+		spv::ExecutionModel model = GetExecutionModel(snippet.stage);
+		if (model == spv::ExecutionModelMax)
+		{
+			// TODO:return error
+			return;
+		}
+
+		compiler->set_entry_point(snippet.entryPoint, model);
+
+		// option
+		spirv_cross::CompilerGLSL::Options options = compiler->get_common_options();
+		options.version = version;
+		options.es = snippet.shaderTarget == ShaderTarget::kShaderTargetGLES20 || snippet.shaderTarget == ShaderTarget::kShaderTargetGLES30;
+		options.force_temporary = false;
+		options.separate_shader_objects = true;
+		options.flatten_multidimensional_arrays = false;
+		options.enable_420pack_extension = snippet.shaderTarget == ShaderTarget::kShaderTargetOpenGL && options.version >= 420;
+		options.vulkan_semantics = false;
+		options.vertex.fixup_clipspace = false;
+		options.vertex.flip_vert_y = false;
+		options.vertex.support_nonzero_base_instance = true;
+		compiler->set_common_options(options);
+
+		if (snippet.shaderTarget == ShaderTarget::kShaderTargetMetalIOS || snippet.shaderTarget == ShaderTarget::kShaderTargetMetalMac)
+		{
+			FixupLegacyMetal(snippet, compiler);
+		}
+
+		if (buildDummySampler || combinedImageSamplers)
+		{
+			FixupSampler(compiler, buildDummySampler, combinedImageSamplers);
+		}
+
+		try
+		{
+			const std::string targetStr = compiler->compile();
+			printf("compiled=%s\n", targetStr.c_str());
+		}
+		catch (spirv_cross::CompilerError& error)
+		{
+			const char* errorMsg = error.what();
+			printf("error=%s\n", errorMsg);
+		}
+
+	}
+
+	void CompileHLSLToOther(const ShaderSnippet& snippet)
+	{
+		// compile hlsl
+		HLSLCompileResult result = HLSLCompiler::Compile(snippet);
+
+		if (snippet.shaderTarget == ShaderTarget::kShaderTargetVulkan)
+		{
+			// vulkan reflection
+		}
+		else if (snippet.shaderTarget == ShaderTarget::kShaderTargetHLSL)
+		{
+			// hlsl reflection
+		}
+		else
+		{
+			CrossCompile(snippet, result);
+		}
+
+		printf("Status:%s Message:%s\n", result.data.size() != 0 ? "Success" : "Failed", result.warningErrorMsg.c_str());
+	}
+
+	void CompileGLSLToOther(const ShaderSnippet& snippet)
+	{
+
 	}
 
 	void CompileNormalPass(const CompileShaderInfo& shaderInfo, const SLNormalPass* pass)
@@ -218,14 +486,29 @@ namespace shaderlab
 
 		// generate snippet
 		std::vector<ShaderSnippet> snippets;
-		ProcessShaderSnippets(shaderInfo, source, programParams, snippets);
+		ProcessShaderSnippets(shaderInfo, program.type, source, programParams, snippets);
 
 		// compile code
 		for (int32 snippetIndex = 0; snippetIndex < snippets.size(); ++snippetIndex)
 		{
 			const ShaderSnippet& snippet = snippets[snippetIndex];
-			HLSLCompileResult result = HLSLCompiler::Compile(snippet);
-			printf("Status:%s Message:%s\n", result.data.size() != 0 ? "Success" : "Failed", result.warningErrorMsg.c_str());
+			switch (snippet.sourceType)
+			{
+			case ProgramType::kCG:
+			case ProgramType::kHLSL:
+			{
+				CompileHLSLToOther(snippet);
+				break;
+			}
+			case ProgramType::kGLSL:
+			{
+				CompileGLSLToOther(snippet);
+				break;
+			}
+			default:
+				printf("ProgramType[%d] not support!", snippet.sourceType);
+				break;
+			}
 		}
 	}
 

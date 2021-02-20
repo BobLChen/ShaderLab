@@ -16,7 +16,8 @@ namespace shaderlab
 		kShaderTargetOpenGL = 0,
 		kShaderTargetGLES20,
 		kShaderTargetGLES30,
-		kShaderTargetMetal,
+		kShaderTargetMetalIOS,
+		kShaderTargetMetalMac,
 		kShaderTargetHLSL,
 		kShaderTargetVulkan,
 		kShaderTargetCount
@@ -221,6 +222,7 @@ namespace shaderlab
 	struct ShaderSnippet
 	{
 		const char*						fileName;
+		ProgramType						sourceType;
 		const char*						source;
 		uint32							sourceLength;
 		const char*						entryPoint;

@@ -12,7 +12,7 @@ namespace shaderlab
 {
 	struct HLSLCompileResult
 	{
-		std::vector<uint8_t>			data;
+		std::vector<uint8>				data;
 		std::string						warningErrorMsg;
 	};
 
