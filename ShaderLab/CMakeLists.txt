@@ -1,5 +1,11 @@
 ﻿set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -DNOMINMAX")
 
+if (WIN32)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DPLATFORM_WINDOWS=1")
+elseif (UNIX)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DPLATFORM_LINUX=1")
+endif ()
+
 set(SL_PARSER_HDRS
     Parser/SLParser.h
     Parser/SLParserTypes.h
@@ -59,12 +65,18 @@ source_group(Compiler\\ FILES ${SL_COMPILER_HDRS} ${SL_COMPILER_SRCS})
 source_group(Common\\ FILES ${SL_COMMON_HDRS} ${SL_COMMON_SRCS})
 source_group(Utils\\ FILES ${SL_UTILS_HDRS} ${SL_UTILS_SRCS})
 
-set(DXCompilerName "dxcompiler.dll")
+if(WIN32)
+    set(DXCompilerName "dxcompiler.dll")
+    set(DXCompilerOutputFolder "bin")
+else()
+    set(DXCompilerName "libdxcompiler.so")
+    set(DXCompilerOutputFolder "lib")
+endif()
 
 add_custom_target(CopyDxcompiler ALL
     COMMAND 
         ${CMAKE_COMMAND} -E copy
-        ${CMAKE_BINARY_DIR}/ThirdParty/DirectXShaderCompiler/${CMAKE_CFG_INTDIR}/bin/${DXCompilerName}
+        ${CMAKE_BINARY_DIR}/ThirdParty/DirectXShaderCompiler/${CMAKE_CFG_INTDIR}/${DXCompilerOutputFolder}/${DXCompilerName}
         ${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${DXCompilerName}
     COMMENT "Copying dxcompiler..."
 )

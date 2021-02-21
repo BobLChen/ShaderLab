@@ -1,5 +1,6 @@
 ﻿#include <stdio.h>
 #include <string>
+#include <cstring>
 
 #include "Parser/SLParser.h"
 #include "Compiler/SLCompiler.h"

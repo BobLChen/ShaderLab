@@ -119,7 +119,7 @@ namespace shaderlab
 
 	struct SLPropTexture
 	{
-		SLPropTexture::SLPropTexture()
+		SLPropTexture()
 			: dimension(kTexDimUnknown)
 		{
 
@@ -532,17 +532,7 @@ namespace shaderlab
 			}
 			subShaders.clear();
 		}
-
-		bool operator == (const SLShader& rhs) const
-		{
-
-		}
-
-		bool operator != (const SLShader &rhs) const
-		{
-			return !(*this == rhs);
-		}
-
+		
 		std::string					shaderName;
 		std::string					fallbackName;
 		SLProperties				properties;

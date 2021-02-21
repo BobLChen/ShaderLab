@@ -1,7 +1,4 @@
-﻿#include <Windows.h>
-#include <d3d12shader.h>
-#include <xstring>
-#include <atomic>
+﻿#include <atomic>
 
 #include "HLSLCompiler.h"
 
@@ -35,8 +32,9 @@ namespace shaderlab
 
 		explicit ScIncludeHandler(std::function<std::string(const char* includeName)> loadCallback)
 			: m_LoadCallback(std::move(loadCallback))
+			, m_Ref(std::atomic_int(0))
 		{
-
+			
 		}
 
 		HRESULT STDMETHODCALLTYPE LoadSource(LPCWSTR fileName, IDxcBlob** includeSource) override
@@ -97,7 +95,7 @@ namespace shaderlab
 
 	private:
 		std::function<std::string(const char* includeName)>		m_LoadCallback;
-		std::atomic<ULONG>										m_Ref = 0;
+		std::atomic<ULONG>										m_Ref;
 	};
 
 	bool HLSLCompiler::Init()
@@ -107,14 +105,26 @@ namespace shaderlab
 			return true;
 		}
 
+#if PLATFORM_WINDOWS
 		const char* dllName      = "dxcompiler.dll";
+#else
+		const char* dllName      = "libdxcompiler.so";
+#endif
 		const char* functionName = "DxcCreateInstance";
 
+#if PLATFORM_WINDOWS
 		G_DXCompilerDLL = ::LoadLibraryA(dllName);
+#else
+		G_DXCompilerDLL = ::dlopen(dllName, RTLD_LAZY);
+#endif
 
 		if (G_DXCompilerDLL != nullptr)
 		{
+#if PLATFORM_WINDOWS
 			G_CreateInstanceFunc = (DxcCreateInstanceProc)::GetProcAddress(G_DXCompilerDLL, functionName);
+#else
+			G_CreateInstanceFunc = (DxcCreateInstanceProc)::dlsym(G_DXCompilerDLL, functionName);
+#endif
 
 			if (G_CreateInstanceFunc != nullptr)
 			{
@@ -141,8 +151,12 @@ namespace shaderlab
 	{
 		if (G_DXCompilerDLL != nullptr)
 		{
+#if PLATFORM_WINDOWS
 			::FreeLibrary(G_DXCompilerDLL);
-
+#else
+			::dlclose(G_DXCompilerDLL);
+#endif
+			
 			G_DXLibrary             = nullptr;
 			G_DXCompiler            = nullptr;
 			G_DXCompilerDLL         = nullptr;

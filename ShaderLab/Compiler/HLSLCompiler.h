@@ -1,7 +1,6 @@
 ﻿#pragma once
 
 #include <string>
-#include <xstring>
 #include <vector>
 #include <functional>
 

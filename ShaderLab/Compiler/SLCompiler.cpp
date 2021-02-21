@@ -376,7 +376,7 @@ namespace shaderlab
 		)
 		{
 			version = GetGLSLTargetVersion(snippet.shaderTarget);
-			compiler = std::make_unique<spirv_cross::CompilerGLSL>(spirvData, spirvSize);
+			compiler = std::make_shared<spirv_cross::CompilerGLSL>(spirvData, spirvSize);
 			buildDummySampler = true;
 			combinedImageSamplers = true;
 			if (version <= 300)
@@ -386,7 +386,7 @@ namespace shaderlab
 		}
 		else if (snippet.shaderTarget == ShaderTarget::kShaderTargetMetalIOS || snippet.shaderTarget == ShaderTarget::kShaderTargetMetalMac)
 		{
-			compiler = std::make_unique<spirv_cross::CompilerMSL>(spirvData, spirvSize);
+			compiler = std::make_shared<spirv_cross::CompilerMSL>(spirvData, spirvSize);
 		}
 
 		if (compiler == nullptr)
