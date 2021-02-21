@@ -8,7 +8,7 @@
             "name": "Debug ShaderCross",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/ShaderCross",
+            "program": "${workspaceFolder}/build/ShaderCross",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

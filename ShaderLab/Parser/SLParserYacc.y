@@ -17,6 +17,7 @@ using namespace shaderlab;
 SLShader*					g_CurrentShader;
 std::stack<SLShaderState*>	g_ShaderStateStack;
 const char*                 g_CurrentProgramCode;
+int32						g_CurrentProgramLine;
 ProgramType					g_CurrentProgramType;
 
 extern int32 yylineno;
@@ -44,7 +45,7 @@ static void PopShaderState();
 	SLSubShader*						subshader;
 	const char*							strval;
 	float								number;
-	int32									enumval;
+	int32								enumval;
 	std::vector<std::string>*			strings;
 	std::map<std::string, std::string>* tags;
 	std::vector<SLPassBase*>*			passes;
@@ -59,12 +60,12 @@ static void PopShaderState();
 %token TOKEN_STENCIL TOKEN_REF TOKEN_READ_MASK TOKEN_WRITE_MASK TOKEN_COMP TOKEN_OP_PASS TOKEN_OP_FAIL TOKEN_OP_ZFAIL
 %token TOKEN_COMP_BACK TOKEN_OP_PASS_BACK TOKEN_OP_FAIL_BACK TOKEN_OP_ZFAIL_BACK
 %token TOKEN_COMP_FRONT TOKEN_OP_PASS_FRONT TOKEN_OP_FAIL_FRONT TOKEN_OP_ZFAIL_FRONT
-%token TOKEN_HLSLPROGRAM TOKEN_GLSLPROGRAM TOKEN_CGPROGRAM
 
 %token <number> VAL_NUMBER
 %token <strval> VAL_ID VAL_STRING VAL_BRACKET_ID VAL_PROGRAM_SOURCE
 %token <enumval> VAL_TRIANGLE_FACE VAL_COMPARE_MODE VAL_RGBA_MASK
 %token <enumval> VAL_TEX_DIM VAL_BLEND_FACTOR VAL_BLEND_OP_MODE VAL_STENCIL_ACTION
+%token <number> VAL_HLSLPROGRAM VAL_GLSLPROGRAM VAL_CGPROGRAM
 
 %type <floatval> numval maskval blendval funcval blendopval stencilaction boolean cullval
 %type <vector4> vector4
@@ -291,11 +292,13 @@ pass:		TOKEN_PASS '{'
 				SLNormalPass* pp = new SLNormalPass(*g_ShaderStateStack.top());
 				pp->program.type   = g_CurrentProgramType;
 				pp->program.source = g_CurrentProgramCode;
+				pp->program.lineNo = g_CurrentProgramLine;
 
 				$$ = pp;
 				
 				g_CurrentProgramType = kCG;
 				g_CurrentProgramCode = nullptr;
+				g_CurrentProgramLine = 0;
 				
 				PopShaderState();
 			}
@@ -455,19 +458,22 @@ states:
 				delete $3;
 				delete $5;
 			}
-			| states TOKEN_HLSLPROGRAM VAL_PROGRAM_SOURCE
+			| states VAL_HLSLPROGRAM VAL_PROGRAM_SOURCE
 			{
 				g_CurrentProgramCode = $3;
+				g_CurrentProgramLine = $2;
 				g_CurrentProgramType = kHLSL;
 			}
-			| states TOKEN_GLSLPROGRAM VAL_PROGRAM_SOURCE
+			| states VAL_GLSLPROGRAM VAL_PROGRAM_SOURCE
 			{
 				g_CurrentProgramCode = $3;
+				g_CurrentProgramLine = $2;
 				g_CurrentProgramType = kGLSL;
 			}
-			| states TOKEN_CGPROGRAM VAL_PROGRAM_SOURCE
+			| states VAL_CGPROGRAM VAL_PROGRAM_SOURCE
 			{
 				g_CurrentProgramCode = $3;
+				g_CurrentProgramLine = $2;
 				g_CurrentProgramType = kCG;
 			}
 			;

@@ -550,21 +550,24 @@ USEPASS					{
 						}
 
 GLSLPROGRAM				{
-							g_LexTempString.clear();
 							BEGIN(STATE_PROGRAM);
-							return TOKEN_GLSLPROGRAM;
+							g_LexTempString.clear();
+							shaderlablval.number = yylineno;
+							return VAL_GLSLPROGRAM;
 						}
 
 HLSLPROGRAM				{
-							g_LexTempString.clear();
 							BEGIN(STATE_PROGRAM);
-							return TOKEN_HLSLPROGRAM;
+							g_LexTempString.clear();
+							shaderlablval.number = yylineno;
+							return VAL_HLSLPROGRAM;
 						}
 
 CGPROGRAM				{
-							g_LexTempString.clear();
 							BEGIN(STATE_PROGRAM);
-							return TOKEN_CGPROGRAM;
+							g_LexTempString.clear();
+							shaderlablval.number = yylineno;
+							return VAL_CGPROGRAM;
 						}						
 
 <STATE_PROGRAM>{

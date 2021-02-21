@@ -38,4 +38,6 @@ namespace shaderlab
 	std::string ReadNonWhiteSpace(const char* text, int32 end, int32& startPos);
 
 	void ReplaceString(std::string& target, const std::string& search, const std::string& replace, int32 startPos = 0);
+
+	void FixErrorLineNumber(std::string& source, const std::string& fileName, int32 startLine);
 }

@@ -1,5 +1,5 @@
 
-float test_cg_include_file(float v)
+float TestCGIncludeFunc(float v)
 {
 	#if defined (TEST1)
 	return v * 10;

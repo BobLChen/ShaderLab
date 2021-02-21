@@ -122,6 +122,16 @@ namespace shaderlab
 			target.replace(p, search.size(), replace);
 			p += replace.size();
 		}
+	}
 
+	void FixErrorLineNumber(std::string& source, const std::string& fileName, int32 startLine)
+	{
+		printf("FileName:%s\n", fileName.c_str());
+
+		int32 p = 0;
+		while ((p = source.find(fileName, p)) != std::string::npos) 
+		{
+			break;
+		}
 	}
 }

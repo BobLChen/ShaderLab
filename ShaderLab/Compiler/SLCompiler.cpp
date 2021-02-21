@@ -442,28 +442,32 @@ namespace shaderlab
 
 	}
 
-	void CompileHLSLToOther(const ShaderSnippet& snippet)
+	void CompileHLSLToOther(const SLProgram& program, const ShaderSnippet& snippet)
 	{
 		// compile hlsl
 		HLSLCompileResult result = HLSLCompiler::Compile(snippet);
+		if (result.data.size() == 0)
+		{
+			FixErrorLineNumber(result.warningErrorMsg, snippet.fileName, program.lineNo + 1);
+			printf("Status:%s\n Message:\n%s\n", result.data.size() != 0 ? "Success" : "Failed", result.warningErrorMsg.c_str());
+			return;
+		}
 
 		if (snippet.shaderTarget == ShaderTarget::kShaderTargetVulkan)
 		{
-			// vulkan reflection
+			// 
 		}
 		else if (snippet.shaderTarget == ShaderTarget::kShaderTargetHLSL)
 		{
-			// hlsl reflection
+			// 
 		}
 		else
 		{
 			CrossCompile(snippet, result);
 		}
-
-		printf("Status:%s Message:%s\n", result.data.size() != 0 ? "Success" : "Failed", result.warningErrorMsg.c_str());
 	}
 
-	void CompileGLSLToOther(const ShaderSnippet& snippet)
+	void CompileGLSLToOther(const SLProgram& program, const ShaderSnippet& snippet)
 	{
 
 	}
@@ -497,12 +501,12 @@ namespace shaderlab
 			case ProgramType::kCG:
 			case ProgramType::kHLSL:
 			{
-				CompileHLSLToOther(snippet);
+				CompileHLSLToOther(program, snippet);
 				break;
 			}
 			case ProgramType::kGLSL:
 			{
-				CompileGLSLToOther(snippet);
+				CompileGLSLToOther(program, snippet);
 				break;
 			}
 			default:
@@ -510,6 +514,8 @@ namespace shaderlab
 				break;
 			}
 		}
+
+
 	}
 
 	bool SLCompiler::Init()

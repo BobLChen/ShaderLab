@@ -156,7 +156,7 @@ namespace shaderlab
 			, description(desc)
 			, attributes(atts)
 		{
-			for (int i = 0; i < 4; ++i)
+			for (int32 i = 0; i < 4; ++i)
 			{
 				value[i] = 0.0f;
 			}
@@ -178,7 +178,7 @@ namespace shaderlab
 				return false;
 			}
 
-			for (int i = 0; i < attributes.size(); ++i)
+			for (int32 i = 0; i < attributes.size(); ++i)
 			{
 				if (attributes[i] != rhs.attributes[i])
 				{
@@ -186,7 +186,7 @@ namespace shaderlab
 				}
 			}
 
-			for (int i = 0; i < 4; ++i) 
+			for (int32 i = 0; i < 4; ++i) 
 			{
 				if (value[i] != rhs.value[i]) 
 				{
@@ -392,6 +392,7 @@ namespace shaderlab
 		}
 
 		ProgramType		type;
+		int32			lineNo;
 		std::string		source;
 	};
 
@@ -460,7 +461,7 @@ namespace shaderlab
 
 		~SLSubShader()
 		{
-			for (int i = 0; i < passes.size(); ++i)
+			for (int32 i = 0; i < passes.size(); ++i)
 			{
 				delete passes[i];
 			}
@@ -526,7 +527,7 @@ namespace shaderlab
 	{
 		~SLShader()
 		{
-			for (int i = 0; i < subShaders.size(); ++i)
+			for (int32 i = 0; i < subShaders.size(); ++i)
 			{
 				delete subShaders[i];
 			}
