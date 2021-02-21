@@ -358,11 +358,13 @@ namespace shaderlab
 		return model;
 	}
 
-	void CrossCompile(const ShaderSnippet& snippet, const HLSLCompileResult& result)
+	ShaderSnippetCompiledResult CrossCompile(const ShaderSnippet& snippet, const HLSLCompileResult& hlslCompield)
 	{
+		ShaderSnippetCompiledResult snippetCompiledResult;
+
 		// get spirv
-		const uint32* spirvData = (const uint32*)result.data.data();
-		const int32   spirvSize = result.data.size() / sizeof(uint32);
+		const uint32* spirvData = (const uint32*)hlslCompield.data.data();
+		const int32   spirvSize = hlslCompield.data.size() / sizeof(uint32);
 
 		bool buildDummySampler     = false;
 		bool combinedImageSamplers = false;
@@ -391,16 +393,16 @@ namespace shaderlab
 
 		if (compiler == nullptr)
 		{
-			// TODO:return error
-			return;
+			snippetCompiledResult.errorMsg = "ShaderTarget not supported.";
+			return snippetCompiledResult;
 		}
 
 		// get model
 		spv::ExecutionModel model = GetExecutionModel(snippet.stage);
 		if (model == spv::ExecutionModelMax)
 		{
-			// TODO:return error
-			return;
+			snippetCompiledResult.errorMsg = "ExecutionModel not supported.";
+			return snippetCompiledResult;
 		}
 
 		compiler->set_entry_point(snippet.entryPoint, model);
@@ -431,43 +433,53 @@ namespace shaderlab
 
 		try
 		{
-			const std::string targetStr = compiler->compile();
-			printf("compiled=%s\n", targetStr.c_str());
+			const std::string compiledCode = compiler->compile();
+			SLCompiledProgram* program = new SLCompiledProgram();
+			program->shaderTarget = snippet.shaderTarget;
+			program->stage        = snippet.stage;
+			program->entryPoint   = snippet.entryPoint;
+			program->data.resize(compiledCode.size());
+			memcpy(program->data.data(), compiledCode.data(), compiledCode.size());
+			snippetCompiledResult.program = program;
 		}
 		catch (spirv_cross::CompilerError& error)
 		{
 			const char* errorMsg = error.what();
-			printf("error=%s\n", errorMsg);
+			snippetCompiledResult.errorMsg = errorMsg;
 		}
 
+		return snippetCompiledResult;
 	}
 
-	void CompileHLSLToOther(const SLProgram& program, const ShaderSnippet& snippet)
+	ShaderSnippetCompiledResult CompileHLSLToOther(const SLNormalPass* pass, const SLProgram& program, const ShaderSnippet& snippet)
 	{
+		ShaderSnippetCompiledResult snippetCompiledResult;
+
 		// compile hlsl
 		HLSLCompileResult result = HLSLCompiler::Compile(snippet);
 		if (result.data.size() == 0)
 		{
 			FixErrorLineNumber(result.warningErrorMsg, snippet.fileName, program.lineNo + 1);
-			printf("Status:%s\n Message:\n%s\n", result.data.size() != 0 ? "Success" : "Failed", result.warningErrorMsg.c_str());
-			return;
+			snippetCompiledResult.errorMsg = result.warningErrorMsg;
 		}
-
-		if (snippet.shaderTarget == ShaderTarget::kShaderTargetVulkan)
+		else if (snippet.shaderTarget == ShaderTarget::kShaderTargetVulkan || snippet.shaderTarget == ShaderTarget::kShaderTargetHLSL)
 		{
-			// 
-		}
-		else if (snippet.shaderTarget == ShaderTarget::kShaderTargetHLSL)
-		{
-			// 
+			SLCompiledProgram* program = new SLCompiledProgram();
+			program->data         = result.data;
+			program->shaderTarget = snippet.shaderTarget;
+			program->stage        = snippet.stage;
+			program->entryPoint   = snippet.entryPoint;
+			snippetCompiledResult.program = program;
 		}
 		else
 		{
-			CrossCompile(snippet, result);
+			snippetCompiledResult = CrossCompile(snippet, result);
 		}
+
+		return snippetCompiledResult;
 	}
 
-	void CompileGLSLToOther(const SLProgram& program, const ShaderSnippet& snippet)
+	void CompileGLSLToOther(const SLNormalPass* pass, const SLProgram& program, const ShaderSnippet& snippet)
 	{
 
 	}
@@ -501,12 +513,12 @@ namespace shaderlab
 			case ProgramType::kCG:
 			case ProgramType::kHLSL:
 			{
-				CompileHLSLToOther(program, snippet);
+				CompileHLSLToOther(pass, program, snippet);
 				break;
 			}
 			case ProgramType::kGLSL:
 			{
-				CompileGLSLToOther(program, snippet);
+				CompileGLSLToOther(pass, program, snippet);
 				break;
 			}
 			default:

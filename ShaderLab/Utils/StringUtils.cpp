@@ -126,12 +126,14 @@ namespace shaderlab
 
 	void FixErrorLineNumber(std::string& source, const std::string& fileName, int32 startLine)
 	{
-		printf("FileName:%s\n", fileName.c_str());
-
-		int32 p = 0;
-		while ((p = source.find(fileName, p)) != std::string::npos) 
+		int32 pos = 0;
+		while ((pos = source.find(fileName, pos)) != std::string::npos)
 		{
-			break;
+			int32 lineStart = source.find(':', pos + fileName.size());
+			int32 lineEnd   = source.find(':', lineStart + 1);
+			int32 lineNumer = std::stoi(source.substr(lineStart + 1, lineEnd - lineStart - 1)) + startLine - 2;
+			source.replace(lineStart + 1, lineEnd - lineStart - 1, std::to_string(lineNumer));
+			pos += fileName.size();
 		}
 	}
 }

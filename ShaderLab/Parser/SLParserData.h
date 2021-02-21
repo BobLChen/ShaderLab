@@ -357,6 +357,7 @@ namespace shaderlab
 		{
 			kPassNormal,
 			kPassUse,
+			kPassCompiled,
 		};
 
 		SLPassBase(PassType inType) 
@@ -377,6 +378,7 @@ namespace shaderlab
 	{
 		SLProgram()
 			: type(kCG)
+			, lineNo(0)
 		{
 
 		}
@@ -449,6 +451,32 @@ namespace shaderlab
 		}
 
 		std::string		useName;
+	};
+
+	struct SLCompiledProgram
+	{
+		ShaderStage						stage;
+		ShaderTarget					shaderTarget;
+		std::string						entryPoint;
+		std::vector<uint8>				data;
+	};
+
+	struct SLCompiledPass : public SLPassBase
+	{
+		SLCompiledPass()
+			: SLPassBase(kPassCompiled)
+		{
+
+		}
+
+		virtual ~SLCompiledPass()
+		{
+
+		}
+
+		SLShaderState					state;
+		std::vector<SLCompiledProgram>	programs;
+		std::vector<std::string>		keywords;
 	};
 
 	struct SLSubShader

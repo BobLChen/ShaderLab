@@ -7,40 +7,10 @@
 
 #include "Common/Common.h"
 #include "Parser/SLParser.h"
+#include "Parser/SLParserTypes.h"
 
 namespace shaderlab
 {
-	enum ShaderTarget
-	{
-		kShaderTargetOpenGL = 0,
-		kShaderTargetGLES20,
-		kShaderTargetGLES30,
-		kShaderTargetMetalIOS,
-		kShaderTargetMetalMac,
-		kShaderTargetHLSL,
-		kShaderTargetVulkan,
-		kShaderTargetCount
-	};
-
-	enum ShaderStage
-	{
-		kProgramVertex = 0,
-		kProgramFragment,
-		kProgramCompute,
-		kProgramGeometry,
-		kProgramHull,
-		kProgramDomain,
-		kProgramMesh,
-		kProgramTask,
-		kProgramRayGen,
-		kProgramRayInt,
-		kProgramRayAHit,
-		kProgramRayCHit,
-		kProgramRayMiss,
-		kProgramRayRcall,
-		kProgramCount
-	};
-
 	struct ShaderModel
 	{
 		uint8 majorVer : 6;
@@ -239,9 +209,10 @@ namespace shaderlab
 		IncludeCallback					includeCallback;
 	};
 
-	struct ShaderCompileResult
+	struct ShaderSnippetCompiledResult
 	{
-		
+		std::string						errorMsg;
+		SLCompiledProgram*				program;
 	};
 
 	class SLCompiler

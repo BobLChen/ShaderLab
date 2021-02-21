@@ -108,4 +108,35 @@ namespace shaderlab
         kStencilOpDecrWrap,
         kStencilOpCount
     };
+
+	enum ShaderTarget
+	{
+		kShaderTargetOpenGL = 0,
+		kShaderTargetGLES20,
+		kShaderTargetGLES30,
+		kShaderTargetMetalIOS,
+		kShaderTargetMetalMac,
+		kShaderTargetHLSL,
+		kShaderTargetVulkan,
+		kShaderTargetCount
+	};
+
+	enum ShaderStage
+	{
+		kProgramVertex = 0,
+		kProgramFragment,
+		kProgramCompute,
+		kProgramGeometry,
+		kProgramHull,
+		kProgramDomain,
+		kProgramMesh,
+		kProgramTask,
+		kProgramRayGen,
+		kProgramRayInt,
+		kProgramRayAHit,
+		kProgramRayCHit,
+		kProgramRayMiss,
+		kProgramRayRcall,
+		kProgramCount
+	};
 }
