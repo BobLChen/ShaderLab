@@ -102,6 +102,11 @@ int main(int argc, char const *argv[])
 		return 0;
 	}
 
+	if (option.output.empty())
+	{
+		option.output = option.input + ".compiled";
+	}
+
 	// load shaderlab text
     std::string shaderLabData;
 	if (!ReadTextFile(option.input.c_str(), shaderLabData))
