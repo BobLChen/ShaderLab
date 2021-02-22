@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "name": "Linux-VulkanTutorials",
+            "includePath": [
+                "${workspaceFolder}/ShaderLab/**",
+                "${workspaceFolder}/ThirdParty/DirectXShaderCompiler/include/**",
+                "${workspaceFolder}/ThirdParty/SPIRV-Cross/include/**",
+                "${workspaceFolder}/ThirdParty/SPIRV-Headers/include/**",
+                "${workspaceFolder}/ThirdParty/SPIRV-Tools/include/**"
+            ],
+            "defines": ["PLATFORM_LINUX=1"],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}
