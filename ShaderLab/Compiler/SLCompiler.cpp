@@ -77,7 +77,7 @@ namespace shaderlab
 		return "unknown";
 	}
 
-	std::string GetShaderTargetName(ShaderTarget shaderTarget)
+	std::string GetShaderTarget(ShaderTarget shaderTarget)
 	{
 		if (shaderTarget == kShaderTargetOpenGL) 
 		{
@@ -271,7 +271,7 @@ namespace shaderlab
 						snippet.sourceLength    = source.size();
 						snippet.entryPoint      = params.entryName[programIndex].c_str();
 						snippet.defines			= defines;
-						snippet.stage           = stage;
+						snippet.shaderStage     = stage;
 						snippet.shaderModel     = { 6, 0 };
 						snippet.shaderTarget    = (ShaderTarget)shaderTargetIndex;
 						snippet.includeCallback = shaderInfo.includeCallback;
@@ -336,7 +336,7 @@ namespace shaderlab
 		for (auto& var : variables)
 		{
 			auto varClass = compiler->get_storage_class(var);
-			if ((snippet.stage == ShaderStage::kProgramVertex) && (varClass == spv::StorageClass::StorageClassOutput))
+			if ((snippet.shaderStage == ShaderStage::kProgramVertex) && (varClass == spv::StorageClass::StorageClassOutput))
 			{
 				auto name = compiler->get_name(var);
 				if (name.find("out.var.") == 0)
@@ -345,7 +345,7 @@ namespace shaderlab
 					compiler->set_name(var, name);
 				}
 			}
-			else if ((snippet.stage == ShaderStage::kProgramFragment) && (varClass == spv::StorageClass::StorageClassInput))
+			else if ((snippet.shaderStage == ShaderStage::kProgramFragment) && (varClass == spv::StorageClass::StorageClassInput))
 			{
 				auto name = compiler->get_name(var);
 				if (name.find("in.var.") == 0)
@@ -472,7 +472,7 @@ namespace shaderlab
 		}
 
 		// get model
-		spv::ExecutionModel model = GetExecutionModel(snippet.stage);
+		spv::ExecutionModel model = GetExecutionModel(snippet.shaderStage);
 		if (model == spv::ExecutionModelMax)
 		{
 			snippetCompiledResult.errorMsg = "ExecutionModel not supported.";
@@ -510,7 +510,7 @@ namespace shaderlab
 			const std::string compiledCode = compiler->compile();
 			SLCompiledProgram* program = new SLCompiledProgram();
 			program->shaderTarget = snippet.shaderTarget;
-			program->stage        = snippet.stage;
+			program->shaderStage  = snippet.shaderStage;
 			program->entryPoint   = snippet.entryPoint;
 			program->data.resize(compiledCode.size());
 			memcpy(program->data.data(), compiledCode.data(), compiledCode.size());
@@ -543,7 +543,7 @@ namespace shaderlab
 			SLCompiledProgram* program = new SLCompiledProgram();
 			program->data         = result.data;
 			program->shaderTarget = snippet.shaderTarget;
-			program->stage        = snippet.stage;
+			program->shaderStage  = snippet.shaderStage;
 			program->entryPoint   = snippet.entryPoint;
 			MacroDefinesToKeywords(snippet.defines, program->keywords);
 			snippetCompiledResult.program = program;

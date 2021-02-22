@@ -49,7 +49,7 @@ namespace shaderlab
 
 	std::wstring ShaderProfileName(ShaderStage stage, ShaderModel shaderModel);
 
-	std::string GetShaderTargetName(ShaderTarget shaderTarget);
+	std::string GetShaderTarget(ShaderTarget shaderTarget);
 
 	std::string GetShaderStage(ShaderStage shaderStage);
 
@@ -197,7 +197,7 @@ namespace shaderlab
 		const char*						source;
 		uint32							sourceLength;
 		const char*						entryPoint;
-		ShaderStage						stage;
+		ShaderStage						shaderStage;
 		ShaderModel						shaderModel;
 		ShaderTarget					shaderTarget;
 		std::vector<MacroDefine>		defines;

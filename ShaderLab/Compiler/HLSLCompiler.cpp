@@ -172,7 +172,7 @@ namespace shaderlab
 		HLSLCompileResult hlslCompileResult;
 
 		// shader profile
-		std::wstring shaderProfile = ShaderProfileName(snippet.stage, snippet.shaderModel);
+		std::wstring shaderProfile = ShaderProfileName(snippet.shaderStage, snippet.shaderModel);
 
 		// defines
 		std::vector<DxcDefine> dxcDefines;

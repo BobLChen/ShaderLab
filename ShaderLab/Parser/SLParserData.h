@@ -135,6 +135,30 @@ namespace shaderlab
 			return !(*this == rhs);
 		}
 
+		std::string GetTextureDimension() const
+		{
+			if (dimension == TextureDimension::kTexDim2D)
+			{
+				return "2D";
+			}
+			else if (dimension == TextureDimension::kTexDim2DArray)
+			{
+				return "2DArray";
+			}
+			else if (dimension == TextureDimension::kTexDim3D)
+			{
+				return "3D";
+			}
+			else if (dimension == TextureDimension::kTexDimCUBE)
+			{
+				return "CUBE";
+			}
+			else
+			{
+				return "Unknown";
+			}
+		}
+
 		TextureDimension	dimension;
 		std::string			name;
 	};
@@ -166,24 +190,24 @@ namespace shaderlab
 		{
 			switch (type)
 			{
-			case SLPropValue::kColor:
-				return "Color";
-				break;
-			case SLPropValue::kVector:
-				return "Vector";
-				break;
-			case SLPropValue::kFloat:
-				return "Float";
-				break;
-			case SLPropValue::kRange:
-				return "Range";
-				break;
-			case SLPropValue::kTexture:
-				return "Texture";
-				break;
-			default:
-				return "UnKnown";
-				break;
+				case SLPropValue::kColor:
+					return "Color";
+					break;
+				case SLPropValue::kVector:
+					return "Vector";
+					break;
+				case SLPropValue::kFloat:
+					return "Float";
+					break;
+				case SLPropValue::kRange:
+					return "Range";
+					break;
+				case SLPropValue::kTexture:
+					return "Texture";
+					break;
+				default:
+					return "UnKnown";
+					break;
 			}
 			return "UnKnown";
 		}
@@ -497,7 +521,7 @@ namespace shaderlab
 
 	struct SLCompiledProgram
 	{
-		ShaderStage						stage;
+		ShaderStage						shaderStage;
 		ShaderTarget					shaderTarget;
 		std::string						entryPoint;
 		std::vector<uint8>				data;

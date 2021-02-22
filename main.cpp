@@ -90,7 +90,7 @@ ArgOption ParseOptions(int argc, char const *argv[])
 	return option;
 }
 
-std::string ShaderToJson(shaderlab::SLShader* shader);
+std::string ShaderToJson(const shaderlab::SLShader* shader);
 
 int main(int argc, char const *argv[])
 {
@@ -128,6 +128,12 @@ int main(int argc, char const *argv[])
 
 	delete sourceShader;
 	delete compiledShader;
+	
+	FILE* file = fopen(option.output.c_str(), "wb");
+	fwrite(jsonData.c_str(), jsonData.size(), 1, file);
+	fclose(file);
+
+	printf("Compile completed!");
 
     return 0;
 }
@@ -147,7 +153,7 @@ void SLPropValueToJson(Json::Value& data, const shaderlab::SLPropValue& prop)
 	data["value"]["w"] = prop.value[3];
 
 	data["texture"]["name"] = prop.texture.name;
-	data["texture"]["dimension"] = prop.texture.dimension;
+	data["texture"]["dimension"] = prop.texture.GetTextureDimension();
 }
 
 void SLFloatToJson(Json::Value& data, const shaderlab::SLFloat& val)
@@ -201,13 +207,29 @@ void SLProgramToJson(Json::Value& data, const shaderlab::SLProgram& program)
 
 void SLProgramToJson(Json::Value& data, const shaderlab::SLCompiledProgram* program)
 {
-	/*ShaderStage						stage;
-	ShaderTarget					shaderTarget;
-	std::string						entryPoint;
-	std::vector<uint8>				data;
-	std::vector<std::string>		keywords;*/
+	data["shaderStage"]  = GetShaderStage(program->shaderStage);
+	data["shaderTarget"] = GetShaderTarget(program->shaderTarget);
+	data["entryPoint"]   = program->entryPoint;
+	for (int32 i = 0; i < program->keywords.size(); ++i)
+	{
+		data["keywords"][i] = program->keywords[i];
+	}
 
-	data["stage"] = program->GetStage();
+	if (program->shaderTarget == ShaderTarget::kShaderTargetHLSL || program->shaderTarget == ShaderTarget::kShaderTargetVulkan)
+	{
+		std::string base64Data;
+		Base64Encode(program->data.data(), program->data.size(), base64Data);
+
+		data["data"]   = base64Data;
+		data["encode"] = "base64";
+	}
+	else
+	{
+		std::string stringData(program->data.begin(), program->data.end());
+
+		data["data"]   = stringData;
+		data["encode"] = "string";
+	}
 }
 
 void SLPassToJson(Json::Value& data, const shaderlab::SLPassBase* basePass)
@@ -271,4 +293,10 @@ std::string ShaderToJson(const shaderlab::SLShader* shader)
 	{
 		SLSubShaderToJson(data["subShaders"][i], shader->subShaders[i]);
 	}
+
+	Json::FastWriter fastWsriter;
+	fastWsriter.omitEndingLineFeed();
+
+	std::string jsonString = fastWsriter.write(data);
+	return jsonString;
 }
