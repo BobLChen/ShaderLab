@@ -223,7 +223,7 @@ namespace shaderlab
 
 		static bool Destroy();
 
-		static void Compile(const CompileShaderInfo& shader);
+		static SLShader* Compile(const CompileShaderInfo& shader);
 
 	};
 }

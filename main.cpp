@@ -106,18 +106,22 @@ int main(int argc, char const *argv[])
 	}
 
 	// parse shaderlab
-	shaderlab::SLShader* shader = ParseShaderLab(shaderLabData.c_str(), shaderLabData.size());
+	shaderlab::SLShader* sourceShader = ParseShaderLab(shaderLabData.c_str(), shaderLabData.size());
 	
 	// init compiler
 	shaderlab::SLCompiler::Init();
 
-	// compile shader
+	// shader info
 	shaderlab::CompileShaderInfo info = { };
-	info.shader          = shader;
+	info.shader          = sourceShader;
 	info.fileName        = option.input.c_str();
 	info.includeCallback = OnLoadInlcudeCallback;
-	shaderlab::SLCompiler::Compile(info);
 
-	delete shader;
+	// compile shader
+	shaderlab::SLShader* compiledShader = shaderlab::SLCompiler::Compile(info);
+
+	delete sourceShader;
+	delete compiledShader;
+
     return 0;
 }

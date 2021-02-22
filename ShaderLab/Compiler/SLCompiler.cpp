@@ -358,6 +358,18 @@ namespace shaderlab
 		return model;
 	}
 
+	void MacroDefinesToKeywords(const std::vector<MacroDefine>& defines, std::vector<std::string>& keywords)
+	{
+		for (int32 i = 0; i < defines.size(); ++i)
+		{
+			const MacroDefine& define = defines[i];
+			if (!define.name.empty() && define.value.empty())
+			{
+				keywords.push_back(define.name);
+			}
+		}
+	}
+
 	ShaderSnippetCompiledResult CrossCompile(const ShaderSnippet& snippet, const HLSLCompileResult& hlslCompield)
 	{
 		ShaderSnippetCompiledResult snippetCompiledResult;
@@ -440,6 +452,7 @@ namespace shaderlab
 			program->entryPoint   = snippet.entryPoint;
 			program->data.resize(compiledCode.size());
 			memcpy(program->data.data(), compiledCode.data(), compiledCode.size());
+			MacroDefinesToKeywords(snippet.defines, program->keywords);
 			snippetCompiledResult.program = program;
 		}
 		catch (spirv_cross::CompilerError& error)
@@ -451,12 +464,13 @@ namespace shaderlab
 		return snippetCompiledResult;
 	}
 
-	ShaderSnippetCompiledResult CompileHLSLToOther(const SLNormalPass* pass, const SLProgram& program, const ShaderSnippet& snippet)
+	ShaderSnippetCompiledResult CrossCompileHLSL(const SLNormalPass* pass, const SLProgram& program, const ShaderSnippet& snippet)
 	{
 		ShaderSnippetCompiledResult snippetCompiledResult;
 
 		// compile hlsl
 		HLSLCompileResult result = HLSLCompiler::Compile(snippet);
+
 		if (result.data.size() == 0)
 		{
 			FixErrorLineNumber(result.warningErrorMsg, snippet.fileName, program.lineNo + 1);
@@ -469,6 +483,7 @@ namespace shaderlab
 			program->shaderTarget = snippet.shaderTarget;
 			program->stage        = snippet.stage;
 			program->entryPoint   = snippet.entryPoint;
+			MacroDefinesToKeywords(snippet.defines, program->keywords);
 			snippetCompiledResult.program = program;
 		}
 		else
@@ -479,14 +494,21 @@ namespace shaderlab
 		return snippetCompiledResult;
 	}
 
-	void CompileGLSLToOther(const SLNormalPass* pass, const SLProgram& program, const ShaderSnippet& snippet)
+	ShaderSnippetCompiledResult CrossCompileGLSL(const SLNormalPass* pass, const SLProgram& program, const ShaderSnippet& snippet)
 	{
+		ShaderSnippetCompiledResult snippetCompiledResult;
 
+
+		snippetCompiledResult.errorMsg = "GLSLProgram not supported!";
+		return snippetCompiledResult;
 	}
 
-	void CompileNormalPass(const CompileShaderInfo& shaderInfo, const SLNormalPass* pass)
+	SLCompiledPass* CompileNormalPass(const CompileShaderInfo& shaderInfo, const SLNormalPass* pass)
 	{
 		const SLProgram& program = pass->program;
+
+		SLCompiledPass* compiledResult = new SLCompiledPass();
+		compiledResult->state = pass->state;
 
 		// parse pragma
 		std::vector<PragmaParam> pragmaParams;
@@ -508,26 +530,40 @@ namespace shaderlab
 		for (int32 snippetIndex = 0; snippetIndex < snippets.size(); ++snippetIndex)
 		{
 			const ShaderSnippet& snippet = snippets[snippetIndex];
+			ShaderSnippetCompiledResult snippetResult;
+
 			switch (snippet.sourceType)
 			{
-			case ProgramType::kCG:
-			case ProgramType::kHLSL:
-			{
-				CompileHLSLToOther(pass, program, snippet);
-				break;
+				case ProgramType::kCG:
+				case ProgramType::kHLSL:
+				{
+					snippetResult = CrossCompileHLSL(pass, program, snippet);
+					break;
+				}
+				case ProgramType::kGLSL:
+				{
+					snippetResult = CrossCompileGLSL(pass, program, snippet);
+					break;
+				}
+				default:
+				{
+					snippetResult.errorMsg = "ProgramType not support!";
+					break;
+				}
 			}
-			case ProgramType::kGLSL:
+			
+			if (snippetResult.errorMsg.empty())
 			{
-				CompileGLSLToOther(pass, program, snippet);
-				break;
+				compiledResult->programs.push_back(snippetResult.program);
 			}
-			default:
-				printf("ProgramType[%d] not support!", snippet.sourceType);
+			else
+			{
+				compiledResult->errorMsg = snippetResult.errorMsg;
 				break;
 			}
 		}
 
-
+		return compiledResult;
 	}
 
 	bool SLCompiler::Init()
@@ -544,24 +580,40 @@ namespace shaderlab
 		return success;
 	}
 
-	void SLCompiler::Compile(const CompileShaderInfo& shaderInfo)
+	SLShader* SLCompiler::Compile(const CompileShaderInfo& shaderInfo)
 	{
-		SLShader* shader = shaderInfo.shader;
+		SLShader* sourceShader   = shaderInfo.shader;
+		SLShader* compiledShader = new SLShader();
+		compiledShader->fallbackName = sourceShader->fallbackName;
+		compiledShader->properties   = sourceShader->properties;
+		compiledShader->shaderName   = sourceShader->shaderName;
 
 		// compile code
-		for (int32 shaderIdx = 0; shaderIdx < shader->subShaders.size(); ++shaderIdx)
+		for (int32 shaderIdx = 0; shaderIdx < sourceShader->subShaders.size(); ++shaderIdx)
 		{
-			SLSubShader* subShader = shader->subShaders[shaderIdx];
-			for (int32 subShaderIdx = 0; subShaderIdx < subShader->passes.size(); ++subShaderIdx)
+			SLSubShader* sourceSubShader   = sourceShader->subShaders[shaderIdx];
+			SLSubShader* compiledSubShader = new SLSubShader();
+			compiledSubShader->lod  = sourceSubShader->lod;
+			compiledSubShader->tags = sourceSubShader->tags;
+			compiledShader->subShaders.push_back(compiledSubShader);
+
+			for (int32 subShaderIdx = 0; subShaderIdx < sourceSubShader->passes.size(); ++subShaderIdx)
 			{
-				SLPassBase* slpass = subShader->passes[subShaderIdx];
-				if (slpass->type == SLPassBase::kPassNormal)
+				SLPassBase* sourcePass = sourceSubShader->passes[subShaderIdx];
+				if (sourcePass->type == SLPassBase::kPassNormal)
 				{
-					CompileNormalPass(shaderInfo, (SLNormalPass*)slpass);
+					SLCompiledPass* compiledPass = CompileNormalPass(shaderInfo, (SLNormalPass*)sourcePass);
+					compiledSubShader->passes.push_back(compiledPass);
+				}
+				else if (sourcePass->type == SLPassBase::kPassUse)
+				{
+					SLUsePass* sourceUsePass = (SLUsePass*)sourcePass;
+					SLUsePass* compiledPass  = new SLUsePass(sourceUsePass->useName.c_str());
+					compiledSubShader->passes.push_back(compiledPass);
 				}
 			}
 		}
 
-		// result
+		return compiledShader;
 	}
 }

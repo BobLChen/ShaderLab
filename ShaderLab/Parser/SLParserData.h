@@ -459,6 +459,7 @@ namespace shaderlab
 		ShaderTarget					shaderTarget;
 		std::string						entryPoint;
 		std::vector<uint8>				data;
+		std::vector<std::string>		keywords;
 	};
 
 	struct SLCompiledPass : public SLPassBase
@@ -471,12 +472,16 @@ namespace shaderlab
 
 		virtual ~SLCompiledPass()
 		{
-
+			for (int32 i = 0; i < programs.size(); ++i)
+			{
+				delete programs[i];
+			}
+			programs.clear();
 		}
 
 		SLShaderState					state;
-		std::vector<SLCompiledProgram>	programs;
-		std::vector<std::string>		keywords;
+		std::string						errorMsg;
+		std::vector<SLCompiledProgram*>	programs;
 	};
 
 	struct SLSubShader
