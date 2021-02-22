@@ -76,17 +76,17 @@ endif()
 add_custom_target(CopyDxcompiler ALL
     COMMAND 
         ${CMAKE_COMMAND} -E copy
-        ${CMAKE_BINARY_DIR}/ThirdParty/DirectXShaderCompiler/${CMAKE_CFG_INTDIR}/${DXCompilerOutputFolder}/${DXCompilerName}
-        ${CMAKE_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${DXCompilerName}
+        ${BINARY_ROOT_DIR}/ThirdParty/DirectXShaderCompiler/${CMAKE_CFG_INTDIR}/${DXCompilerOutputFolder}/${DXCompilerName}
+        ${BINARY_ROOT_DIR}/${CMAKE_CFG_INTDIR}/${DXCompilerName}
     COMMENT "Copying dxcompiler..."
 )
 add_dependencies(CopyDxcompiler dxcompiler)
 
 include_directories(
-    ${CMAKE_SOURCE_DIR}/ThirdParty/DirectXShaderCompiler/include
-    ${CMAKE_SOURCE_DIR}/ThirdParty/SPIRV-Cross/include
-    ${CMAKE_SOURCE_DIR}/ThirdParty/SPIRV-Headers/include
-    ${CMAKE_SOURCE_DIR}/ThirdParty/SPIRV-Tools/include
+    ${SOURCE_ROOT_DIR}/ThirdParty/DirectXShaderCompiler/include
+    ${SOURCE_ROOT_DIR}/ThirdParty/SPIRV-Cross/include
+    ${SOURCE_ROOT_DIR}/ThirdParty/SPIRV-Headers/include
+    ${SOURCE_ROOT_DIR}/ThirdParty/SPIRV-Tools/include
 )
 
 target_link_libraries(

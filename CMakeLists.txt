@@ -14,6 +14,9 @@ include_directories(
 	ShaderLab/
 )
 
+set(SOURCE_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(BINARY_ROOT_DIR ${CMAKE_CURRENT_BINARY_DIR})
+
 add_subdirectory(ShaderLab)
 add_subdirectory(ThirdParty)
 
