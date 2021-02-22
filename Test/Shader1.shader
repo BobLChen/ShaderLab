@@ -29,7 +29,7 @@ Shader "Particles/Blend"
 				#pragma multi_compile TEST1 TEST2
 				#pragma multi_compile TEST3 TEST4 TEST5
 				#pragma multi_compile TEST6 TEST7 TEST8 TEST9
-				#pragma target gles30
+				#pragma target gles30 opengl gles20 ios mac vulkan hlsl
 
 				#include "TestCgInclude.cginc"
 
