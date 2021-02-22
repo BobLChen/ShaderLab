@@ -41,9 +41,12 @@ set(SL_COMMON_SRCS
 
 set(SL_UTILS_HDRS
     Utils/StringUtils.h
+    Utils/json.h
+    Utils/json-forwards.h
 )
 set(SL_UTILS_SRCS
     Utils/StringUtils.cpp
+    Utils/jsoncpp.cpp
 )
 
 add_library(shaderlab STATIC

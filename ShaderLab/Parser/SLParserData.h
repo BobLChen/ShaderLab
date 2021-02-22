@@ -162,6 +162,32 @@ namespace shaderlab
 			}
 		}
 
+		std::string GetType() const
+		{
+			switch (type)
+			{
+			case SLPropValue::kColor:
+				return "Color";
+				break;
+			case SLPropValue::kVector:
+				return "Vector";
+				break;
+			case SLPropValue::kFloat:
+				return "Float";
+				break;
+			case SLPropValue::kRange:
+				return "Range";
+				break;
+			case SLPropValue::kTexture:
+				return "Texture";
+				break;
+			default:
+				return "UnKnown";
+				break;
+			}
+			return "UnKnown";
+		}
+
 		bool operator == (const SLPropValue& rhs) const
 		{
 			if (name != rhs.name || 
@@ -391,6 +417,22 @@ namespace shaderlab
 		bool operator != (const SLProgram& rhs) const
 		{
 			return !(*this == rhs);
+		}
+
+		std::string GetType() const
+		{
+			if (type == ProgramType::kCG)
+			{
+				return "CG";
+			}
+			else if (type == ProgramType::kGLSL)
+			{
+				return "GLSL";
+			}
+			else
+			{
+				return "HLSL";
+			}
 		}
 
 		ProgramType		type;

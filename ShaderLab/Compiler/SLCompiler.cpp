@@ -15,6 +15,68 @@
 
 namespace shaderlab
 {
+	std::string GetShaderStage(ShaderStage shaderStage)
+	{
+		if (shaderStage == ShaderStage::kProgramVertex)
+		{
+			return "vertex";
+		}
+		else if (shaderStage == ShaderStage::kProgramFragment)
+		{
+			return "fragment";
+		}
+		else if (shaderStage == ShaderStage::kProgramCompute)
+		{
+			return "compute";
+		}
+		else if (shaderStage == ShaderStage::kProgramGeometry)
+		{
+			return "geometry";
+		}
+		else if (shaderStage == ShaderStage::kProgramHull)
+		{
+			return "hull";
+		}
+		else if (shaderStage == ShaderStage::kProgramDomain)
+		{
+			return "domain";
+		}
+		else if (shaderStage == ShaderStage::kProgramMesh)
+		{
+			return "mesh";
+		}
+		else if (shaderStage == ShaderStage::kProgramTask)
+		{
+			return "task";
+		}
+		else if (shaderStage == ShaderStage::kProgramRayGen)
+		{
+			return "rgen";
+		}
+		else if (shaderStage == ShaderStage::kProgramRayInt)
+		{
+			return "rint";
+		}
+		else if (shaderStage == ShaderStage::kProgramRayAHit)
+		{
+			return "rahit";
+		}
+		else if (shaderStage == ShaderStage::kProgramRayCHit)
+		{
+			return "rchit";
+		}
+		else if (shaderStage == ShaderStage::kProgramRayMiss)
+		{
+			return "rmiss";
+		}
+		else if (shaderStage == ShaderStage::kProgramRayRcall)
+		{
+			return "rcall";
+		}
+
+		return "unknown";
+	}
+
 	std::string GetShaderTargetName(ShaderTarget shaderTarget)
 	{
 		if (shaderTarget == kShaderTargetOpenGL) 

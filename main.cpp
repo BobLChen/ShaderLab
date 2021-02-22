@@ -5,6 +5,8 @@
 #include "Parser/SLParser.h"
 #include "Compiler/SLCompiler.h"
 #include "Compiler/HLSLCompiler.h"
+#include "Utils/StringUtils.h"
+#include "Utils/json.h"
 
 bool ReadTextFile(const std::string &filename, std::string &output)
 {
@@ -88,6 +90,8 @@ ArgOption ParseOptions(int argc, char const *argv[])
 	return option;
 }
 
+std::string ShaderToJson(shaderlab::SLShader* shader);
+
 int main(int argc, char const *argv[])
 {
 	// get options
@@ -120,8 +124,151 @@ int main(int argc, char const *argv[])
 	// compile shader
 	shaderlab::SLShader* compiledShader = shaderlab::SLCompiler::Compile(info);
 
+	std::string jsonData = ShaderToJson(compiledShader);
+
 	delete sourceShader;
 	delete compiledShader;
 
     return 0;
+}
+
+void SLPropValueToJson(Json::Value& data, const shaderlab::SLPropValue& prop)
+{
+	data["type"] = prop.GetType();
+	data["name"] = prop.name;
+	data["description"] = prop.description;
+	for (int i = 0; i < prop.attributes.size(); ++i) 
+	{
+		data["attributes"][i] = prop.attributes[i];
+	}
+	data["value"]["x"] = prop.value[0];
+	data["value"]["y"] = prop.value[1];
+	data["value"]["z"] = prop.value[2];
+	data["value"]["w"] = prop.value[3];
+
+	data["texture"]["name"] = prop.texture.name;
+	data["texture"]["dimension"] = prop.texture.dimension;
+}
+
+void SLFloatToJson(Json::Value& data, const shaderlab::SLFloat& val)
+{
+	data["val"] = val.val;
+	data["ref"] = val.ref;
+}
+
+void SLStencilToJson(Json::Value& data, const shaderlab::SLStencilOperation & val)
+{
+	data["comp"]  = val.comp.val;
+	data["pass"]  = val.pass.val;
+	data["fail"]  = val.fail.val;
+	data["zFail"] = val.zFail.val;
+}
+
+void SLStateToJson(Json::Value& data, const shaderlab::SLShaderState& state)
+{
+	data["lod"]  = state.lod;
+	data["name"] = state.name;
+	for (auto it = state.tags.begin(); it != state.tags.end(); ++it) 
+	{
+		data["tags"][it->first] = it->second;
+	}
+	SLFloatToJson(data["colMask"],			state.colMask);
+	SLFloatToJson(data["alphaToMask"],		state.alphaToMask);
+	SLFloatToJson(data["offsetFactor"],		state.offsetFactor);
+	SLFloatToJson(data["offsetUnits"],		state.offsetUnits);
+	SLFloatToJson(data["zTest"],			state.zTest);
+	SLFloatToJson(data["zWrite"],			state.zWrite);
+	SLFloatToJson(data["culling"],			state.culling);
+	SLFloatToJson(data["blendOp"],			state.blendOp);
+	SLFloatToJson(data["blendOpAlpha"],		state.blendOpAlpha);
+	SLFloatToJson(data["srcBlend"],			state.srcBlend);
+	SLFloatToJson(data["destBlend"],		state.destBlend);
+	SLFloatToJson(data["srcBlendAlpha"],	state.srcBlendAlpha);
+	SLFloatToJson(data["destBlendAlpha"],	state.destBlendAlpha);
+	SLFloatToJson(data["stencilRef"],		state.stencilRef);
+	SLFloatToJson(data["stencilReadMask"],  state.stencilReadMask);
+	SLFloatToJson(data["stencilWriteMask"],	state.stencilWriteMask);
+	SLStencilToJson(data["stencilOp"],		state.stencilOp);
+	SLStencilToJson(data["stencilOpFront"], state.stencilOpFront);
+	SLStencilToJson(data["stencilOpBack"],	state.stencilOpBack);
+}
+
+void SLProgramToJson(Json::Value& data, const shaderlab::SLProgram& program)
+{
+	data["type"]  = program.GetType();
+	data["souce"] = program.source;
+}
+
+void SLProgramToJson(Json::Value& data, const shaderlab::SLCompiledProgram* program)
+{
+	/*ShaderStage						stage;
+	ShaderTarget					shaderTarget;
+	std::string						entryPoint;
+	std::vector<uint8>				data;
+	std::vector<std::string>		keywords;*/
+
+	data["stage"] = program->GetStage();
+}
+
+void SLPassToJson(Json::Value& data, const shaderlab::SLPassBase* basePass)
+{
+	if (basePass->type == shaderlab::SLPassBase::kPassNormal)
+	{
+		const shaderlab::SLNormalPass* pass = (const shaderlab::SLNormalPass*)basePass;
+
+		data["type"] = "normalPass";
+		SLStateToJson(data["state"], pass->state);
+		SLProgramToJson(data["program"], pass->program);
+	}
+	else if (basePass->type == shaderlab::SLPassBase::kPassCompiled)
+	{
+		const shaderlab::SLCompiledPass* pass = (const shaderlab::SLCompiledPass*)basePass;
+		data["type"] = "compiledPass";
+		data["errorMsg"] = pass->errorMsg;
+		SLStateToJson(data["state"], pass->state);
+		for (int32 i = 0; i < pass->programs.size(); ++i)
+		{
+			SLProgramToJson(data["programs"][i], pass->programs[i]);
+		}
+	}
+	else if (basePass->type == shaderlab::SLPassBase::kPassUse)
+	{
+		const shaderlab::SLUsePass* pass = (const shaderlab::SLUsePass*)basePass;
+
+		data["type"]    = "usePass";
+		data["useName"] = pass->useName;
+	}
+}
+
+void SLSubShaderToJson(Json::Value& data, const shaderlab::SLSubShader* subShader)
+{
+	data["lod"] = subShader->lod;
+
+	for (auto it = subShader->tags.begin(); it != subShader->tags.end(); ++it)
+	{
+		data["tags"][it->first] = it->second;
+	}
+
+	for (int32 i = 0; i < subShader->passes.size(); ++i)
+	{
+		SLPassToJson(data["passes"][i], subShader->passes[i]);
+	}
+}
+
+std::string ShaderToJson(const shaderlab::SLShader* shader)
+{
+	Json::Value data;
+
+	data["shaderName"]   = shader->shaderName;
+	data["fallbackName"] = shader->fallbackName;
+
+	for (int32 i = 0; i < shader->properties.props.size(); ++i)
+	{
+		SLPropValueToJson(data["properties"], shader->properties.props[i]);
+	}
+
+	for (int32 i = 0; i < shader->subShaders.size(); ++i)
+	{
+		SLSubShaderToJson(data["subShaders"][i], shader->subShaders[i]);
+	}
 }

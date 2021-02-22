@@ -51,6 +51,8 @@ namespace shaderlab
 
 	std::string GetShaderTargetName(ShaderTarget shaderTarget);
 
+	std::string GetShaderStage(ShaderStage shaderStage);
+
 	ShaderTarget GetShaderTarget(const std::string& name);
 
 	struct PragmaParam

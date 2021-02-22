@@ -60,7 +60,7 @@ Shader "Particles/Blend"
 				
 				float4 frag(PSInput input) : SV_Target
 				{
-				    float4 color;a
+				    float4 color;
 				    color.rgb = CalcBrdf(diffColor, specColor, shininess, input.lightVec, input.halfway, input.normal);
 				    color.a = TestCGIncludeFunc(1.0);
 				    return color;
