@@ -90,6 +90,9 @@ include_directories(
     ${SOURCE_ROOT_DIR}/ThirdParty/SPIRV-Cross/include
     ${SOURCE_ROOT_DIR}/ThirdParty/SPIRV-Headers/include
     ${SOURCE_ROOT_DIR}/ThirdParty/SPIRV-Tools/include
+    ${SOURCE_ROOT_DIR}/ThirdParty/glslang/glslang/include
+    ${SOURCE_ROOT_DIR}/ThirdParty/glslang/OGLCompilersDLL
+    ${SOURCE_ROOT_DIR}/ThirdParty/glslang/SPIRV
 )
 
 target_link_libraries(
@@ -103,6 +106,11 @@ target_link_libraries(
     spirv-cross-msl
     spirv-cross-util
     SPIRV-Tools
+    glslang
+    OGLCompiler
+    OSDependent
+    SPIRV
+    SPVRemapper
 )
 
 add_dependencies(
@@ -113,4 +121,9 @@ add_dependencies(
     spirv-cross-msl
     CopyDxcompiler
     SPIRV-Tools
+    glslang
+    OGLCompiler
+    OSDependent
+    SPIRV
+    SPVRemapper
 )
