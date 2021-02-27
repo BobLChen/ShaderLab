@@ -1,6 +1,7 @@
 ﻿#include <stdio.h>
 #include <string>
 #include <cstring>
+#include <fstream>
 
 #include "Parser/SLParser.h"
 #include "Compiler/SLCompiler.h"
@@ -8,41 +9,33 @@
 #include "Utils/StringUtils.h"
 #include "Utils/json.h"
 
-bool ReadTextFile(const std::string &filename, std::string &output)
+ByteArray ReadTextFileData(const char* path)
 {
-	FILE *file = fopen(filename.c_str(), "rt");
-	if (!file) 
+	ByteArray bytes;
+
+	std::ifstream file(path, std::ios_base::binary | std::ios_base::ate);
+	if (!file)
 	{
-		printf("file not found :%s\n", filename.c_str());
-		return false;
+		printf("ERROR:File:%s not found!\n", path);
+		return bytes;
 	}
 
-	fseek(file, 0, SEEK_END);
-	int dataSize = ftell(file);
-	fseek(file, 0, SEEK_SET);
-	if (dataSize <= 0) 
-	{
-		fclose(file);
-		printf("not found data :%s\n", filename.c_str());
-		return false;
-	}
+	int32 length  = file.tellg();
+	char* content = new char[length + 1];
+	content[length] = '\0';
 
-	output.resize(dataSize);
-	int readSize = fread(&(*output.begin()), 1, dataSize, file);
-	fclose(file);
-	output.resize(readSize);
+	file.seekg(0, file.beg);
+	file.read(content, length);
 
-	return true;
+	bytes.data = content;
+	bytes.size = length;
+
+	return bytes;
 }
 
-std::string OnLoadInlcudeCallback(const char* includeName)
+ByteArray OnLoadInlcudeCallback(const char* includeName)
 {
-	std::string includeData;
-	if (!ReadTextFile(includeName, includeData))
-	{
-		printf("Failed to load include file:%s\n", includeName);
-	}
-	return includeData;
+	return ReadTextFileData(includeName);
 }
 
 struct ArgOption
@@ -90,7 +83,7 @@ ArgOption ParseOptions(int argc, char const *argv[])
 	return option;
 }
 
-std::string ShaderToJson(const shaderlab::SLShader* shader);
+bool ShaderToJson(const shaderlab::SLShader* shader, std::string& outString);
 
 int main(int argc, char const *argv[])
 {
@@ -108,14 +101,15 @@ int main(int argc, char const *argv[])
 	}
 
 	// load shaderlab text
-    std::string shaderLabData;
-	if (!ReadTextFile(option.input.c_str(), shaderLabData))
+	ByteArray bytes = ReadTextFileData(option.input.c_str());
+	if (bytes.data == nullptr)
 	{
+		Usage();
 		return 1;
 	}
 
 	// parse shaderlab
-	shaderlab::SLShader* sourceShader = ParseShaderLab(shaderLabData.c_str(), shaderLabData.size());
+	shaderlab::SLShader* sourceShader = ParseShaderLab(bytes.data, bytes.size);
 	
 	// init compiler
 	shaderlab::SLCompiler::Init();
@@ -129,15 +123,18 @@ int main(int argc, char const *argv[])
 	// compile shader
 	shaderlab::SLShader* compiledShader = shaderlab::SLCompiler::Compile(info);
 
-	std::string jsonData = ShaderToJson(compiledShader);
+	// compiled shader to jsondata
+	std::string jsonData;
+	ShaderToJson(compiledShader, jsonData);
+
+	// save file
+	std::ofstream outfile(option.output.c_str(), std::ios_base::binary);
+	outfile.write(jsonData.c_str(), jsonData.size());
+	outfile.close();
 
 	delete sourceShader;
 	delete compiledShader;
 	
-	FILE* file = fopen(option.output.c_str(), "wb");
-	fwrite(jsonData.c_str(), jsonData.size(), 1, file);
-	fclose(file);
-
 	printf("Compile completed!");
 
     return 0;
@@ -169,10 +166,10 @@ void SLFloatToJson(Json::Value& data, const shaderlab::SLFloat& val)
 
 void SLStencilToJson(Json::Value& data, const shaderlab::SLStencilOperation & val)
 {
-	data["comp"]  = val.comp.val;
-	data["pass"]  = val.pass.val;
-	data["fail"]  = val.fail.val;
-	data["zFail"] = val.zFail.val;
+	SLFloatToJson(data["comp"],  val.comp);
+	SLFloatToJson(data["pass"],  val.pass);
+	SLFloatToJson(data["fail"],  val.fail);
+	SLFloatToJson(data["zFail"], val.zFail);
 }
 
 void SLStateToJson(Json::Value& data, const shaderlab::SLShaderState& state)
@@ -215,10 +212,6 @@ void SLProgramToJson(Json::Value& data, const shaderlab::SLCompiledProgram* prog
 	data["shaderStage"]  = GetShaderStage(program->shaderStage);
 	data["shaderTarget"] = GetShaderTarget(program->shaderTarget);
 	data["entryPoint"]   = program->entryPoint;
-	for (int32 i = 0; i < program->keywords.size(); ++i)
-	{
-		data["keywords"][i] = program->keywords[i];
-	}
 
 	if (program->shaderTarget == ShaderTarget::kShaderTargetHLSL || program->shaderTarget == ShaderTarget::kShaderTargetVulkan)
 	{
@@ -235,6 +228,11 @@ void SLProgramToJson(Json::Value& data, const shaderlab::SLCompiledProgram* prog
 		data["data"]   = stringData;
 		data["encode"] = "string";
 	}
+
+	for (int32 i = 0; i < program->keywords.size(); ++i)
+	{
+		data["keywords"][i] = program->keywords[i];
+	}
 }
 
 void SLPassToJson(Json::Value& data, const shaderlab::SLPassBase* basePass)
@@ -244,13 +242,14 @@ void SLPassToJson(Json::Value& data, const shaderlab::SLPassBase* basePass)
 		const shaderlab::SLNormalPass* pass = (const shaderlab::SLNormalPass*)basePass;
 
 		data["type"] = "normalPass";
-		SLStateToJson(data["state"], pass->state);
+		SLStateToJson(data["state"],     pass->state);
 		SLProgramToJson(data["program"], pass->program);
 	}
 	else if (basePass->type == shaderlab::SLPassBase::kPassCompiled)
 	{
 		const shaderlab::SLCompiledPass* pass = (const shaderlab::SLCompiledPass*)basePass;
-		data["type"] = "compiledPass";
+
+		data["type"]     = "compiledPass";
 		data["errorMsg"] = pass->errorMsg;
 		SLStateToJson(data["state"], pass->state);
 		for (int32 i = 0; i < pass->programs.size(); ++i)
@@ -282,7 +281,7 @@ void SLSubShaderToJson(Json::Value& data, const shaderlab::SLSubShader* subShade
 	}
 }
 
-std::string ShaderToJson(const shaderlab::SLShader* shader)
+bool ShaderToJson(const shaderlab::SLShader* shader, std::string& outString)
 {
 	Json::Value data;
 
@@ -301,7 +300,7 @@ std::string ShaderToJson(const shaderlab::SLShader* shader)
 
 	Json::FastWriter fastWsriter;
 	fastWsriter.omitEndingLineFeed();
+	outString = fastWsriter.write(data);
 
-	std::string jsonString = fastWsriter.write(data);
-	return jsonString;
+	return true;
 }

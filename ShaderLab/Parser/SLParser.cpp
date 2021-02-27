@@ -2,7 +2,7 @@
 
 void SetDefaultShaderState(SLShaderState& base)
 {
-	base.lod = 0;
+	base.lod  = 0;
 	base.name = "";
 
 	base.offsetFactor.SetValue(0.0f);
@@ -28,8 +28,9 @@ void SetDefaultShaderState(SLShaderState& base)
 	base.stencilOp.pass.SetValue(kStencilOpKeep);
 	base.stencilOp.fail.SetValue(kStencilOpKeep);
 	base.stencilOp.zFail.SetValue(kStencilOpKeep);
+
 	base.stencilOpFront = base.stencilOp;
-	base.stencilOpBack = base.stencilOp;
+	base.stencilOpBack  = base.stencilOp;
 }
 
 SLShader* ParseShaderLab(const char* data, int32 size)

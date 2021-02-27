@@ -1,4 +1,4 @@
-set(glslang_REV "d481e0716ade062a184e3effe3c2cd3f6e45fd37")
+set(glslang_REV "5421877c380d5f92c1965c7a94620dac861297dd")
 
 UpdateExternalLib("glslang" "https://github.com/KhronosGroup/glslang.git" ${glslang_REV})
 
@@ -9,6 +9,6 @@ set(BUILD_TESTING OFF CACHE BOOL "" FORCE)
 set(ENABLE_OPT OFF CACHE BOOL "" FORCE)
 
 add_subdirectory(glslang)
-foreach(target "glslang" "OGLCompiler" "OSDependent" "SPIRV" "SPVRemapper")
+foreach(target "glslang" "OGLCompiler" "OSDependent" "SPIRV" "SPVRemapper" "GenericCodeGen" "MachineIndependent")
     set_target_properties(${target} PROPERTIES FOLDER "External/glslang")
 endforeach()

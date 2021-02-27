@@ -24,11 +24,13 @@ set(SL_PARSER_SRCS
 set(SL_COMPILER_HDRS
     Compiler/SLCompiler.h
     Compiler/HLSLCompiler.h
+    Compiler/GLSLCompiler.h
 )
 
 set(SL_COMPILER_SRCS
     Compiler/SLCompiler.cpp
     Compiler/HLSLCompiler.cpp
+    Compiler/GLSLCompiler.cpp
 )
 
 set(SL_COMMON_HDRS
@@ -90,9 +92,7 @@ include_directories(
     ${SOURCE_ROOT_DIR}/ThirdParty/SPIRV-Cross/include
     ${SOURCE_ROOT_DIR}/ThirdParty/SPIRV-Headers/include
     ${SOURCE_ROOT_DIR}/ThirdParty/SPIRV-Tools/include
-    ${SOURCE_ROOT_DIR}/ThirdParty/glslang/glslang/include
-    ${SOURCE_ROOT_DIR}/ThirdParty/glslang/OGLCompilersDLL
-    ${SOURCE_ROOT_DIR}/ThirdParty/glslang/SPIRV
+    ${SOURCE_ROOT_DIR}/ThirdParty/glslang/
 )
 
 target_link_libraries(

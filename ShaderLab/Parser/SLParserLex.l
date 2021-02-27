@@ -572,7 +572,7 @@ CGPROGRAM				{
 
 <STATE_PROGRAM>{
 
-ENDHLSL|ENDCG			{
+ENDHLSL|ENDCG|ENDGLSL	{
 							BEGIN(INITIAL);
 							shaderlablval.strval = g_LexTempString.c_str();
 							return VAL_PROGRAM_SOURCE;
