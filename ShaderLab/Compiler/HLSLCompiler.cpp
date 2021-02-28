@@ -314,16 +314,6 @@ namespace shaderlab
 		HRESULT compileStatus;
 		compileResult->GetStatus(&compileStatus);
 
-		// get warning & error msg
-		IDxcBlobEncoding* compileErrors = nullptr;
-		compileResult->GetErrorBuffer(&compileErrors);
-		if (compileErrors != nullptr)
-		{
-			const char* buffer = (const char*)compileErrors->GetBufferPointer();
-			hlslCompileResult.warningErrorMsg = std::string(buffer, buffer + compileErrors->GetBufferSize());
-			compileErrors->Release();
-		}
-
 		if (SUCCEEDED(compileStatus))
 		{
 			IDxcBlob* program = nullptr;
@@ -337,6 +327,17 @@ namespace shaderlab
 				hlslCompileResult.data.resize(program->GetBufferSize());
 				memcpy(hlslCompileResult.data.data(), buffer, program->GetBufferSize());
 				program->Release();
+			}
+		}
+		else
+		{
+			IDxcBlobEncoding* compileErrors = nullptr;
+			compileResult->GetErrorBuffer(&compileErrors);
+			if (compileErrors != nullptr)
+			{
+				const char* buffer = (const char*)compileErrors->GetBufferPointer();
+				hlslCompileResult.warningErrorMsg = std::string(buffer, buffer + compileErrors->GetBufferSize());
+				compileErrors->Release();
 			}
 		}
 

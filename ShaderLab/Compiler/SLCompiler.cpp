@@ -463,7 +463,11 @@ namespace shaderlab
 		{
 			compiler = std::make_shared<spirv_cross::CompilerMSL>(spirvData, spirvSize);
 		}
-
+		else if (snippet.shaderTarget == ShaderTarget::kShaderTargetHLSL)
+		{
+			compiler = std::make_shared<spirv_cross::CompilerHLSL>(spirvData, spirvSize);
+		}
+		
 		if (compiler == nullptr)
 		{
 			snippetCompiledResult.errorMsg = "ShaderTarget not supported.";
@@ -499,6 +503,17 @@ namespace shaderlab
 			FixupLegacyMetal(snippet, compiler);
 		}
 
+		if (snippet.shaderTarget == ShaderTarget::kShaderTargetHLSL)
+		{
+			auto* hlslCompiler = static_cast<spirv_cross::CompilerHLSL*>(compiler.get());
+			const uint32 newBuiltin = hlslCompiler->remap_num_workgroups_builtin();
+			if (newBuiltin)
+			{
+				compiler->set_decoration(newBuiltin, spv::DecorationDescriptorSet, 0);
+				compiler->set_decoration(newBuiltin, spv::DecorationBinding, 0);
+			}
+		}
+
 		if (buildDummySampler || combinedImageSamplers)
 		{
 			FixupSampler(compiler, buildDummySampler, combinedImageSamplers);
@@ -522,6 +537,27 @@ namespace shaderlab
 			snippetCompiledResult.errorMsg = errorMsg;
 		}
 
+		if (snippet.shaderTarget == ShaderTarget::kShaderTargetHLSL && snippetCompiledResult.errorMsg.empty())
+		{
+			// temp snippet
+			ShaderSnippet hlslSnippet;
+			hlslSnippet.entryPoint      = "main";
+			hlslSnippet.fileName        = snippet.fileName;
+			hlslSnippet.shaderStage     = snippet.shaderStage;
+			hlslSnippet.shaderTarget    = ShaderTarget::kShaderTargetHLSL;
+			hlslSnippet.source          = (const char*)snippetCompiledResult.program->data.data();
+			hlslSnippet.sourceLength    = snippetCompiledResult.program->data.size();
+			hlslSnippet.sourceType      = ProgramType::kHLSL;
+			hlslSnippet.includeCallback = snippet.includeCallback;
+
+			// compile hlsl
+			HLSLCompileResult hlslResult = HLSLCompiler::Compile(hlslSnippet);
+
+			// copy compiled data
+			snippetCompiledResult.program->data.resize(hlslResult.data.size());
+			memcpy(snippetCompiledResult.program->data.data(), hlslResult.data.data(), hlslResult.data.size());
+		}
+		
 		return snippetCompiledResult;
 	}
 
