@@ -24,11 +24,13 @@ set(SL_PARSER_SRCS
 set(SL_COMPILER_HDRS
     Compiler/SLCompiler.h
     Compiler/HLSLCompiler.h
+    Compiler/GLSLCompiler.h
 )
 
 set(SL_COMPILER_SRCS
     Compiler/SLCompiler.cpp
     Compiler/HLSLCompiler.cpp
+    Compiler/GLSLCompiler.cpp
 )
 
 set(SL_COMMON_HDRS
@@ -90,6 +92,7 @@ include_directories(
     ${SOURCE_ROOT_DIR}/ThirdParty/SPIRV-Cross/include
     ${SOURCE_ROOT_DIR}/ThirdParty/SPIRV-Headers/include
     ${SOURCE_ROOT_DIR}/ThirdParty/SPIRV-Tools/include
+    ${SOURCE_ROOT_DIR}/ThirdParty/glslang/
 )
 
 target_link_libraries(
@@ -103,6 +106,11 @@ target_link_libraries(
     spirv-cross-msl
     spirv-cross-util
     SPIRV-Tools
+    glslang
+    OGLCompiler
+    OSDependent
+    SPIRV
+    SPVRemapper
 )
 
 add_dependencies(
@@ -113,4 +121,9 @@ add_dependencies(
     spirv-cross-msl
     CopyDxcompiler
     SPIRV-Tools
+    glslang
+    OGLCompiler
+    OSDependent
+    SPIRV
+    SPVRemapper
 )

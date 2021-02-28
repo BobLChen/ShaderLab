@@ -26,11 +26,54 @@ namespace shaderlab
 	static IDxcCompiler*				G_DXCompiler = nullptr;
 	static IDxcContainerReflection*		G_DXContainerReflection = nullptr;
 
-	class ScIncludeHandler : public IDxcIncludeHandler
+	std::wstring ShaderProfileName(ShaderStage stage, ShaderModel shaderModel)
+	{
+		std::wstring shaderProfile;
+
+		switch (stage)
+		{
+		case ShaderStage::kProgramVertex:
+			shaderProfile = L"vs";
+			break;
+
+		case ShaderStage::kProgramFragment:
+			shaderProfile = L"ps";
+			break;
+
+		case ShaderStage::kProgramGeometry:
+			shaderProfile = L"gs";
+			break;
+
+		case ShaderStage::kProgramHull:
+			shaderProfile = L"hs";
+			break;
+
+		case ShaderStage::kProgramDomain:
+			shaderProfile = L"ds";
+			break;
+
+		case ShaderStage::kProgramCompute:
+			shaderProfile = L"cs";
+			break;
+
+		default:
+			shaderProfile = L"vs";
+			break;
+		}
+
+		shaderProfile.push_back(L'_');
+		shaderProfile.push_back(L'0' + shaderModel.majorVer);
+		shaderProfile.push_back(L'_');
+		shaderProfile.push_back(L'0' + shaderModel.minorVer);
+
+		return shaderProfile;
+	}
+
+	class HLSLIncludeHandler : public IDxcIncludeHandler
 	{
 	public:
 
-		explicit ScIncludeHandler(std::function<std::string(const char* includeName)> loadCallback)
+		explicit HLSLIncludeHandler(IncludeCallback loadCallback)
 			: m_LoadCallback(std::move(loadCallback))
 			, m_Ref(std::atomic_int(0))
 		{
@@ -50,10 +93,11 @@ namespace shaderlab
 				return E_FAIL;
 			}
 
-			std::string includeData = m_LoadCallback(utf8FileName.c_str());
-			
+			ByteArray bytes = m_LoadCallback(utf8FileName.c_str());
+			m_Datas.push_back(bytes);
+
 			*includeSource = nullptr;
-			return G_DXLibrary->CreateBlobWithEncodingOnHeapCopy(includeData.c_str(), includeData.size(), CP_UTF8, reinterpret_cast<IDxcBlobEncoding**>(includeSource));
+			return G_DXLibrary->CreateBlobWithEncodingOnHeapCopy(bytes.data, bytes.size, CP_UTF8, reinterpret_cast<IDxcBlobEncoding**>(includeSource));
 		}
 
 		ULONG STDMETHODCALLTYPE AddRef() override
@@ -68,6 +112,7 @@ namespace shaderlab
 			ULONG result = m_Ref;
 			if (result == 0)
 			{
+				ReleaseData();
 				delete this;
 			}
 			return result;
@@ -93,9 +138,20 @@ namespace shaderlab
 			}
 		}
 
+		void ReleaseData()
+		{
+			for (int32 i = 0; i < m_Datas.size(); ++i)
+			{
+				delete[] m_Datas[i].data;
+			}
+
+			m_Datas.clear();
+		}
+
 	private:
-		std::function<std::string(const char* includeName)>		m_LoadCallback;
-		std::atomic<ULONG>										m_Ref;
+		IncludeCallback			m_LoadCallback;
+		std::atomic<ULONG>		m_Ref;
+		std::vector<ByteArray>	m_Datas;
 	};
 
 	bool HLSLCompiler::Init()
@@ -171,8 +227,10 @@ namespace shaderlab
 	{
 		HLSLCompileResult hlslCompileResult;
 
+		ShaderModel shaderModel = { 6, 0 };
+
 		// shader profile
-		std::wstring shaderProfile = ShaderProfileName(snippet.shaderStage, snippet.shaderModel);
+		std::wstring shaderProfile = ShaderProfileName(snippet.shaderStage, shaderModel);
 
 		// defines
 		std::vector<DxcDefine> dxcDefines;
@@ -236,7 +294,7 @@ namespace shaderlab
 		}
 
 		// compile
-		IDxcIncludeHandler* includeHandler = new ScIncludeHandler(std::move(snippet.includeCallback));
+		IDxcIncludeHandler* includeHandler = new HLSLIncludeHandler(std::move(snippet.includeCallback));
 		IDxcOperationResult* compileResult = nullptr;
 		G_DXCompiler->Compile(
 			sourceBlob,
@@ -256,16 +314,6 @@ namespace shaderlab
 		HRESULT compileStatus;
 		compileResult->GetStatus(&compileStatus);
 
-		// get warning & error msg
-		IDxcBlobEncoding* compileErrors = nullptr;
-		compileResult->GetErrorBuffer(&compileErrors);
-		if (compileErrors != nullptr)
-		{
-			const char* buffer = (const char*)compileErrors->GetBufferPointer();
-			hlslCompileResult.warningErrorMsg = std::string(buffer, buffer + compileErrors->GetBufferSize());
-			compileErrors->Release();
-		}
-
 		if (SUCCEEDED(compileStatus))
 		{
 			IDxcBlob* program = nullptr;
@@ -279,6 +327,17 @@ namespace shaderlab
 				hlslCompileResult.data.resize(program->GetBufferSize());
 				memcpy(hlslCompileResult.data.data(), buffer, program->GetBufferSize());
 				program->Release();
+			}
+		}
+		else
+		{
+			IDxcBlobEncoding* compileErrors = nullptr;
+			compileResult->GetErrorBuffer(&compileErrors);
+			if (compileErrors != nullptr)
+			{
+				const char* buffer = (const char*)compileErrors->GetBufferPointer();
+				hlslCompileResult.warningErrorMsg = std::string(buffer, buffer + compileErrors->GetBufferSize());
+				compileErrors->Release();
 			}
 		}
 

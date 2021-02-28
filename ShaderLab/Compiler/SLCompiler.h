@@ -11,43 +11,20 @@
 
 namespace shaderlab
 {
-	struct ShaderModel
+	struct ByteArray
 	{
-		uint8 majorVer : 6;
-		uint8 minorVer : 2;
-		
-		uint32 FullVersion() const noexcept
+		ByteArray()
+			: data(nullptr)
+			, size(0)
 		{
-			return (majorVer << 2) | minorVer;
+
 		}
 
-		bool operator<(const ShaderModel& other) const noexcept
-		{
-			return this->FullVersion() < other.FullVersion();
-		}
-
-		bool operator==(const ShaderModel& other) const noexcept
-		{
-			return this->FullVersion() == other.FullVersion();
-		}
-
-		bool operator>(const ShaderModel& other) const noexcept
-		{
-			return other < *this;
-		}
-
-		bool operator<=(const ShaderModel& other) const noexcept
-		{
-			return (*this < other) || (*this == other);
-		}
-
-		bool operator>=(const ShaderModel& other) const noexcept
-		{
-			return (*this > other) || (*this == other);
-		}
+		char* data;
+		int32 size;
 	};
 
-	std::wstring ShaderProfileName(ShaderStage stage, ShaderModel shaderModel);
+	typedef std::function<ByteArray(const char* includeName)> IncludeCallback;
 
 	std::string GetShaderTarget(ShaderTarget shaderTarget);
 
@@ -87,7 +64,6 @@ namespace shaderlab
 				const PragmaParam& pragma = params[i];
 				if (pragma.values.size() < 1)
 				{
-					printf("not enough params\n");
 					continue;
 				}
 				if (pragma.option == "multi_compile") 
@@ -188,8 +164,6 @@ namespace shaderlab
 		std::string						value;
 	};
 
-	typedef std::function<std::string(const char* includeName)> IncludeCallback;
-
 	struct ShaderSnippet
 	{
 		const char*						fileName;
@@ -198,7 +172,6 @@ namespace shaderlab
 		uint32							sourceLength;
 		const char*						entryPoint;
 		ShaderStage						shaderStage;
-		ShaderModel						shaderModel;
 		ShaderTarget					shaderTarget;
 		std::vector<MacroDefine>		defines;
 		IncludeCallback					includeCallback;
@@ -226,6 +199,5 @@ namespace shaderlab
 		static bool Destroy();
 
 		static SLShader* Compile(const CompileShaderInfo& shader);
-
 	};
 }

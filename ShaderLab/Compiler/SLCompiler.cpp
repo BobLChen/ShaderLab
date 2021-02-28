@@ -1,5 +1,6 @@
 ﻿#include "SLCompiler.h"
 #include "HLSLCompiler.h"
+#include "GLSLCompiler.h"
 
 #include "Utils/StringUtils.h"
 
@@ -145,49 +146,6 @@ namespace shaderlab
 		return kShaderTargetGLES20;
 	}
 
-	std::wstring ShaderProfileName(ShaderStage stage, ShaderModel shaderModel)
-	{
-		std::wstring shaderProfile;
-
-		switch (stage)
-		{
-		case ShaderStage::kProgramVertex:
-			shaderProfile = L"vs";
-			break;
-
-		case ShaderStage::kProgramFragment:
-			shaderProfile = L"ps";
-			break;
-
-		case ShaderStage::kProgramGeometry:
-			shaderProfile = L"gs";
-			break;
-
-		case ShaderStage::kProgramHull:
-			shaderProfile = L"hs";
-			break;
-
-		case ShaderStage::kProgramDomain:
-			shaderProfile = L"ds";
-			break;
-
-		case ShaderStage::kProgramCompute:
-			shaderProfile = L"cs";
-			break;
-
-		default:
-			shaderProfile = L"vs";
-			break;
-		}
-
-		shaderProfile.push_back(L'_');
-		shaderProfile.push_back(L'0' + shaderModel.majorVer);
-		shaderProfile.push_back(L'_');
-		shaderProfile.push_back(L'0' + shaderModel.minorVer);
-
-		return shaderProfile;
-	}
-
 	void ProcessPragmaArgs(const char* text, int32 textLen, const char* pragmaName, int32 pragmaLen, std::vector<PragmaParam>& outParams)
 	{
 		int32 pos = IndexOfToken(text, textLen, pragmaName, pragmaLen, 0);
@@ -272,7 +230,6 @@ namespace shaderlab
 						snippet.entryPoint      = params.entryName[programIndex].c_str();
 						snippet.defines			= defines;
 						snippet.shaderStage     = stage;
-						snippet.shaderModel     = { 6, 0 };
 						snippet.shaderTarget    = (ShaderTarget)shaderTargetIndex;
 						snippet.includeCallback = shaderInfo.includeCallback;
 						snippets.push_back(snippet);
@@ -380,6 +337,7 @@ namespace shaderlab
 	spv::ExecutionModel GetExecutionModel(ShaderStage stage)
 	{
 		spv::ExecutionModel model = spv::ExecutionModelMax;
+
 		switch (stage)
 		{
 			case ShaderStage::kProgramVertex:
@@ -412,11 +370,52 @@ namespace shaderlab
 				model = spv::ExecutionModelGLCompute;
 				break;
 			}
+			case ShaderStage::kProgramMesh:
+			{
+				model = spv::ExecutionModelMeshNV;
+				break;
+			}
+			case ShaderStage::kProgramTask:
+			{
+				model = spv::ExecutionModelTaskNV;
+				break;
+			}
+			case ShaderStage::kProgramRayAHit:
+			{
+				model = spv::ExecutionModelAnyHitKHR;
+				break;
+			}
+			case ShaderStage::kProgramRayCHit:
+			{
+				model = spv::ExecutionModelClosestHitKHR;
+				break;
+			}
+			case ShaderStage::kProgramRayGen:
+			{
+				model = spv::ExecutionModelRayGenerationKHR;
+				break;
+			}
+			case ShaderStage::kProgramRayInt:
+			{
+				model = spv::ExecutionModelIntersectionKHR;
+				break;
+			}
+			case ShaderStage::kProgramRayMiss:
+			{
+				model = spv::ExecutionModelMissKHR;
+				break;
+			}
+			case ShaderStage::kProgramRayRcall:
+			{
+				model = spv::ExecutionModelCallableKHR;
+				break;
+			}
 			default:
 			{
 				break;
 			}
 		}
+
 		return model;
 	}
 
@@ -432,13 +431,13 @@ namespace shaderlab
 		}
 	}
 
-	ShaderSnippetCompiledResult CrossCompile(const ShaderSnippet& snippet, const HLSLCompileResult& hlslCompield)
+	ShaderSnippetCompiledResult CrossCompile(const ShaderSnippet& snippet, const std::vector<uint8>& spirvBytes)
 	{
 		ShaderSnippetCompiledResult snippetCompiledResult;
 
 		// get spirv
-		const uint32* spirvData = (const uint32*)hlslCompield.data.data();
-		const int32   spirvSize = hlslCompield.data.size() / sizeof(uint32);
+		const uint32* spirvData = (const uint32*)spirvBytes.data();
+		const int32   spirvSize = spirvBytes.size() / sizeof(uint32);
 
 		bool buildDummySampler     = false;
 		bool combinedImageSamplers = false;
@@ -451,9 +450,9 @@ namespace shaderlab
 			snippet.shaderTarget == ShaderTarget::kShaderTargetOpenGL
 		)
 		{
-			version = GetGLSLTargetVersion(snippet.shaderTarget);
+			version  = GetGLSLTargetVersion(snippet.shaderTarget);
 			compiler = std::make_shared<spirv_cross::CompilerGLSL>(spirvData, spirvSize);
-			buildDummySampler = true;
+			buildDummySampler     = true;
 			combinedImageSamplers = true;
 			if (version <= 300)
 			{
@@ -464,7 +463,11 @@ namespace shaderlab
 		{
 			compiler = std::make_shared<spirv_cross::CompilerMSL>(spirvData, spirvSize);
 		}
-
+		else if (snippet.shaderTarget == ShaderTarget::kShaderTargetHLSL)
+		{
+			compiler = std::make_shared<spirv_cross::CompilerHLSL>(spirvData, spirvSize);
+		}
+		
 		if (compiler == nullptr)
 		{
 			snippetCompiledResult.errorMsg = "ShaderTarget not supported.";
@@ -500,6 +503,17 @@ namespace shaderlab
 			FixupLegacyMetal(snippet, compiler);
 		}
 
+		if (snippet.shaderTarget == ShaderTarget::kShaderTargetHLSL)
+		{
+			auto* hlslCompiler = static_cast<spirv_cross::CompilerHLSL*>(compiler.get());
+			const uint32 newBuiltin = hlslCompiler->remap_num_workgroups_builtin();
+			if (newBuiltin)
+			{
+				compiler->set_decoration(newBuiltin, spv::DecorationDescriptorSet, 0);
+				compiler->set_decoration(newBuiltin, spv::DecorationBinding, 0);
+			}
+		}
+
 		if (buildDummySampler || combinedImageSamplers)
 		{
 			FixupSampler(compiler, buildDummySampler, combinedImageSamplers);
@@ -523,6 +537,27 @@ namespace shaderlab
 			snippetCompiledResult.errorMsg = errorMsg;
 		}
 
+		if (snippet.shaderTarget == ShaderTarget::kShaderTargetHLSL && snippetCompiledResult.errorMsg.empty())
+		{
+			// temp snippet
+			ShaderSnippet hlslSnippet;
+			hlslSnippet.entryPoint      = "main";
+			hlslSnippet.fileName        = snippet.fileName;
+			hlslSnippet.shaderStage     = snippet.shaderStage;
+			hlslSnippet.shaderTarget    = ShaderTarget::kShaderTargetHLSL;
+			hlslSnippet.source          = (const char*)snippetCompiledResult.program->data.data();
+			hlslSnippet.sourceLength    = snippetCompiledResult.program->data.size();
+			hlslSnippet.sourceType      = ProgramType::kHLSL;
+			hlslSnippet.includeCallback = snippet.includeCallback;
+
+			// compile hlsl
+			HLSLCompileResult hlslResult = HLSLCompiler::Compile(hlslSnippet);
+
+			// copy compiled data
+			snippetCompiledResult.program->data.resize(hlslResult.data.size());
+			memcpy(snippetCompiledResult.program->data.data(), hlslResult.data.data(), hlslResult.data.size());
+		}
+		
 		return snippetCompiledResult;
 	}
 
@@ -550,7 +585,7 @@ namespace shaderlab
 		}
 		else
 		{
-			snippetCompiledResult = CrossCompile(snippet, result);
+			snippetCompiledResult = CrossCompile(snippet, result.data);
 		}
 
 		return snippetCompiledResult;
@@ -560,8 +595,29 @@ namespace shaderlab
 	{
 		ShaderSnippetCompiledResult snippetCompiledResult;
 
+		// compile glsl
+		GLSLCompileResult result = GLSLCompiler::Compile(snippet);
 
-		snippetCompiledResult.errorMsg = "GLSLProgram not supported!";
+		if (result.data.size() == 0)
+		{
+			FixErrorLineNumber(result.warningErrorMsg, snippet.fileName, program.lineNo + 1);
+			snippetCompiledResult.errorMsg = result.warningErrorMsg;
+		}
+		else if (snippet.shaderTarget == ShaderTarget::kShaderTargetVulkan)
+		{
+			SLCompiledProgram* program = new SLCompiledProgram();
+			program->data = result.data;
+			program->shaderTarget = snippet.shaderTarget;
+			program->shaderStage = snippet.shaderStage;
+			program->entryPoint = snippet.entryPoint;
+			MacroDefinesToKeywords(snippet.defines, program->keywords);
+			snippetCompiledResult.program = program;
+		}
+		else
+		{
+			snippetCompiledResult = CrossCompile(snippet, result.data);
+		}
+
 		return snippetCompiledResult;
 	}
 
@@ -632,6 +688,7 @@ namespace shaderlab
 	{
 		bool success = true;
 		success &= HLSLCompiler::Init();
+		success &= GLSLCompiler::Init();
 		return success;
 	}
 
@@ -639,6 +696,7 @@ namespace shaderlab
 	{
 		bool success = true;
 		success &= HLSLCompiler::Destroy();
+		success &= GLSLCompiler::Destroy();
 		return success;
 	}
 
