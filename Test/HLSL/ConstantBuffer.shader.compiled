@@ -1,0 +1,262 @@
+{
+    "fallbackName": "",
+    "properties": {
+        "description": "Tiling Offset",
+        "name": "_Diffuse",
+        "texture": {
+            "dimension": "Unknown",
+            "name": ""
+        },
+        "type": "Vector",
+        "value": {
+            "w": 1,
+            "x": 1,
+            "y": 1,
+            "z": 1
+        }
+    },
+    "shaderName": "Test/ConstantBuffer",
+    "subShaders": [
+        {
+            "lod": 0,
+            "passes": [
+                {
+                    "errorMsg": "",
+                    "programs": [
+                        {
+                            "data": "#version 460\n\nout gl_PerVertex\n{\n    vec4 gl_Position;\n};\n\nlayout(binding = 0, std140) uniform type_SceneConstantBuffer\n{\n    vec4 offset;\n} SceneConstantBuffer;\n\nlayout(location = 0) in vec4 in_var_POSITION;\nlayout(location = 1) in vec4 in_var_COLOR;\nlayout(location = 0) out vec4 out_var_COLOR;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION + SceneConstantBuffer.offset;\n    out_var_COLOR = in_var_COLOR;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "shaderStage": "vertex",
+                            "shaderTarget": "opengl"
+                        },
+                        {
+                            "data": "#version 100\n\nstruct type_SceneConstantBuffer\n{\n    vec4 offset;\n};\n\nuniform type_SceneConstantBuffer SceneConstantBuffer;\n\nattribute vec4 in_var_POSITION;\nattribute vec4 in_var_COLOR;\nvarying vec4 out_var_COLOR;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION + SceneConstantBuffer.offset;\n    out_var_COLOR = in_var_COLOR;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "shaderStage": "vertex",
+                            "shaderTarget": "gles20"
+                        },
+                        {
+                            "data": "#version 320 es\n\nlayout(binding = 0, std140) uniform type_SceneConstantBuffer\n{\n    vec4 offset;\n} SceneConstantBuffer;\n\nlayout(location = 0) in vec4 in_var_POSITION;\nlayout(location = 1) in vec4 in_var_COLOR;\nlayout(location = 0) out vec4 out_var_COLOR;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION + SceneConstantBuffer.offset;\n    out_var_COLOR = in_var_COLOR;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "shaderStage": "vertex",
+                            "shaderTarget": "gles30"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct type_SceneConstantBuffer\n{\n    float4 offset;\n};\n\nstruct vert_out\n{\n    float4 out_var_COLOR [[user(locn0)]];\n    float4 gl_Position [[position]];\n};\n\nstruct vert_in\n{\n    float4 in_var_POSITION [[attribute(0)]];\n    float4 in_var_COLOR [[attribute(1)]];\n};\n\nvertex vert_out vert(vert_in in [[stage_in]], constant type_SceneConstantBuffer& SceneConstantBuffer [[buffer(0)]])\n{\n    vert_out out = {};\n    out.gl_Position = in.in_var_POSITION + SceneConstantBuffer.offset;\n    out.out_var_COLOR = in.in_var_COLOR;\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "shaderStage": "vertex",
+                            "shaderTarget": "ios"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct type_SceneConstantBuffer\n{\n    float4 offset;\n};\n\nstruct vert_out\n{\n    float4 out_var_COLOR [[user(locn0)]];\n    float4 gl_Position [[position]];\n};\n\nstruct vert_in\n{\n    float4 in_var_POSITION [[attribute(0)]];\n    float4 in_var_COLOR [[attribute(1)]];\n};\n\nvertex vert_out vert(vert_in in [[stage_in]], constant type_SceneConstantBuffer& SceneConstantBuffer [[buffer(0)]])\n{\n    vert_out out = {};\n    out.gl_Position = in.in_var_POSITION + SceneConstantBuffer.offset;\n    out.out_var_COLOR = in.in_var_COLOR;\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "shaderStage": "vertex",
+                            "shaderTarget": "mac"
+                        },
+                        {
+                            "data": "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",
+                            "encode": "base64",
+                            "entryPoint": "vert",
+                            "shaderStage": "vertex",
+                            "shaderTarget": "hlsl"
+                        },
+                        {
+                            "data": "AwIjBwAAAQAAAA4AGAAAAAAAAAARAAIAAQAAAA4AAwAAAAAAAQAAAA8ACQAAAAAAAQAAAHZlcnQAAAAAAgAAAAMAAAAEAAAABQAAAAMAAwAFAAAAWAIAAAUACQAGAAAAdHlwZS5TY2VuZUNvbnN0YW50QnVmZmVyAAAAAAYABQAGAAAAAAAAAG9mZnNldAAABQAHAAcAAABTY2VuZUNvbnN0YW50QnVmZmVyAAUABgACAAAAaW4udmFyLlBPU0lUSU9OAAUABgADAAAAaW4udmFyLkNPTE9SAAAAAAUABgAFAAAAb3V0LnZhci5DT0xPUgAAAAUABAABAAAAdmVydAAAAABHAAQABAAAAAsAAAAAAAAARwAEAAIAAAAeAAAAAAAAAEcABAADAAAAHgAAAAEAAABHAAQABQAAAB4AAAAAAAAARwAEAAcAAAAiAAAAAAAAAEcABAAHAAAAIQAAAAAAAABIAAUABgAAAAAAAAAjAAAAAAAAAEcAAwAGAAAAAgAAABUABAAIAAAAIAAAAAEAAAArAAQACAAAAAkAAAAAAAAAFgADAAoAAAAgAAAAFwAEAAsAAAAKAAAABAAAAB4AAwAGAAAACwAAACAABAAMAAAAAgAAAAYAAAAgAAQADQAAAAEAAAALAAAAIAAEAA4AAAADAAAACwAAABMAAgAPAAAAIQADABAAAAAPAAAAIAAEABEAAAACAAAACwAAADsABAAMAAAABwAAAAIAAAA7AAQADQAAAAIAAAABAAAAOwAEAA0AAAADAAAAAQAAADsABAAOAAAABAAAAAMAAAA7AAQADgAAAAUAAAADAAAANgAFAA8AAAABAAAAAAAAABAAAAD4AAIAEgAAAD0ABAALAAAAEwAAAAIAAAA9AAQACwAAABQAAAADAAAAQQAFABEAAAAVAAAABwAAAAkAAAA9AAQACwAAABYAAAAVAAAAgQAFAAsAAAAXAAAAEwAAABYAAAA+AAMABAAAABcAAAA+AAMABQAAABQAAAD9AAEAOAABAA==",
+                            "encode": "base64",
+                            "entryPoint": "vert",
+                            "shaderStage": "vertex",
+                            "shaderTarget": "vulkan"
+                        },
+                        {
+                            "data": "#version 460\n\nlayout(binding = 1, std140) uniform type_Globals\n{\n    vec4 _Diffuse;\n} _Globals;\n\nlayout(location = 0) in vec4 in_var_COLOR;\nlayout(location = 0) out vec4 out_var_SV_TARGET;\n\nvoid main()\n{\n    out_var_SV_TARGET = in_var_COLOR * _Globals._Diffuse;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "shaderStage": "fragment",
+                            "shaderTarget": "opengl"
+                        },
+                        {
+                            "data": "#version 100\nprecision mediump float;\nprecision highp int;\n\nstruct type_Globals\n{\n    highp vec4 _Diffuse;\n};\n\nuniform type_Globals _Globals;\n\nvarying highp vec4 in_var_COLOR;\n\nvoid main()\n{\n    gl_FragData[0] = in_var_COLOR * _Globals._Diffuse;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "shaderStage": "fragment",
+                            "shaderTarget": "gles20"
+                        },
+                        {
+                            "data": "#version 320 es\nprecision mediump float;\nprecision highp int;\n\nlayout(binding = 1, std140) uniform type_Globals\n{\n    highp vec4 _Diffuse;\n} _Globals;\n\nlayout(location = 0) in highp vec4 in_var_COLOR;\nlayout(location = 0) out highp vec4 out_var_SV_TARGET;\n\nvoid main()\n{\n    out_var_SV_TARGET = in_var_COLOR * _Globals._Diffuse;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "shaderStage": "fragment",
+                            "shaderTarget": "gles30"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct type_Globals\n{\n    float4 _Diffuse;\n};\n\nstruct frag_out\n{\n    float4 out_var_SV_TARGET [[color(0)]];\n};\n\nstruct frag_in\n{\n    float4 in_var_COLOR [[user(locn0)]];\n};\n\nfragment frag_out frag(frag_in in [[stage_in]], constant type_Globals& _Globals [[buffer(0)]])\n{\n    frag_out out = {};\n    out.out_var_SV_TARGET = in.in_var_COLOR * _Globals._Diffuse;\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "shaderStage": "fragment",
+                            "shaderTarget": "ios"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct type_Globals\n{\n    float4 _Diffuse;\n};\n\nstruct frag_out\n{\n    float4 out_var_SV_TARGET [[color(0)]];\n};\n\nstruct frag_in\n{\n    float4 in_var_COLOR [[user(locn0)]];\n};\n\nfragment frag_out frag(frag_in in [[stage_in]], constant type_Globals& _Globals [[buffer(0)]])\n{\n    frag_out out = {};\n    out.out_var_SV_TARGET = in.in_var_COLOR * _Globals._Diffuse;\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "shaderStage": "fragment",
+                            "shaderTarget": "mac"
+                        },
+                        {
+                            "data": "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",
+                            "encode": "base64",
+                            "entryPoint": "frag",
+                            "shaderStage": "fragment",
+                            "shaderTarget": "hlsl"
+                        },
+                        {
+                            "data": "AwIjBwAAAQAAAA4AFgAAAAAAAAARAAIAAQAAAA4AAwAAAAAAAQAAAA8ACAAEAAAAAQAAAGZyYWcAAAAAAgAAAAMAAAAEAAAAEAADAAEAAAAHAAAAAwADAAUAAABYAgAABQAGAAUAAAB0eXBlLiRHbG9iYWxzAAAABgAGAAUAAAAAAAAAX0RpZmZ1c2UAAAAABQAFAAYAAAAkR2xvYmFscwAAAAAFAAYAAwAAAGluLnZhci5DT0xPUgAAAAAFAAcABAAAAG91dC52YXIuU1ZfVEFSR0VUAAAABQAEAAEAAABmcmFnAAAAAEcABAACAAAACwAAAA8AAABHAAQAAwAAAB4AAAAAAAAARwAEAAQAAAAeAAAAAAAAAEcABAAGAAAAIgAAAAAAAABHAAQABgAAACEAAAABAAAASAAFAAUAAAAAAAAAIwAAAAAAAABHAAMABQAAAAIAAAAVAAQABwAAACAAAAABAAAAKwAEAAcAAAAIAAAAAAAAABYAAwAJAAAAIAAAABcABAAKAAAACQAAAAQAAAAeAAMABQAAAAoAAAAgAAQACwAAAAIAAAAFAAAAIAAEAAwAAAABAAAACgAAACAABAANAAAAAwAAAAoAAAATAAIADgAAACEAAwAPAAAADgAAACAABAAQAAAAAgAAAAoAAAA7AAQACwAAAAYAAAACAAAAOwAEAAwAAAACAAAAAQAAADsABAAMAAAAAwAAAAEAAAA7AAQADQAAAAQAAAADAAAANgAFAA4AAAABAAAAAAAAAA8AAAD4AAIAEQAAAD0ABAAKAAAAEgAAAAMAAABBAAUAEAAAABMAAAAGAAAACAAAAD0ABAAKAAAAFAAAABMAAACFAAUACgAAABUAAAASAAAAFAAAAD4AAwAEAAAAFQAAAP0AAQA4AAEA",
+                            "encode": "base64",
+                            "entryPoint": "frag",
+                            "shaderStage": "fragment",
+                            "shaderTarget": "vulkan"
+                        }
+                    ],
+                    "state": {
+                        "alphaToMask": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "blendOp": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "blendOpAlpha": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "colMask": {
+                            "ref": "",
+                            "val": 15
+                        },
+                        "culling": {
+                            "ref": "",
+                            "val": 2
+                        },
+                        "destBlend": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "destBlendAlpha": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "lod": 0,
+                        "name": "",
+                        "offsetFactor": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "offsetUnits": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "srcBlend": {
+                            "ref": "",
+                            "val": 1
+                        },
+                        "srcBlendAlpha": {
+                            "ref": "",
+                            "val": 1
+                        },
+                        "stencilOp": {
+                            "comp": {
+                                "ref": "",
+                                "val": 8
+                            },
+                            "fail": {
+                                "ref": "",
+                                "val": 0
+                            },
+                            "pass": {
+                                "ref": "",
+                                "val": 0
+                            },
+                            "zFail": {
+                                "ref": "",
+                                "val": 0
+                            }
+                        },
+                        "stencilOpBack": {
+                            "comp": {
+                                "ref": "",
+                                "val": 8
+                            },
+                            "fail": {
+                                "ref": "",
+                                "val": 0
+                            },
+                            "pass": {
+                                "ref": "",
+                                "val": 0
+                            },
+                            "zFail": {
+                                "ref": "",
+                                "val": 0
+                            }
+                        },
+                        "stencilOpFront": {
+                            "comp": {
+                                "ref": "",
+                                "val": 8
+                            },
+                            "fail": {
+                                "ref": "",
+                                "val": 0
+                            },
+                            "pass": {
+                                "ref": "",
+                                "val": 0
+                            },
+                            "zFail": {
+                                "ref": "",
+                                "val": 0
+                            }
+                        },
+                        "stencilReadMask": {
+                            "ref": "",
+                            "val": 255
+                        },
+                        "stencilRef": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "stencilWriteMask": {
+                            "ref": "",
+                            "val": 255
+                        },
+                        "tags": {
+                            "IgnoreProjector": "True",
+                            "Queue": "Transparent",
+                            "RenderType": "Transparent"
+                        },
+                        "zTest": {
+                            "ref": "",
+                            "val": 4
+                        },
+                        "zWrite": {
+                            "ref": "",
+                            "val": 1
+                        }
+                    },
+                    "type": "compiledPass"
+                }
+            ],
+            "tags": {
+                "IgnoreProjector": "True",
+                "Queue": "Transparent",
+                "RenderType": "Transparent"
+            }
+        }
+    ]
+}
