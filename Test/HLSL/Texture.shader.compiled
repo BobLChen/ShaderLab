@@ -1,0 +1,724 @@
+{
+    "fallbackName": "",
+    "properties": {
+        "description": "Texture",
+        "name": "g_texture",
+        "texture": {
+            "dimension": "2D",
+            "name": "white"
+        },
+        "type": "Texture",
+        "value": {
+            "w": 0,
+            "x": 0,
+            "y": 0,
+            "z": 0
+        }
+    },
+    "shaderName": "Test/Texture",
+    "subShaders": [
+        {
+            "lod": 0,
+            "passes": [
+                {
+                    "errorMsg": "",
+                    "programs": [
+                        {
+                            "data": "#version 460\n\nout gl_PerVertex\n{\n    vec4 gl_Position;\n};\n\nlayout(location = 0) in vec4 in_var_POSITION;\nlayout(location = 1) in vec4 in_var_TEXCOORD;\nlayout(location = 0) out vec2 out_var_TEXCOORD;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION;\n    out_var_TEXCOORD = vec2(in_var_TEXCOORD.xy);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "opengl"
+                        },
+                        {
+                            "data": "#version 100\n\nattribute vec4 in_var_POSITION;\nattribute vec4 in_var_TEXCOORD;\nvarying vec2 out_var_TEXCOORD;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION;\n    out_var_TEXCOORD = vec2(in_var_TEXCOORD.xy);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "gles20"
+                        },
+                        {
+                            "data": "#version 320 es\n\nlayout(location = 0) in vec4 in_var_POSITION;\nlayout(location = 1) in vec4 in_var_TEXCOORD;\nlayout(location = 0) out vec2 out_var_TEXCOORD;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION;\n    out_var_TEXCOORD = vec2(in_var_TEXCOORD.xy);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "gles30"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct vert_out\n{\n    float2 out_var_TEXCOORD [[user(locn0)]];\n    float4 gl_Position [[position]];\n};\n\nstruct vert_in\n{\n    float4 in_var_POSITION [[attribute(0)]];\n    float4 in_var_TEXCOORD [[attribute(1)]];\n};\n\nvertex vert_out vert(vert_in in [[stage_in]])\n{\n    vert_out out = {};\n    out.gl_Position = in.in_var_POSITION;\n    out.out_var_TEXCOORD = float2(in.in_var_TEXCOORD.xy);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "ios"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct vert_out\n{\n    float2 out_var_TEXCOORD [[user(locn0)]];\n    float4 gl_Position [[position]];\n};\n\nstruct vert_in\n{\n    float4 in_var_POSITION [[attribute(0)]];\n    float4 in_var_TEXCOORD [[attribute(1)]];\n};\n\nvertex vert_out vert(vert_in in [[stage_in]])\n{\n    vert_out out = {};\n    out.gl_Position = in.in_var_POSITION;\n    out.out_var_TEXCOORD = float2(in.in_var_TEXCOORD.xy);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "mac"
+                        },
+                        {
+                            "data": "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",
+                            "encode": "base64",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "hlsl"
+                        },
+                        {
+                            "data": "AwIjBwAAAQAAAA4AFAAAAAAAAAARAAIAAQAAAA4AAwAAAAAAAQAAAA8ACQAAAAAAAQAAAHZlcnQAAAAAAgAAAAMAAAAEAAAABQAAAAMAAwAFAAAAWAIAAAUABgACAAAAaW4udmFyLlBPU0lUSU9OAAUABgADAAAAaW4udmFyLlRFWENPT1JEAAUABwAFAAAAb3V0LnZhci5URVhDT09SRAAAAAAFAAQAAQAAAHZlcnQAAAAARwAEAAQAAAALAAAAAAAAAEcABAACAAAAHgAAAAAAAABHAAQAAwAAAB4AAAABAAAARwAEAAUAAAAeAAAAAAAAABYAAwAGAAAAIAAAABcABAAHAAAABgAAAAQAAAAgAAQACAAAAAEAAAAHAAAAIAAEAAkAAAADAAAABwAAABcABAAKAAAABgAAAAIAAAAgAAQACwAAAAMAAAAKAAAAEwACAAwAAAAhAAMADQAAAAwAAAA7AAQACAAAAAIAAAABAAAAOwAEAAgAAAADAAAAAQAAADsABAAJAAAABAAAAAMAAAA7AAQACwAAAAUAAAADAAAANgAFAAwAAAABAAAAAAAAAA0AAAD4AAIADgAAAD0ABAAHAAAADwAAAAIAAAA9AAQABwAAABAAAAADAAAAUQAFAAYAAAARAAAAEAAAAAAAAABRAAUABgAAABIAAAAQAAAAAQAAAFAABQAKAAAAEwAAABEAAAASAAAAPgADAAQAAAAPAAAAPgADAAUAAAATAAAA/QABADgAAQA=",
+                            "encode": "base64",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "vulkan"
+                        },
+                        {
+                            "data": "#version 460\n\nuniform sampler2D SPIRV_Cross_Combinedg_textureg_sampler;\n\nlayout(location = 0) in vec2 in_var_TEXCOORD;\nlayout(location = 0) out vec4 out_var_SV_TARGET;\n\nvoid main()\n{\n    out_var_SV_TARGET = texture(SPIRV_Cross_Combinedg_textureg_sampler, in_var_TEXCOORD);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "opengl"
+                        },
+                        {
+                            "data": "#version 100\nprecision mediump float;\nprecision highp int;\n\nuniform highp sampler2D SPIRV_Cross_Combinedg_textureg_sampler;\n\nvarying highp vec2 in_var_TEXCOORD;\n\nvoid main()\n{\n    gl_FragData[0] = texture2D(SPIRV_Cross_Combinedg_textureg_sampler, in_var_TEXCOORD);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "gles20"
+                        },
+                        {
+                            "data": "#version 320 es\nprecision mediump float;\nprecision highp int;\n\nuniform highp sampler2D SPIRV_Cross_Combinedg_textureg_sampler;\n\nlayout(location = 0) in highp vec2 in_var_TEXCOORD;\nlayout(location = 0) out highp vec4 out_var_SV_TARGET;\n\nvoid main()\n{\n    out_var_SV_TARGET = texture(SPIRV_Cross_Combinedg_textureg_sampler, in_var_TEXCOORD);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "gles30"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct frag_out\n{\n    float4 out_var_SV_TARGET [[color(0)]];\n};\n\nstruct frag_in\n{\n    float2 in_var_TEXCOORD [[user(locn0)]];\n};\n\nfragment frag_out frag(frag_in in [[stage_in]], texture2d<float> g_texture [[texture(0)]], sampler g_sampler [[sampler(0)]])\n{\n    frag_out out = {};\n    out.out_var_SV_TARGET = g_texture.sample(g_sampler, in.in_var_TEXCOORD);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "ios"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct frag_out\n{\n    float4 out_var_SV_TARGET [[color(0)]];\n};\n\nstruct frag_in\n{\n    float2 in_var_TEXCOORD [[user(locn0)]];\n};\n\nfragment frag_out frag(frag_in in [[stage_in]], texture2d<float> g_texture [[texture(0)]], sampler g_sampler [[sampler(0)]])\n{\n    frag_out out = {};\n    out.out_var_SV_TARGET = g_texture.sample(g_sampler, in.in_var_TEXCOORD);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "mac"
+                        },
+                        {
+                            "data": "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",
+                            "encode": "base64",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "hlsl"
+                        },
+                        {
+                            "data": "AwIjBwAAAQAAAA4AGgAAAAAAAAARAAIAAQAAAA4AAwAAAAAAAQAAAA8ACAAEAAAAAQAAAGZyYWcAAAAAAgAAAAMAAAAEAAAAEAADAAEAAAAHAAAAAwADAAUAAABYAgAABQAGAAUAAAB0eXBlLjJkLmltYWdlAAAABQAFAAYAAABnX3RleHR1cmUAAAAFAAYABwAAAHR5cGUuc2FtcGxlcgAAAAAFAAUACAAAAGdfc2FtcGxlcgAAAAUABgADAAAAaW4udmFyLlRFWENPT1JEAAUABwAEAAAAb3V0LnZhci5TVl9UQVJHRVQAAAAFAAQAAQAAAGZyYWcAAAAABQAHAAkAAAB0eXBlLnNhbXBsZWQuaW1hZ2UAAEcABAACAAAACwAAAA8AAABHAAQAAwAAAB4AAAAAAAAARwAEAAQAAAAeAAAAAAAAAEcABAAGAAAAIgAAAAAAAABHAAQABgAAACEAAAAAAAAARwAEAAgAAAAiAAAAAAAAAEcABAAIAAAAIQAAAAAAAAAWAAMACgAAACAAAAAZAAkABQAAAAoAAAABAAAAAgAAAAAAAAAAAAAAAQAAAAAAAAAgAAQACwAAAAAAAAAFAAAAGgACAAcAAAAgAAQADAAAAAAAAAAHAAAAFwAEAA0AAAAKAAAABAAAACAABAAOAAAAAQAAAA0AAAAXAAQADwAAAAoAAAACAAAAIAAEABAAAAABAAAADwAAACAABAARAAAAAwAAAA0AAAATAAIAEgAAACEAAwATAAAAEgAAABsAAwAJAAAABQAAADsABAALAAAABgAAAAAAAAA7AAQADAAAAAgAAAAAAAAAOwAEAA4AAAACAAAAAQAAADsABAAQAAAAAwAAAAEAAAA7AAQAEQAAAAQAAAADAAAANgAFABIAAAABAAAAAAAAABMAAAD4AAIAFAAAAD0ABAAPAAAAFQAAAAMAAAA9AAQABQAAABYAAAAGAAAAPQAEAAcAAAAXAAAACAAAAFYABQAJAAAAGAAAABYAAAAXAAAAVwAGAA0AAAAZAAAAGAAAABUAAAAAAAAAPgADAAQAAAAZAAAA/QABADgAAQA=",
+                            "encode": "base64",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST6"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "vulkan"
+                        },
+                        {
+                            "data": "#version 460\n\nout gl_PerVertex\n{\n    vec4 gl_Position;\n};\n\nlayout(location = 0) in vec4 in_var_POSITION;\nlayout(location = 1) in vec4 in_var_TEXCOORD;\nlayout(location = 0) out vec2 out_var_TEXCOORD;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION;\n    out_var_TEXCOORD = vec2(in_var_TEXCOORD.xy);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "opengl"
+                        },
+                        {
+                            "data": "#version 100\n\nattribute vec4 in_var_POSITION;\nattribute vec4 in_var_TEXCOORD;\nvarying vec2 out_var_TEXCOORD;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION;\n    out_var_TEXCOORD = vec2(in_var_TEXCOORD.xy);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "gles20"
+                        },
+                        {
+                            "data": "#version 320 es\n\nlayout(location = 0) in vec4 in_var_POSITION;\nlayout(location = 1) in vec4 in_var_TEXCOORD;\nlayout(location = 0) out vec2 out_var_TEXCOORD;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION;\n    out_var_TEXCOORD = vec2(in_var_TEXCOORD.xy);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "gles30"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct vert_out\n{\n    float2 out_var_TEXCOORD [[user(locn0)]];\n    float4 gl_Position [[position]];\n};\n\nstruct vert_in\n{\n    float4 in_var_POSITION [[attribute(0)]];\n    float4 in_var_TEXCOORD [[attribute(1)]];\n};\n\nvertex vert_out vert(vert_in in [[stage_in]])\n{\n    vert_out out = {};\n    out.gl_Position = in.in_var_POSITION;\n    out.out_var_TEXCOORD = float2(in.in_var_TEXCOORD.xy);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "ios"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct vert_out\n{\n    float2 out_var_TEXCOORD [[user(locn0)]];\n    float4 gl_Position [[position]];\n};\n\nstruct vert_in\n{\n    float4 in_var_POSITION [[attribute(0)]];\n    float4 in_var_TEXCOORD [[attribute(1)]];\n};\n\nvertex vert_out vert(vert_in in [[stage_in]])\n{\n    vert_out out = {};\n    out.gl_Position = in.in_var_POSITION;\n    out.out_var_TEXCOORD = float2(in.in_var_TEXCOORD.xy);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "mac"
+                        },
+                        {
+                            "data": "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",
+                            "encode": "base64",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "hlsl"
+                        },
+                        {
+                            "data": "AwIjBwAAAQAAAA4AFAAAAAAAAAARAAIAAQAAAA4AAwAAAAAAAQAAAA8ACQAAAAAAAQAAAHZlcnQAAAAAAgAAAAMAAAAEAAAABQAAAAMAAwAFAAAAWAIAAAUABgACAAAAaW4udmFyLlBPU0lUSU9OAAUABgADAAAAaW4udmFyLlRFWENPT1JEAAUABwAFAAAAb3V0LnZhci5URVhDT09SRAAAAAAFAAQAAQAAAHZlcnQAAAAARwAEAAQAAAALAAAAAAAAAEcABAACAAAAHgAAAAAAAABHAAQAAwAAAB4AAAABAAAARwAEAAUAAAAeAAAAAAAAABYAAwAGAAAAIAAAABcABAAHAAAABgAAAAQAAAAgAAQACAAAAAEAAAAHAAAAIAAEAAkAAAADAAAABwAAABcABAAKAAAABgAAAAIAAAAgAAQACwAAAAMAAAAKAAAAEwACAAwAAAAhAAMADQAAAAwAAAA7AAQACAAAAAIAAAABAAAAOwAEAAgAAAADAAAAAQAAADsABAAJAAAABAAAAAMAAAA7AAQACwAAAAUAAAADAAAANgAFAAwAAAABAAAAAAAAAA0AAAD4AAIADgAAAD0ABAAHAAAADwAAAAIAAAA9AAQABwAAABAAAAADAAAAUQAFAAYAAAARAAAAEAAAAAAAAABRAAUABgAAABIAAAAQAAAAAQAAAFAABQAKAAAAEwAAABEAAAASAAAAPgADAAQAAAAPAAAAPgADAAUAAAATAAAA/QABADgAAQA=",
+                            "encode": "base64",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "vulkan"
+                        },
+                        {
+                            "data": "#version 460\n\nuniform sampler2D SPIRV_Cross_Combinedg_textureg_sampler;\n\nlayout(location = 0) in vec2 in_var_TEXCOORD;\nlayout(location = 0) out vec4 out_var_SV_TARGET;\n\nvoid main()\n{\n    out_var_SV_TARGET = texture(SPIRV_Cross_Combinedg_textureg_sampler, in_var_TEXCOORD);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "opengl"
+                        },
+                        {
+                            "data": "#version 100\nprecision mediump float;\nprecision highp int;\n\nuniform highp sampler2D SPIRV_Cross_Combinedg_textureg_sampler;\n\nvarying highp vec2 in_var_TEXCOORD;\n\nvoid main()\n{\n    gl_FragData[0] = texture2D(SPIRV_Cross_Combinedg_textureg_sampler, in_var_TEXCOORD);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "gles20"
+                        },
+                        {
+                            "data": "#version 320 es\nprecision mediump float;\nprecision highp int;\n\nuniform highp sampler2D SPIRV_Cross_Combinedg_textureg_sampler;\n\nlayout(location = 0) in highp vec2 in_var_TEXCOORD;\nlayout(location = 0) out highp vec4 out_var_SV_TARGET;\n\nvoid main()\n{\n    out_var_SV_TARGET = texture(SPIRV_Cross_Combinedg_textureg_sampler, in_var_TEXCOORD);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "gles30"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct frag_out\n{\n    float4 out_var_SV_TARGET [[color(0)]];\n};\n\nstruct frag_in\n{\n    float2 in_var_TEXCOORD [[user(locn0)]];\n};\n\nfragment frag_out frag(frag_in in [[stage_in]], texture2d<float> g_texture [[texture(0)]], sampler g_sampler [[sampler(0)]])\n{\n    frag_out out = {};\n    out.out_var_SV_TARGET = g_texture.sample(g_sampler, in.in_var_TEXCOORD);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "ios"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct frag_out\n{\n    float4 out_var_SV_TARGET [[color(0)]];\n};\n\nstruct frag_in\n{\n    float2 in_var_TEXCOORD [[user(locn0)]];\n};\n\nfragment frag_out frag(frag_in in [[stage_in]], texture2d<float> g_texture [[texture(0)]], sampler g_sampler [[sampler(0)]])\n{\n    frag_out out = {};\n    out.out_var_SV_TARGET = g_texture.sample(g_sampler, in.in_var_TEXCOORD);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "mac"
+                        },
+                        {
+                            "data": "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",
+                            "encode": "base64",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "hlsl"
+                        },
+                        {
+                            "data": "AwIjBwAAAQAAAA4AGgAAAAAAAAARAAIAAQAAAA4AAwAAAAAAAQAAAA8ACAAEAAAAAQAAAGZyYWcAAAAAAgAAAAMAAAAEAAAAEAADAAEAAAAHAAAAAwADAAUAAABYAgAABQAGAAUAAAB0eXBlLjJkLmltYWdlAAAABQAFAAYAAABnX3RleHR1cmUAAAAFAAYABwAAAHR5cGUuc2FtcGxlcgAAAAAFAAUACAAAAGdfc2FtcGxlcgAAAAUABgADAAAAaW4udmFyLlRFWENPT1JEAAUABwAEAAAAb3V0LnZhci5TVl9UQVJHRVQAAAAFAAQAAQAAAGZyYWcAAAAABQAHAAkAAAB0eXBlLnNhbXBsZWQuaW1hZ2UAAEcABAACAAAACwAAAA8AAABHAAQAAwAAAB4AAAAAAAAARwAEAAQAAAAeAAAAAAAAAEcABAAGAAAAIgAAAAAAAABHAAQABgAAACEAAAAAAAAARwAEAAgAAAAiAAAAAAAAAEcABAAIAAAAIQAAAAAAAAAWAAMACgAAACAAAAAZAAkABQAAAAoAAAABAAAAAgAAAAAAAAAAAAAAAQAAAAAAAAAgAAQACwAAAAAAAAAFAAAAGgACAAcAAAAgAAQADAAAAAAAAAAHAAAAFwAEAA0AAAAKAAAABAAAACAABAAOAAAAAQAAAA0AAAAXAAQADwAAAAoAAAACAAAAIAAEABAAAAABAAAADwAAACAABAARAAAAAwAAAA0AAAATAAIAEgAAACEAAwATAAAAEgAAABsAAwAJAAAABQAAADsABAALAAAABgAAAAAAAAA7AAQADAAAAAgAAAAAAAAAOwAEAA4AAAACAAAAAQAAADsABAAQAAAAAwAAAAEAAAA7AAQAEQAAAAQAAAADAAAANgAFABIAAAABAAAAAAAAABMAAAD4AAIAFAAAAD0ABAAPAAAAFQAAAAMAAAA9AAQABQAAABYAAAAGAAAAPQAEAAcAAAAXAAAACAAAAFYABQAJAAAAGAAAABYAAAAXAAAAVwAGAA0AAAAZAAAAGAAAABUAAAAAAAAAPgADAAQAAAAZAAAA/QABADgAAQA=",
+                            "encode": "base64",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST7"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "vulkan"
+                        },
+                        {
+                            "data": "#version 460\n\nout gl_PerVertex\n{\n    vec4 gl_Position;\n};\n\nlayout(location = 0) in vec4 in_var_POSITION;\nlayout(location = 1) in vec4 in_var_TEXCOORD;\nlayout(location = 0) out vec2 out_var_TEXCOORD;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION;\n    out_var_TEXCOORD = vec2(in_var_TEXCOORD.xy);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "opengl"
+                        },
+                        {
+                            "data": "#version 100\n\nattribute vec4 in_var_POSITION;\nattribute vec4 in_var_TEXCOORD;\nvarying vec2 out_var_TEXCOORD;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION;\n    out_var_TEXCOORD = vec2(in_var_TEXCOORD.xy);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "gles20"
+                        },
+                        {
+                            "data": "#version 320 es\n\nlayout(location = 0) in vec4 in_var_POSITION;\nlayout(location = 1) in vec4 in_var_TEXCOORD;\nlayout(location = 0) out vec2 out_var_TEXCOORD;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION;\n    out_var_TEXCOORD = vec2(in_var_TEXCOORD.xy);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "gles30"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct vert_out\n{\n    float2 out_var_TEXCOORD [[user(locn0)]];\n    float4 gl_Position [[position]];\n};\n\nstruct vert_in\n{\n    float4 in_var_POSITION [[attribute(0)]];\n    float4 in_var_TEXCOORD [[attribute(1)]];\n};\n\nvertex vert_out vert(vert_in in [[stage_in]])\n{\n    vert_out out = {};\n    out.gl_Position = in.in_var_POSITION;\n    out.out_var_TEXCOORD = float2(in.in_var_TEXCOORD.xy);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "ios"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct vert_out\n{\n    float2 out_var_TEXCOORD [[user(locn0)]];\n    float4 gl_Position [[position]];\n};\n\nstruct vert_in\n{\n    float4 in_var_POSITION [[attribute(0)]];\n    float4 in_var_TEXCOORD [[attribute(1)]];\n};\n\nvertex vert_out vert(vert_in in [[stage_in]])\n{\n    vert_out out = {};\n    out.gl_Position = in.in_var_POSITION;\n    out.out_var_TEXCOORD = float2(in.in_var_TEXCOORD.xy);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "mac"
+                        },
+                        {
+                            "data": "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",
+                            "encode": "base64",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "hlsl"
+                        },
+                        {
+                            "data": "AwIjBwAAAQAAAA4AFAAAAAAAAAARAAIAAQAAAA4AAwAAAAAAAQAAAA8ACQAAAAAAAQAAAHZlcnQAAAAAAgAAAAMAAAAEAAAABQAAAAMAAwAFAAAAWAIAAAUABgACAAAAaW4udmFyLlBPU0lUSU9OAAUABgADAAAAaW4udmFyLlRFWENPT1JEAAUABwAFAAAAb3V0LnZhci5URVhDT09SRAAAAAAFAAQAAQAAAHZlcnQAAAAARwAEAAQAAAALAAAAAAAAAEcABAACAAAAHgAAAAAAAABHAAQAAwAAAB4AAAABAAAARwAEAAUAAAAeAAAAAAAAABYAAwAGAAAAIAAAABcABAAHAAAABgAAAAQAAAAgAAQACAAAAAEAAAAHAAAAIAAEAAkAAAADAAAABwAAABcABAAKAAAABgAAAAIAAAAgAAQACwAAAAMAAAAKAAAAEwACAAwAAAAhAAMADQAAAAwAAAA7AAQACAAAAAIAAAABAAAAOwAEAAgAAAADAAAAAQAAADsABAAJAAAABAAAAAMAAAA7AAQACwAAAAUAAAADAAAANgAFAAwAAAABAAAAAAAAAA0AAAD4AAIADgAAAD0ABAAHAAAADwAAAAIAAAA9AAQABwAAABAAAAADAAAAUQAFAAYAAAARAAAAEAAAAAAAAABRAAUABgAAABIAAAAQAAAAAQAAAFAABQAKAAAAEwAAABEAAAASAAAAPgADAAQAAAAPAAAAPgADAAUAAAATAAAA/QABADgAAQA=",
+                            "encode": "base64",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "vulkan"
+                        },
+                        {
+                            "data": "#version 460\n\nuniform sampler2D SPIRV_Cross_Combinedg_textureg_sampler;\n\nlayout(location = 0) in vec2 in_var_TEXCOORD;\nlayout(location = 0) out vec4 out_var_SV_TARGET;\n\nvoid main()\n{\n    out_var_SV_TARGET = texture(SPIRV_Cross_Combinedg_textureg_sampler, in_var_TEXCOORD);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "opengl"
+                        },
+                        {
+                            "data": "#version 100\nprecision mediump float;\nprecision highp int;\n\nuniform highp sampler2D SPIRV_Cross_Combinedg_textureg_sampler;\n\nvarying highp vec2 in_var_TEXCOORD;\n\nvoid main()\n{\n    gl_FragData[0] = texture2D(SPIRV_Cross_Combinedg_textureg_sampler, in_var_TEXCOORD);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "gles20"
+                        },
+                        {
+                            "data": "#version 320 es\nprecision mediump float;\nprecision highp int;\n\nuniform highp sampler2D SPIRV_Cross_Combinedg_textureg_sampler;\n\nlayout(location = 0) in highp vec2 in_var_TEXCOORD;\nlayout(location = 0) out highp vec4 out_var_SV_TARGET;\n\nvoid main()\n{\n    out_var_SV_TARGET = texture(SPIRV_Cross_Combinedg_textureg_sampler, in_var_TEXCOORD);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "gles30"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct frag_out\n{\n    float4 out_var_SV_TARGET [[color(0)]];\n};\n\nstruct frag_in\n{\n    float2 in_var_TEXCOORD [[user(locn0)]];\n};\n\nfragment frag_out frag(frag_in in [[stage_in]], texture2d<float> g_texture [[texture(0)]], sampler g_sampler [[sampler(0)]])\n{\n    frag_out out = {};\n    out.out_var_SV_TARGET = g_texture.sample(g_sampler, in.in_var_TEXCOORD);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "ios"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct frag_out\n{\n    float4 out_var_SV_TARGET [[color(0)]];\n};\n\nstruct frag_in\n{\n    float2 in_var_TEXCOORD [[user(locn0)]];\n};\n\nfragment frag_out frag(frag_in in [[stage_in]], texture2d<float> g_texture [[texture(0)]], sampler g_sampler [[sampler(0)]])\n{\n    frag_out out = {};\n    out.out_var_SV_TARGET = g_texture.sample(g_sampler, in.in_var_TEXCOORD);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "mac"
+                        },
+                        {
+                            "data": "RFhCQwAAAAAAAAAAAAAAAAAAAAABAAAA8w8AAAcAAAA8AAAATAAAALEAAADrAAAArwEAADsJAABXCQAAU0ZJMAgAAAAAAAAAAAAAAElTRzFdAAAAAgAAAAgAAAAAAAAASAAAAAAAAAABAAAAAwAAAAAAAAAPAAAAAAAAAAAAAABUAAAAAAAAAAAAAAADAAAAAQAAAAMDAAAAAAAAU1ZfUG9zaXRpb24AVEVYQ09PUkQAT1NHMTIAAAABAAAACAAAAAAAAAAoAAAAAAAAAEAAAAADAAAAAAAAAA8AAAAAAAAAU1ZfVGFyZ2V0AFBTVjC8AAAAJAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/////wAAAAACAQACAQAAAAIAAAAQAAAAAQAAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAAAAAAAMAAAAAFRFWENPT1JEAAAAAQAAAAAAAAAQAAAAAAAAAAAAAAABAEQDAwQAAAEAAAAAAAAAAQFCAAMCAAAAAAAAAAAAAAEARBADAAAAAAAAAAAAAAAAAAAAAAAAAA8AAAAPAAAAAAAAAAAAAABTVEFUhAcAAGAAAADhAQAARFhJTAABAAAQAAAAbAcAAEJDwN4hDAAA2AEAAAuCIAACAAAAEwAAAAeBI5FByARJBhAyOZIBhAwlBQgZHgSLYoAURQJCkgtCpBAyFDgIGEsKMlKISJAUIENGiKUAGTJC5EgOkJEixFBBUYGM4YPligQpRgZRGAAACAAAABuM4P////8HQAKoDYTw/////wMgbTCG/////x8ACagASRgAAAMAAAATgmBCIEwIBgAAAACJIAAASAAAADIiSAkgZIUEkyKkhASTIuOEoZAUEkyKjAuEpEwQcDMAwwgEMEcABjO1wTiwQzjMwzy4AS2UAz7QQz3IQznIASnwgT2UwzjQwzvIAx+YAzu8QzjQAxuAAR34ARj4gR7oQTukAzzMwy/QQz7AQzmgQMwkBuPADuEwD/PgBrRQDvhAD/UgD+UgB6TAB/ZQDuNAD+8gD3xgDuzwDuFAD2wABnTgB2DgB0gIg8hN0hRRwuSzAPMsRMROwESgQJAZASgBojRHgBQDCCGWIFYMJIRYgNxNw+VP2ENI/kpIKzH5xW2jAgAABK17hsufsIeQ/BBohoVAQSwMFFICAIAQAtCcIwiKIcUSopIdCBhGEIBzpCmihMlPWbF5qAkJISeCAAAAABMUcsCHdGCHNmiHeWgDcsCHDa9QDm3QDnpQDm0AD3owB3KgB3MgB22QDnGgB3MgB22QDnigB3MgB22QDnFgB3owB3LQBukwB3KgB3MgB22QDnZAB3pgB3TQBuYQB3agB3MgB21gDnMgB3owB3LQBuZgB3SgB3ZAB23gDnigB3FgB3owB3KgB3ZABzoPZJAhI0VEAHIAwPQAgIc8CRAAAAAAAAAAAAAMeRggAAIAAAAAAAAAGPI4QAAIAAAAAAAAADDkmYAAGAAAAAAAAABgyGMBATAAAAAAAAAAQBYIAAAAFAAAADIemBgZEUyQjAkmR8YEQ1oFQqIERgCKoQhKolDKoBwKpBBKoWDKozhoFcEIQCGUQUnQmQGgMgNAZAaAxgwAhRkA0jMAtMdCDAIAAOB5AAAAeRgAAKUAAAAaA0yQRgITRDUYYwtzOwOxK5ObS3tzA5lxuQFBoQs7m3uRKmIqCpoq+pq5gXkxS3MLY0vZEAQTBAGZIAjJBmEgNggEQQFuboIgKBuGAyEmCAXH5OyLrgyPrk6ubIIgLBMEgdkgEM2GhFAWghgYwtkQPBOEY2Ny9jUX1gbHVia3ASEiiSAGAtgQTBsICACoCQLRTRCEhgHaBEFwJgjCs8FAsIzQGhJtaXBzEwQB2kAgXNZNEIJvg0B8GwIw2CAQYbCBuDZPDCYIgzdBECIaaGFuZGxlEwRB2mAgZpAR2hlsEMoADSYIGhhMEISJCNzbXBpd2psblymrL6inqSSqpCenDQjCBhlRBm2gNRTq7IhQFWENPT1JEW1AkDfIujKAA63ZMKyBG8TBhoOwxoAM0kAN5GCCoAgbgA0DUQd1sCGwgw3DQAd3MEHYwmBDkAckzOTCzrhMWX1Bvc2l0aW9uU0QFm2CsGQbAmKCsGAThOXasBB80Ad+8AegMIACEQrABGGxNghZtmEZ4KAPQuEPRmEYhSEUSGGDIAqlwGTK6osqTO6sjG6CsBwTBIHaIGSpsGEhTqEPUOEPQmEABSIUVGFDsAobBlNgBWBDQQd70AoVwCLNbY5uboIgVDTm0s6+2MhozKWdfc3REaErw/tye5Nr24C8AizEAiMLZTALQxU2Nrs2lzSyMje6KUFQhQzPxa5Mbi7tzW1KQDQhw3OxC2OzK5ObEhR1yPBc5tDCyMrkmt7IytimBEgZMjwXubK5tzq5sbK5KQFViQzPhS4PrizIze2NLowu7c1tboogB3dQhwzPxS6t7C6JbIoujK5sSpAHdcjwXMrc6OTyoN7S3OjmpgSt0IUMz2Xsrc6NrkxubkowCwB5GAAATAAAADMIgBzE4RxmFAE9iEM4hMOMQoAHeXgHc5hxDOYAD+0QDvSADjMMQh7CwR3OoRxmMAU9iEM4hIMbzAM9yEM9jAM9zHiMdHAHewgHeUiHcHAHenADdniHcCCHGcwRDuyQDuEwD24wD+PwDvBQDjMQxB3eIRzYIR3CYR5mMIk7vIM70EM5tAM8vIM8hAM7zPAUdmAHe2gHN2iHcmgHN4CHcJCHcGAHdigHdvgFdniHd4CHXwiHcRiHcpiHeZiBLO7wDu7gDvXADuwwA2LIoRzkoRzMoRzkoRzcYRzKIRzEgR3KYQbWkEM5yEM5mEM5yEM5uMM4lEM4iAM7lMMvvIM8/II71AM7sMMMxCEHfHADeiiHdoCHGdFDDvjgBuQgDufgBvYQDvLADuGQD+9QD/QAAABxIAAAJAAAABXgBX7n7zzchrPLciBwVp2G23B2WT6lh+llIDBYAG4Q+J2/9DKeXpeXgcCZ9UeilvH0urwsIwKtP5K9PKa/5cAmCTYDAoHAoBlIw+U7jy9EBDARIdAMC2ED03D5zuMvDjCIzUNNfnHbVgANl+88vgQwz0L4xW0bQTVcvvP40uREBEpNDzX5xW2bAFFEgAEAAAAAAABIQVNIFAAAAAAAAACel51Rx59ZVDOGdlRFrochRFhJTJQGAABgAAAApQEAAERYSUwAAQAAEAAAAHwGAABCQ8DeIQwAAJwBAAALgiAAAgAAABMAAAAHgSORQcgESQYQMjmSAYQMJQUIGR4Ei2KAFEUCQpILQqQQMhQ4CBhLCjJSiEiQFCBDRoilABkyQuRIDpCRIsRQQVGBjOGD5YoEKUYGURgAAAgAAAAbjOD/////B0ACqA2E8P////8DIG0whv////8fAAmoAEkYAAADAAAAE4JgQiBMCAYAAAAAiSAAAEMAAAAyIkgJIGSFBJMipIQEkyLjhKGQFBJMiowLhKRMEGgjACUAFGYA5gjAYI4AKcYghBRCphiAEFIGoZuGy5+wh5D8lZBWYvKL20bFGGMQKvcMlz9hDyH5IdAMC4GCVRhFGBtjDELIoDZHEBSDkULIIzgQMIxADDO1wTiwQzjMwzy4AS2UAz7QQz3IQznIASnwgT2UwzjQwzvIAx+YAzu8QzjQAxuAAR34ARj4gR7oQTukAzzMwy/QQz7AQzmggMwkBuPADuEwD/PgBrRQDvhAD/UgD+UgB6TAB/ZQDuNAD+8gD3xgDuzwDuFAD2wABnTgB2DgB0iYlOpN0hRRwuSzAPMsRMROwESggNBNBAIAExRywId0YIc2aId5aANywIcNr1AObdAOelAObQAPejAHcqAHcyAHbZAOcaAHcyAHbZAOeKAHcyAHbZAOcWAHejAHctAG6TAHcqAHcyAHbZAOdkAHemAHdNAG5hAHdqAHcyAHbWAOcyAHejAHctAG5mAHdKAHdkAHbeAOeKAHcWAHejAHcqAHdkAHQ54AAAAAAAAAAAAAAIY8BhAAAQAAAAAAAAAMeRAgAAQAAAAAAAAAGPI0QAAMAAAAAAAAADDkgYAAGAAAAAAAAAAgCwQAAA4AAAAyHpgUGRFMkIwJJkfGBEMiJTACUAxFUBJlUB5USqIMCmEEoAgKhOwMAOEZAMpjIQYBAADwPAAAAHkYAABeAAAAGgNMkEYCE0Q1GGMLczsDsSuTm0t7cwOZcbkBQaELO5t7kSpiKgqaKvqauYF5MUtzC2NL2RAEEwSimCAQxgZhICYIxLFBGAwKcHMbBsQgJgiWRGCCQCATBCLZIBDNhoRQFoIYGMLZEDwTBGzagBDRQhADAWwIpA0EBADTBCGjNgTVBEEASJjJhZ1xmbL6gnqbS6NLe3ObIBTMBKFoNgTEBKFwJgjFs2EhMm3juqEjPIAIVRHW0NOTFNEEoYAmCISyQRADMdiwDGCgeVwYDGEweGOwQfjIgMmU1RdVmNxZGd0EoYgmCMSyQRADNNiwEGagnQHnDR3hpcGGQA02DGWwBsCG4sLYgAKqsLHZtbmkkZW50U0JgipkeC52ZXJzaW9uUwKiCRmei10Ym12Z3JTAqEOG5zKHFkZWJtf0RlbGNiVAypDhuciVzb3VyY2VzU0JpjpkeC52aWV3SWRTdGF0ZVOCqg4ZnkuZG51cHtRbmhvd3JSADQAAAHkYAABMAAAAMwiAHMThHGYUAT2IQziEw4xCgAd5eAdzmHEM5gAP7RAO9IAOMwxCHsLBHc6hHGYwBT2IQziEgxvMAz3IQz2MAz3MeIx0cAd7CAd5SIdwcAd6cAN2eIdwIIcZzBEO7JAO4TAPbjAP4/AO8FAOMxDEHd4hHNghHcJhHmYwiTu8gzvQQzm0Azy8gzyEAzvM8BR2YAd7aAc3aIdyaAc3gIdwkIdwYAd2KAd2+AV2eId3gIdfCIdxGIdymId5mIEs7vAO7uAO9cAO7DADYsihHOShHMyhHOShHNxhHMohHMSBHcphBtaQQznIQzmYQznIQzm4wziUQziIAzuUwy+8gzz8gjvUAzuwwwzEIQd8cAN6KId2gIcZ0UMO+OAG5CAO5+AG9hAO8sAO4ZAP71AP9AAAAHEgAAASAAAARiANl+88vhARwESEQDMshAVMw+U7j784wCA2DzX5xW3bADRcvvP4EsA8C+EXt20C1XD5zuNLkxMRKDU91OQXt20ARBEBBgAAYSAAACoAAAATBEEsEAAAAAUAAAD0RgCIlMIMQMkVQuFRKQEaMwAAACMGCQCCYABlhXNdyIhBAoAgGECaEWFYMmKQACAIBoZnaBmEjBgkAAiCgfEdm1YkIwYPAIJg0HgHMQhBUWybUowmBMBoghCMJgzCaAIxjBgkAAiCAUIGEBiAwUWMGCQACIIBQgYQGIDBMowYJAAIggFCBhAYgIEljBgkAAiCAUIGEBiAQRYgAAAAAAAA",
+                            "encode": "base64",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "hlsl"
+                        },
+                        {
+                            "data": "AwIjBwAAAQAAAA4AGgAAAAAAAAARAAIAAQAAAA4AAwAAAAAAAQAAAA8ACAAEAAAAAQAAAGZyYWcAAAAAAgAAAAMAAAAEAAAAEAADAAEAAAAHAAAAAwADAAUAAABYAgAABQAGAAUAAAB0eXBlLjJkLmltYWdlAAAABQAFAAYAAABnX3RleHR1cmUAAAAFAAYABwAAAHR5cGUuc2FtcGxlcgAAAAAFAAUACAAAAGdfc2FtcGxlcgAAAAUABgADAAAAaW4udmFyLlRFWENPT1JEAAUABwAEAAAAb3V0LnZhci5TVl9UQVJHRVQAAAAFAAQAAQAAAGZyYWcAAAAABQAHAAkAAAB0eXBlLnNhbXBsZWQuaW1hZ2UAAEcABAACAAAACwAAAA8AAABHAAQAAwAAAB4AAAAAAAAARwAEAAQAAAAeAAAAAAAAAEcABAAGAAAAIgAAAAAAAABHAAQABgAAACEAAAAAAAAARwAEAAgAAAAiAAAAAAAAAEcABAAIAAAAIQAAAAAAAAAWAAMACgAAACAAAAAZAAkABQAAAAoAAAABAAAAAgAAAAAAAAAAAAAAAQAAAAAAAAAgAAQACwAAAAAAAAAFAAAAGgACAAcAAAAgAAQADAAAAAAAAAAHAAAAFwAEAA0AAAAKAAAABAAAACAABAAOAAAAAQAAAA0AAAAXAAQADwAAAAoAAAACAAAAIAAEABAAAAABAAAADwAAACAABAARAAAAAwAAAA0AAAATAAIAEgAAACEAAwATAAAAEgAAABsAAwAJAAAABQAAADsABAALAAAABgAAAAAAAAA7AAQADAAAAAgAAAAAAAAAOwAEAA4AAAACAAAAAQAAADsABAAQAAAAAwAAAAEAAAA7AAQAEQAAAAQAAAADAAAANgAFABIAAAABAAAAAAAAABMAAAD4AAIAFAAAAD0ABAAPAAAAFQAAAAMAAAA9AAQABQAAABYAAAAGAAAAPQAEAAcAAAAXAAAACAAAAFYABQAJAAAAGAAAABYAAAAXAAAAVwAGAA0AAAAZAAAAGAAAABUAAAAAAAAAPgADAAQAAAAZAAAA/QABADgAAQA=",
+                            "encode": "base64",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST8"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "vulkan"
+                        },
+                        {
+                            "data": "#version 460\n\nout gl_PerVertex\n{\n    vec4 gl_Position;\n};\n\nlayout(location = 0) in vec4 in_var_POSITION;\nlayout(location = 1) in vec4 in_var_TEXCOORD;\nlayout(location = 0) out vec2 out_var_TEXCOORD;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION;\n    out_var_TEXCOORD = vec2(in_var_TEXCOORD.xy);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "opengl"
+                        },
+                        {
+                            "data": "#version 100\n\nattribute vec4 in_var_POSITION;\nattribute vec4 in_var_TEXCOORD;\nvarying vec2 out_var_TEXCOORD;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION;\n    out_var_TEXCOORD = vec2(in_var_TEXCOORD.xy);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "gles20"
+                        },
+                        {
+                            "data": "#version 320 es\n\nlayout(location = 0) in vec4 in_var_POSITION;\nlayout(location = 1) in vec4 in_var_TEXCOORD;\nlayout(location = 0) out vec2 out_var_TEXCOORD;\n\nvoid main()\n{\n    gl_Position = in_var_POSITION;\n    out_var_TEXCOORD = vec2(in_var_TEXCOORD.xy);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "gles30"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct vert_out\n{\n    float2 out_var_TEXCOORD [[user(locn0)]];\n    float4 gl_Position [[position]];\n};\n\nstruct vert_in\n{\n    float4 in_var_POSITION [[attribute(0)]];\n    float4 in_var_TEXCOORD [[attribute(1)]];\n};\n\nvertex vert_out vert(vert_in in [[stage_in]])\n{\n    vert_out out = {};\n    out.gl_Position = in.in_var_POSITION;\n    out.out_var_TEXCOORD = float2(in.in_var_TEXCOORD.xy);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "ios"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct vert_out\n{\n    float2 out_var_TEXCOORD [[user(locn0)]];\n    float4 gl_Position [[position]];\n};\n\nstruct vert_in\n{\n    float4 in_var_POSITION [[attribute(0)]];\n    float4 in_var_TEXCOORD [[attribute(1)]];\n};\n\nvertex vert_out vert(vert_in in [[stage_in]])\n{\n    vert_out out = {};\n    out.gl_Position = in.in_var_POSITION;\n    out.out_var_TEXCOORD = float2(in.in_var_TEXCOORD.xy);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "mac"
+                        },
+                        {
+                            "data": "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",
+                            "encode": "base64",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "hlsl"
+                        },
+                        {
+                            "data": "AwIjBwAAAQAAAA4AFAAAAAAAAAARAAIAAQAAAA4AAwAAAAAAAQAAAA8ACQAAAAAAAQAAAHZlcnQAAAAAAgAAAAMAAAAEAAAABQAAAAMAAwAFAAAAWAIAAAUABgACAAAAaW4udmFyLlBPU0lUSU9OAAUABgADAAAAaW4udmFyLlRFWENPT1JEAAUABwAFAAAAb3V0LnZhci5URVhDT09SRAAAAAAFAAQAAQAAAHZlcnQAAAAARwAEAAQAAAALAAAAAAAAAEcABAACAAAAHgAAAAAAAABHAAQAAwAAAB4AAAABAAAARwAEAAUAAAAeAAAAAAAAABYAAwAGAAAAIAAAABcABAAHAAAABgAAAAQAAAAgAAQACAAAAAEAAAAHAAAAIAAEAAkAAAADAAAABwAAABcABAAKAAAABgAAAAIAAAAgAAQACwAAAAMAAAAKAAAAEwACAAwAAAAhAAMADQAAAAwAAAA7AAQACAAAAAIAAAABAAAAOwAEAAgAAAADAAAAAQAAADsABAAJAAAABAAAAAMAAAA7AAQACwAAAAUAAAADAAAANgAFAAwAAAABAAAAAAAAAA0AAAD4AAIADgAAAD0ABAAHAAAADwAAAAIAAAA9AAQABwAAABAAAAADAAAAUQAFAAYAAAARAAAAEAAAAAAAAABRAAUABgAAABIAAAAQAAAAAQAAAFAABQAKAAAAEwAAABEAAAASAAAAPgADAAQAAAAPAAAAPgADAAUAAAATAAAA/QABADgAAQA=",
+                            "encode": "base64",
+                            "entryPoint": "vert",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "vertex",
+                            "shaderTarget": "vulkan"
+                        },
+                        {
+                            "data": "#version 460\n\nuniform sampler2D SPIRV_Cross_Combinedg_textureg_sampler;\n\nlayout(location = 0) in vec2 in_var_TEXCOORD;\nlayout(location = 0) out vec4 out_var_SV_TARGET;\n\nvoid main()\n{\n    out_var_SV_TARGET = texture(SPIRV_Cross_Combinedg_textureg_sampler, in_var_TEXCOORD);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "opengl"
+                        },
+                        {
+                            "data": "#version 100\nprecision mediump float;\nprecision highp int;\n\nuniform highp sampler2D SPIRV_Cross_Combinedg_textureg_sampler;\n\nvarying highp vec2 in_var_TEXCOORD;\n\nvoid main()\n{\n    gl_FragData[0] = texture2D(SPIRV_Cross_Combinedg_textureg_sampler, in_var_TEXCOORD);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "gles20"
+                        },
+                        {
+                            "data": "#version 320 es\nprecision mediump float;\nprecision highp int;\n\nuniform highp sampler2D SPIRV_Cross_Combinedg_textureg_sampler;\n\nlayout(location = 0) in highp vec2 in_var_TEXCOORD;\nlayout(location = 0) out highp vec4 out_var_SV_TARGET;\n\nvoid main()\n{\n    out_var_SV_TARGET = texture(SPIRV_Cross_Combinedg_textureg_sampler, in_var_TEXCOORD);\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "gles30"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct frag_out\n{\n    float4 out_var_SV_TARGET [[color(0)]];\n};\n\nstruct frag_in\n{\n    float2 in_var_TEXCOORD [[user(locn0)]];\n};\n\nfragment frag_out frag(frag_in in [[stage_in]], texture2d<float> g_texture [[texture(0)]], sampler g_sampler [[sampler(0)]])\n{\n    frag_out out = {};\n    out.out_var_SV_TARGET = g_texture.sample(g_sampler, in.in_var_TEXCOORD);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "ios"
+                        },
+                        {
+                            "data": "#include <metal_stdlib>\n#include <simd/simd.h>\n\nusing namespace metal;\n\nstruct frag_out\n{\n    float4 out_var_SV_TARGET [[color(0)]];\n};\n\nstruct frag_in\n{\n    float2 in_var_TEXCOORD [[user(locn0)]];\n};\n\nfragment frag_out frag(frag_in in [[stage_in]], texture2d<float> g_texture [[texture(0)]], sampler g_sampler [[sampler(0)]])\n{\n    frag_out out = {};\n    out.out_var_SV_TARGET = g_texture.sample(g_sampler, in.in_var_TEXCOORD);\n    return out;\n}\n\n",
+                            "encode": "string",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "mac"
+                        },
+                        {
+                            "data": "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",
+                            "encode": "base64",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "hlsl"
+                        },
+                        {
+                            "data": "AwIjBwAAAQAAAA4AGgAAAAAAAAARAAIAAQAAAA4AAwAAAAAAAQAAAA8ACAAEAAAAAQAAAGZyYWcAAAAAAgAAAAMAAAAEAAAAEAADAAEAAAAHAAAAAwADAAUAAABYAgAABQAGAAUAAAB0eXBlLjJkLmltYWdlAAAABQAFAAYAAABnX3RleHR1cmUAAAAFAAYABwAAAHR5cGUuc2FtcGxlcgAAAAAFAAUACAAAAGdfc2FtcGxlcgAAAAUABgADAAAAaW4udmFyLlRFWENPT1JEAAUABwAEAAAAb3V0LnZhci5TVl9UQVJHRVQAAAAFAAQAAQAAAGZyYWcAAAAABQAHAAkAAAB0eXBlLnNhbXBsZWQuaW1hZ2UAAEcABAACAAAACwAAAA8AAABHAAQAAwAAAB4AAAAAAAAARwAEAAQAAAAeAAAAAAAAAEcABAAGAAAAIgAAAAAAAABHAAQABgAAACEAAAAAAAAARwAEAAgAAAAiAAAAAAAAAEcABAAIAAAAIQAAAAAAAAAWAAMACgAAACAAAAAZAAkABQAAAAoAAAABAAAAAgAAAAAAAAAAAAAAAQAAAAAAAAAgAAQACwAAAAAAAAAFAAAAGgACAAcAAAAgAAQADAAAAAAAAAAHAAAAFwAEAA0AAAAKAAAABAAAACAABAAOAAAAAQAAAA0AAAAXAAQADwAAAAoAAAACAAAAIAAEABAAAAABAAAADwAAACAABAARAAAAAwAAAA0AAAATAAIAEgAAACEAAwATAAAAEgAAABsAAwAJAAAABQAAADsABAALAAAABgAAAAAAAAA7AAQADAAAAAgAAAAAAAAAOwAEAA4AAAACAAAAAQAAADsABAAQAAAAAwAAAAEAAAA7AAQAEQAAAAQAAAADAAAANgAFABIAAAABAAAAAAAAABMAAAD4AAIAFAAAAD0ABAAPAAAAFQAAAAMAAAA9AAQABQAAABYAAAAGAAAAPQAEAAcAAAAXAAAACAAAAFYABQAJAAAAGAAAABYAAAAXAAAAVwAGAA0AAAAZAAAAGAAAABUAAAAAAAAAPgADAAQAAAAZAAAA/QABADgAAQA=",
+                            "encode": "base64",
+                            "entryPoint": "frag",
+                            "keywords": [
+                                "TEST9"
+                            ],
+                            "shaderStage": "fragment",
+                            "shaderTarget": "vulkan"
+                        }
+                    ],
+                    "state": {
+                        "alphaToMask": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "blendOp": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "blendOpAlpha": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "colMask": {
+                            "ref": "",
+                            "val": 15
+                        },
+                        "culling": {
+                            "ref": "",
+                            "val": 2
+                        },
+                        "destBlend": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "destBlendAlpha": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "lod": 0,
+                        "name": "",
+                        "offsetFactor": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "offsetUnits": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "srcBlend": {
+                            "ref": "",
+                            "val": 1
+                        },
+                        "srcBlendAlpha": {
+                            "ref": "",
+                            "val": 1
+                        },
+                        "stencilOp": {
+                            "comp": {
+                                "ref": "",
+                                "val": 8
+                            },
+                            "fail": {
+                                "ref": "",
+                                "val": 0
+                            },
+                            "pass": {
+                                "ref": "",
+                                "val": 0
+                            },
+                            "zFail": {
+                                "ref": "",
+                                "val": 0
+                            }
+                        },
+                        "stencilOpBack": {
+                            "comp": {
+                                "ref": "",
+                                "val": 8
+                            },
+                            "fail": {
+                                "ref": "",
+                                "val": 0
+                            },
+                            "pass": {
+                                "ref": "",
+                                "val": 0
+                            },
+                            "zFail": {
+                                "ref": "",
+                                "val": 0
+                            }
+                        },
+                        "stencilOpFront": {
+                            "comp": {
+                                "ref": "",
+                                "val": 8
+                            },
+                            "fail": {
+                                "ref": "",
+                                "val": 0
+                            },
+                            "pass": {
+                                "ref": "",
+                                "val": 0
+                            },
+                            "zFail": {
+                                "ref": "",
+                                "val": 0
+                            }
+                        },
+                        "stencilReadMask": {
+                            "ref": "",
+                            "val": 255
+                        },
+                        "stencilRef": {
+                            "ref": "",
+                            "val": 0
+                        },
+                        "stencilWriteMask": {
+                            "ref": "",
+                            "val": 255
+                        },
+                        "tags": {
+                            "IgnoreProjector": "True",
+                            "Queue": "Transparent",
+                            "RenderType": "Transparent"
+                        },
+                        "zTest": {
+                            "ref": "",
+                            "val": 4
+                        },
+                        "zWrite": {
+                            "ref": "",
+                            "val": 1
+                        }
+                    },
+                    "type": "compiledPass"
+                }
+            ],
+            "tags": {
+                "IgnoreProjector": "True",
+                "Queue": "Transparent",
+                "RenderType": "Transparent"
+            }
+        }
+    ]
+}
