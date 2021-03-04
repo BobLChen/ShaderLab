@@ -177,6 +177,12 @@ namespace shaderlab
 
 	void EnumerateKeywords(const ProgramParameters& params, int32 depth, std::vector<std::string>& result, std::vector<std::vector<std::string>>& results)
 	{
+		if (params.keywords.size() == 0)
+		{
+			results.emplace_back();
+			return;
+		}
+		
 		for (int32 i = 0; i < params.keywords[depth].keywords.size(); ++i)
 		{
 			result[depth] = params.keywords[depth].keywords[i];
