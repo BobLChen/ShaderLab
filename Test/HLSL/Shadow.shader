@@ -1,4 +1,4 @@
-Shader "Test/ConstantBuffer" 
+Shader "Test/Shadow" 
 {
 	Properties 
 	{
