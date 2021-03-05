@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <map>
 
 #include "Common/Common.h"
 #include "Parser/SLParser.h"
@@ -37,6 +38,8 @@ namespace shaderlab
 		std::string					option;
 		std::vector<std::string>	values;
 	};
+
+	typedef std::map<std::string, PragmaParam> PragmaParamsMap;
 
 	struct MultiCompileParam
 	{
@@ -133,6 +136,10 @@ namespace shaderlab
 						shaderTarget = shaderTarget | (1 << GetShaderTarget(pragma.values[idx]));
 					}
 				}
+				else
+				{
+					paramsMap[pragma.option] = pragma;
+				}
 			}
 		}
 
@@ -155,6 +162,7 @@ namespace shaderlab
 
 		uint32							shaderTarget;
 		std::vector<MultiCompileParam>	keywords;
+		PragmaParamsMap					paramsMap;
 		std::string						entryName[kProgramCount];
 	};
 
@@ -174,6 +182,7 @@ namespace shaderlab
 		ShaderStage						shaderStage;
 		ShaderTarget					shaderTarget;
 		std::vector<MacroDefine>		defines;
+		PragmaParamsMap					paramsMap;
 		IncludeCallback					includeCallback;
 	};
 
