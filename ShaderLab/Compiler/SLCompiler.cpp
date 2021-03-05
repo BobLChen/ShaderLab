@@ -235,6 +235,7 @@ namespace shaderlab
 						snippet.sourceLength    = source.size();
 						snippet.entryPoint      = params.entryName[programIndex].c_str();
 						snippet.defines			= defines;
+						snippet.paramsMap       = params.paramsMap;
 						snippet.shaderStage     = stage;
 						snippet.shaderTarget    = (ShaderTarget)shaderTargetIndex;
 						snippet.includeCallback = shaderInfo.includeCallback;

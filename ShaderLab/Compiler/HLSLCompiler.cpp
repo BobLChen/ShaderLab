@@ -57,7 +57,7 @@ namespace shaderlab
 			break;
 
 		default:
-			shaderProfile = L"vs";
+			shaderProfile = L"lib";
 			break;
 		}
 
@@ -223,12 +223,26 @@ namespace shaderlab
 		return true;
 	}
 
+	bool HasParam(const PragmaParamsMap& params, const std::string& param)
+	{
+		return params.find(param) != params.end();
+	}
+
 	HLSLCompileResult HLSLCompiler::Compile(const ShaderSnippet& snippet)
 	{
 		HLSLCompileResult hlslCompileResult;
 
+		// shader model
 		ShaderModel shaderModel = { 6, 0 };
-
+		{
+			auto it = snippet.paramsMap.find("shaderModel");
+			if (it != snippet.paramsMap.end())
+			{
+				shaderModel.majorVer = it->second.values.size() >= 1 ? std::stoi(it->second.values[0]) : 6;
+				shaderModel.minorVer = it->second.values.size() >= 2 ? std::stoi(it->second.values[1]) : 0;
+			}
+		}
+		
 		// shader profile
 		std::wstring shaderProfile = ShaderProfileName(snippet.shaderStage, shaderModel);
 
@@ -236,7 +250,6 @@ namespace shaderlab
 		std::vector<DxcDefine> dxcDefines;
 		std::vector<std::wstring> tempStrings;
 		tempStrings.reserve(snippet.defines.size() * 2);
-
 		for (int32 i = 0; i < snippet.defines.size(); ++i)
 		{
 			const MacroDefine& define = snippet.defines[i];
@@ -279,13 +292,49 @@ namespace shaderlab
 
 		// args
 		std::vector<std::wstring> dxcArgStrings;
-		dxcArgStrings.push_back(L"-Zpr");
-		dxcArgStrings.push_back(L"-O3");
+		// row major
+		if (HasParam(snippet.paramsMap, "packMatricesInRowMajor"))
+		{
+			dxcArgStrings.push_back(L"-Zpr");
+		}
+		else
+		{
+			dxcArgStrings.push_back(L"-Zpc");
+		}
+		// 16bit
+		if (HasParam(snippet.paramsMap, "enable16bitTypes") && shaderModel >= ShaderModel{6, 2})
+		{
+			dxcArgStrings.push_back(L"-enable-16bit-types");
+		}
+		// debug info
+		if (HasParam(snippet.paramsMap, "enableDebugInfo"))
+		{
+			dxcArgStrings.push_back(L"-Zi");
+		}
+		// optimizations
+		if (HasParam(snippet.paramsMap, "disableOptimizations"))
+		{
+			dxcArgStrings.push_back(L"-Od");
+		}
+		else
+		{
+			dxcArgStrings.push_back(L"-O3");
+		}
 		if (snippet.shaderTarget != ShaderTarget::kShaderTargetHLSL)
 		{
 			dxcArgStrings.push_back(L"-spirv");
 		}
-
+		// vulkan version
+		if (HasParam(snippet.paramsMap, "-fspv-target-env"))
+		{
+			auto it = snippet.paramsMap.find("-fspv-target-env");
+			std::string tempVersion = it->second.values.size() > 0 ? it->second.values[0] : "vulkan1.2";
+			std::wstring targetVersion;
+			Unicode::UTF8ToUTF16String(tempVersion.c_str(), &targetVersion);
+			dxcArgStrings.push_back(L"-fspv-target-env=");
+			dxcArgStrings.push_back(targetVersion);
+		}
+		
 		std::vector<const wchar_t*> dxcArgWChars;
 		dxcArgWChars.reserve(dxcArgStrings.size());
 		for (int32 i = 0; i < dxcArgStrings.size(); ++i)
